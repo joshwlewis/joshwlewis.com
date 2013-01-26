@@ -1,0 +1,14 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    Josh Lewis -- @joshwlewis
+
+# THANKS
+
+    OSS
+
+# TECHNOLOGY COLOPHON
+
+    Ruby, Middleman, HTML5, CSS3, jQuery, Modernizr
