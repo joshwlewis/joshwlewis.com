@@ -1,66 +1,232 @@
-function shapes_grid(context, max_diameter, rows, columns, colors) {
-  this.context = context;
+var animations = [];
+
+Array.prototype.sample = function() {
+  return this[Math.floor(Math.random()*this.length)];
+}
+
+Array.prototype.remove = function() {
+    var what, a = arguments, L = a.length, ax;
+    while (L && this.length) {
+        what = a[--L];
+        while ((ax = this.indexOf(what)) !== -1) {
+            this.splice(ax, 1);
+        }
+    }
+    return this;
+};
+
+function shapes_grid(canvas, max_diameter, columns, rows) {
+  context = canvas.getContext('2d');
   this.max_diameter = max_diameter;
   this.rows = rows;
   this.columns = columns;
-  this.colors = colors;
-  this.grid_spacing = max_diameter;
+  this.shape_colors = ['#C00', '#0C0', '#00C'];
+  this.shadow_color = '#999';
+  this.letter_color = '#FFF'
+  this.letters = [];
+  this.spacing = max_diameter * 1.2;
+  this.side_counts = [1, 3, 4, 5, 6]
+  this.angles = [0, Math.PI / 4, Math.PI / 6]
   this.shapes = [];
+  this.shrinking_shapes = [];
+  this.growing_shapes = [];
+  this.step = 0;
+  this.speed = 1;
+  this.font = "Courier"
 
-  this.xs = function (){
-    var list = [];
-    for (var x = 0; x < this.columns; x++) {
-      list[x] = (x + 1) * this.grid_spacing;
+  /* This calculates the number of changing shapes vs total shapes which
+     is used later to slow the rate of adding shrinkers */
+  this.change_ratio = function() {
+    return (2 * this.max_diameter) / ((this.columns - 1) * (this.rows - 1) * this.speed)
+  }
+
+  this.angles_for_side_count = function(side_count) {
+    switch(side_count) {
+      case 3:
+        return [0, 0.5 * Math.PI, Math.PI, 1.5 * Math.PI];
+      case 4:
+        return [0, 0.25 * Math.PI];
+      case 5:
+        return [0.5 * Math.PI, 1.5 * Math.PI];
+      default:
+        return [0]
     }
-    return list;
   }
 
-  this.ys = function () {
-    var list = [];
-    for (var y=0; y < this.rows; y++) {
-      list[y] = (y + 1) * this.grid_spacing;
-    }
-    return list;
-  }
-
-    /* Initialize shapes */
-  for (var xi = 0; xi < this.xs().length; xi++) {
-    for (var yi = 0; yi < this.ys().length; yi++) {
-      this.shapes.push( new shape(context, this.xs()[xi], this.ys()[yi], 10, 3, '#663366'));
+  this.interval = function() {
+    if (this.change_ratio() >= 1) {
+      return 2 * Math.ceil(this.change_ratio());
+    } else {
+      return 2;
     }
   }
 
-  this.full_size_shapes = function() {
-    self.shapes.filter(function(s) { return s.diameter == max_diameter; })
+  this.letter_for = function(c,r) {
+    letter_obj = this.letters.filter( function(l) { return l.c == c && l.r == r; })[0];
+    if (letter_obj != undefined) {
+      return letter_obj.letter;
+    }
   }
 
-  this.zero_size_shapes = function() {
-    return self.shapes.filter(function(s) { return s.diameter == 0; });
+  this.init = function() {
+    for (var c = 1; c <= this.columns; c++) {
+      for (var r = 1; r <= this.rows; r++) {
+        side_count = this.side_counts.sample();
+        angle = this.angles_for_side_count(side_count);
+        this.shapes.push( new grid_shape(this, c, r, 0, side_count, this.shape_colors.sample(), angle, this.letter_for(c,r)));
+      }
+    }
   }
 
+  this.full_shapes = function() {
+    return this.shapes.filter(function(s) { return s.diameter == max_diameter;});
+  }
+
+  this.zero_shapes = function() {
+    return this.shapes.filter(function(s) { return s.diameter == 0; })
+  }
+
+  this.zero_shrinking_shapes = function() {
+    return this.shrinking_shapes.filter(function(s) { return s.diameter == 0;})
+  }
+
+  this.full_growing_shapes = function() {
+    return this.growing_shapes.filter(function(s) { return s.diameter >= max_diameter});
+  }
+
+  this.add_shrinking_shape = function() {
+    new_shrinker = this.full_shapes().sample();
+    if (new_shrinker != undefined) {
+      this.shrinking_shapes.push(new_shrinker);
+    }
+  }
+
+  this.remove_zero_shrinking_shapes = function() {
+    for (i = 0; i < this.zero_shrinking_shapes().length; i++) {
+      this.shrinking_shapes.remove(this.zero_shrinking_shapes()[i]);
+    }
+  }
+
+  this.add_growing_shape = function() {
+    new_grower = this.zero_shapes().sample();
+    if (new_grower != undefined) {
+      this.growing_shapes.push(new_grower);
+    }
+  }
+
+  this.grow_shapes = function() {
+    for (i = 0; i < this.growing_shapes.length; i++) {
+      this.growing_shapes[i].diameter += this.speed;
+    }
+  }
+
+  this.shrink_shapes = function() {
+    for (i = 0; i < this.shrinking_shapes.length; i++) {
+      this.shrinking_shapes[i].diameter -= this.speed;
+    }
+  }
+
+  this.remove_full_growing_shapes = function() {
+    for (i = 0; i < this.full_growing_shapes().length; i++) {
+      this.growing_shapes.remove(this.full_growing_shapes()[i]);
+    }
+  }
+  this.reset_zero_shapes = function() {
+    for (i = 0; i < this.zero_shapes().length; i++) {
+      side_count = this.side_counts.sample();
+      angle = this.angles_for_side_count(side_count).sample();
+      this.zero_shapes()[i].sides = side_count;
+      this.zero_shapes()[i].angle = angle;
+      this.zero_shapes()[i].color = this.shape_colors.sample();
+    }
+  }
+
+  this.increment = function() {
+    ++this.step
+    this.remove_zero_shrinking_shapes();
+    this.remove_full_growing_shapes();
+    if (this.step % this.interval() == 0) {
+      this.add_shrinking_shape();
+    }
+    this.reset_zero_shapes();
+    this.add_growing_shape();
+    this.shrink_shapes();
+    this.grow_shapes();
+  }
+
+  this.clear = function() {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+  }
   this.draw = function() {
-    for (var i = 0; i <= this.shapes.length; i++) {
+    for (var i = 0; i < this.shapes.length; i++) {
       this.shapes[i].draw();
     }
   }
+  return this;
 }
 
-function shape(context, x, y, diameter, sides, color){
-  this.context = context;
-  this.x = x;
-  this.y = y;
+
+function animate() {
+  reqAnimFrame = window.mozRequestAnimationFrame    ||
+                 window.webkitRequestAnimationFrame ||
+                 window.msRequestAnimationFrame     ||
+                 window.oRequestAnimationFrame
+                 ;
+
+  reqAnimFrame(animate);
+
+  for (i=0; i < animations.length; i++){
+    animation = animations[i];
+    animation.increment()
+    animation.clear();
+    animation.draw();
+  }
+}
+
+
+function grid_shape(grid, column, row, diameter, sides, color, angle, letter){
+  this.grid = grid;
+  this.column = column;
+  this.row = row;
   this.diameter = diameter;
-  this.radius = diameter / 2.0;
   this.sides = sides;
   this.color = color;
-
+  this.angle = angle;
+  this.letter = letter;
+  this.radius = function() {
+    return (this.diameter / 2);
+  }
+  this.x = function() {
+    return (this.column - 0.5) * this.grid.spacing;
+  }
+  this.y = function() {
+    return (this.row - 0.5) * this.grid.spacing;
+  }
   this.draw = function(){
+    context.save()
     context.beginPath();
-    context.fillStyle = this.color;
-    context.moveTo(x + this.radius * Math.cos(0), y + this.radius * Math.sin(0));
-    for (var i = 1; i <= this.sides; i++){
-      context.lineTo (this.x + this.radius * Math.cos(i * 2 * Math.PI / this.sides), y + this.radius * Math.sin(i * 2 * Math.PI / this.sides));
+    if (this.sides == 1) {
+      context.arc(this.x(), this.y(), this.radius(), 0, 2 * Math.PI, false);
+    } else {
+      context.moveTo(this.x() + this.radius() * Math.cos(this.angle), this.y() + this.radius() * Math.sin(this.angle));
+      for (var i = 1; i <= this.sides; i++){
+        context.lineTo (this.x() + this.radius() * Math.cos(this.angle +( i * 2 * Math.PI / this.sides)), this.y() + this.radius() * Math.sin( this.angle + (i * 2 * Math.PI / this.sides)));
+      }
     }
+    context.closePath();
+    context.shadowBlur = this.diameter / 4;
+    context.shadowOffsetX = this.diameter / 8;
+    context.shadowOffsetY = this.diameter / 8;
+    context.shadowColor = this.grid.shadow_color;
+    context.fillStyle = this.color;
     context.fill();
+    context.restore();
+    if (this.letter != undefined) {
+      context.font = "".concat(this.diameter * 0.5625).concat("px ").concat(this.grid.font);
+      context.textAlign = "center";
+      context.textBaseline = "middle";
+      context.fillStyle = this.grid.letter_color;
+      context.fillText(this.letter, this.x(), this.y());
+    }
   }
 }

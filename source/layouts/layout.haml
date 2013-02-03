@@ -20,10 +20,14 @@
 
     = javascript_include_tag "vendor/modernizr-2.6.1.min"
     = stylesheet_link_tag "site"
+    = stylesheet_link_tag "http://fonts.googleapis.com/css?family=Ubuntu+Mono|Ubuntu:400,700"
   %body
     /[if lt IE 7] <p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p>
-    %header
-      %canvas#shapes_grid
+    %header.main
+      %canvas#banner-shapes-grid
+      #intro
+        %h2 Hello, I'm Josh.
+        %h4 I am a software developer and mechanical engineer.
     %div{:role => "main", :class => "main"}= yield
     %footer
 
@@ -39,7 +43,21 @@
       g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
       s.parentNode.insertBefore(g,s)}(document,'script'));
     :javascript
-      var shape_canvas = document.getElementById('shapes_grid');
-      var shape_context = shape_canvas.getContext('2d');
-      var grid = new shapes_grid(shape_context, 8, 10, 5, "#EEE");
-      grid.draw();
+      var shape_canvas = document.getElementById('banner-shapes-grid');
+      var grid = new shapes_grid(shape_canvas, 40, 6, 3);
+      grid.shape_colors = ["#672435","#4E4E4E", "#7F7F7E", "#1B344D", "#295580"];
+      grid.font = "Ubuntu Mono"
+      grid.side_counts = [1];
+      grid.letters.push({letter: 'j', c: 1, r: 1});
+      grid.letters.push({letter: 'o', c: 2, r: 1});
+      grid.letters.push({letter: 's', c: 3, r: 1});
+      grid.letters.push({letter: 'h', c: 4, r: 1});
+      grid.letters.push({letter: 'w', c: 2, r: 2});
+      grid.letters.push({letter: 'l', c: 2, r: 3});
+      grid.letters.push({letter: 'e', c: 3, r: 3});
+      grid.letters.push({letter: 'w', c: 4, r: 3});
+      grid.letters.push({letter: 'i', c: 5, r: 3});
+      grid.letters.push({letter: 's', c: 6, r: 3});
+      grid.init();
+      animations.push(grid);
+      animate();
