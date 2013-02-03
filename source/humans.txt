@@ -3,12 +3,13 @@
 
 # TEAM
 
-    Josh Lewis -- @joshwlewis
+    <name> -- <role> -- <twitter>
 
 # THANKS
 
-    OSS
+    <name>
 
 # TECHNOLOGY COLOPHON
 
-    Ruby, Middleman, HTML5, CSS3, jQuery, Modernizr
+    HTML5, CSS3
+    jQuery, Modernizr
