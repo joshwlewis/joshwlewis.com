@@ -1,0 +1,37 @@
+@import "compass/css3"
+@import "compass"
+@import url(http://fonts.googleapis.com/css?family=PT+Serif)
+@import url(http://fonts.googleapis.com/css?family=PT+Sans)
+@import "vendor/font-awesome"
+
+$maroon: #672435
+$dark_gray: #4E4E4E
+$gray: #7F7F7F
+$dark_blue: #1B344D
+$blue: #295580
+body
+  font-family: "PT Sans", sans-serif
+  color: $dark_gray
+
+#{headings()}
+  font-weight: normal
+  font-family: "PT Serif", serif
+
+code, kbd, pre, samp
+  font-family: "Ubuntu Mono", monospace, sans-serif
+
+@import "compass/typography/links/link-colors"
+a
+  text-decoration: none
+  +link-colors($blue, $maroon, $dark_gray, $dark_blue, $maroon)
+
+#banner
+  text-align: center
+  margin: 20px auto
+  .shape-grid
+    margin: auto
+    display: block
+#index
+  text-align: center
+  #elsewhere
+    margin-top: 20px

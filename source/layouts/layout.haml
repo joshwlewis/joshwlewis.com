@@ -19,22 +19,18 @@
 
 
     = javascript_include_tag "vendor/modernizr-2.6.1.min"
-    = stylesheet_link_tag "site"
-    = stylesheet_link_tag "http://fonts.googleapis.com/css?family=Ubuntu+Mono|Ubuntu:400,700"
+    = stylesheet_link_tag "application"
   %body
     /[if lt IE 7] <p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p>
-    %header.main
-      %canvas#banner-shapes-grid
-      #intro
-        %h2 Hello, I'm Josh.
-        %h4 I am a software developer and mechanical engineer.
-    %div{:role => "main", :class => "main"}= yield
-    %footer
+    %div#page
+      %header#banner
+        %canvas.shape-grid{:height => 135, :width => 265}
+      %div.content= yield
+      %footer
 
     = javascript_include_tag "//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"
     :javascript
       window.jQuery || document.write('<script src="javascripts/vendor/jquery-1.8.0.min.js"><\/script>')
-    = javascript_include_tag "site"
     = javascript_include_tag "shapes_grid"
 
     :javascript
@@ -43,8 +39,8 @@
       g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
       s.parentNode.insertBefore(g,s)}(document,'script'));
     :javascript
-      var shape_canvas = document.getElementById('banner-shapes-grid');
-      var grid = new shapes_grid(shape_canvas, 40, 6, 3);
+      var shape_canvas = $('#banner .shape-grid')[0];
+      var grid = new shapes_grid(shape_canvas, 36, 6, 3);
       grid.shape_colors = ["#672435","#4E4E4E", "#7F7F7E", "#1B344D", "#295580"];
       grid.font = "Ubuntu Mono"
       grid.side_counts = [1];
