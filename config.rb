@@ -53,6 +53,14 @@ set :js_dir, 'js'
 
 set :images_dir, 'img'
 
+activate :deploy do |deploy|
+  deploy.method = :rsync
+  deploy.user = "jlewis"
+  deploy.port = 2442
+  deploy.host = "108.174.58.154"
+  deploy.path = "/var/www/joshwlewis.com"
+end
+
 # Build-specific configuration
 configure :build do
   # For example, change the Compass output style for deployment
