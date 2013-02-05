@@ -70,8 +70,11 @@ configure :build do
   activate :minify_javascript
 
   # Enable cache buster
-  activate :cache_buster
-
+  #activate :cache_buster
+  # OR
+  # Enable asset hashes
+  activate :asset_hash
+  
   # Use relative URLs
   activate :relative_assets
 
