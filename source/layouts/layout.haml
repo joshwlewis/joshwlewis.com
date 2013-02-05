@@ -11,7 +11,7 @@
     %title= page_title
     %meta{:content => page_description, :name => "description"}
 
-    %meta{:content => "width=device-width", :name => "viewport"}
+    %meta{:content => "width=device-width, initial-scale=1.0", :name => "viewport"}
 
     -#Favicon Options:
     -#Update favicon_base.png in /source and middleman-favicon-maker will generate all the versions you need on 'middleman build'
@@ -22,11 +22,13 @@
     = stylesheet_link_tag "application"
   %body
     /[if lt IE 7] <p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p>
-    %div#page
-      %header#banner
-        %canvas.shape-grid{:height => 135, :width => 265}
-      %div.content= yield
-      %footer
+    %header#banner
+      %a{:href => '/'}
+        %canvas.shape-grid{:height => 100, :width => 295}
+    #page
+      .container
+        .content= yield
+        %footer
 
     = javascript_include_tag "//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"
     :javascript
@@ -40,20 +42,20 @@
       s.parentNode.insertBefore(g,s)}(document,'script'));
     :javascript
       var shape_canvas = $('#banner .shape-grid')[0];
-      var grid = new shapes_grid(shape_canvas, 36, 6, 3);
+      var grid = new shapes_grid(shape_canvas, 40, 6, 3);
       grid.shape_colors = ["#672435","#4E4E4E", "#7F7F7E", "#1B344D", "#295580"];
       grid.font = "Ubuntu Mono"
-      grid.side_counts = [1];
+      grid.side_counts = [[1,4,6].sample()];
       grid.letters.push({letter: 'j', c: 1, r: 1});
       grid.letters.push({letter: 'o', c: 2, r: 1});
       grid.letters.push({letter: 's', c: 3, r: 1});
       grid.letters.push({letter: 'h', c: 4, r: 1});
-      grid.letters.push({letter: 'w', c: 2, r: 2});
-      grid.letters.push({letter: 'l', c: 2, r: 3});
-      grid.letters.push({letter: 'e', c: 3, r: 3});
-      grid.letters.push({letter: 'w', c: 4, r: 3});
-      grid.letters.push({letter: 'i', c: 5, r: 3});
-      grid.letters.push({letter: 's', c: 6, r: 3});
+      grid.letters.push({letter: 'w', c: 6, r: 1});
+      grid.letters.push({letter: 'l', c: 2, r: 2});
+      grid.letters.push({letter: 'e', c: 3, r: 2});
+      grid.letters.push({letter: 'w', c: 4, r: 2});
+      grid.letters.push({letter: 'i', c: 5, r: 2});
+      grid.letters.push({letter: 's', c: 6, r: 2});
       grid.init();
       animations.push(grid);
       animate();

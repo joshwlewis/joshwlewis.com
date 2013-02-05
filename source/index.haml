@@ -2,29 +2,37 @@
 title: HTML5 Boilerplate Middleman
 ---
 #index
-  #introduction
-    %h1 Hi—I'm Josh.
-    %h3
-      I am a software and web developer in Memphis.
-      I am currently working on the home banking platform for #{ link_to "Share One", "http://www.shareone.com"}.
-      I am also a partner and the Chief Technical Officer at #{ link_to "Emergent Coils", "http://www.emergentcoils.com"}.
-      I am a Rubyist to the core, and also a husband, dad, and disc golfer.
+  #introduction.row
+    .span10.center
+      %h1 Hi—I'm Josh.
+      %h4
+        I am a software and web developer in Memphis.
+        I am currently working on the home banking platform for #{ link_to "Share One", "http://www.shareone.com"}.
+        I am also a partner and the Chief Technical Officer at #{ link_to "Emergent Coils", "http://www.emergentcoils.com"}.
+        I am a Rubyist to the core, and also a husband, father of two boys, and disc golfer.
   #elsewhere
-    .elsewhere-links
-      .elsewhere-link
+    .row
+      .span8.center
+        %h3 Elsewhere
+    .row-fluid
+      .span2.offset1
         %a{:href => "http://github.com/joshwlewis"}
           %i.icon-github.icon-4x
           %br
           %p Github
-      .elsewhere-link
+      .span2
         %a{:href => "http://twitter.com/joshwlewis"}
           %i.icon-twitter.icon-4x
           %p Twitter
-      .elsewhere-link
+      .span2
         %a{:href => "http://www.facebook.com/josh.w.lewis"}
           %i.icon-facebook.icon-4x
           %p Facebook
-      .elsewhere-link.last
+      .span2
         %a{:href => "http://www.linkedin.com/in/joshwlewis"}
           %i.icon-linkedin.icon-4x
           %p LinkedIn
+      .span2
+        %a{:href => "mailto:josh.w.lewis@gmail.com"}
+          %i.icon-envelope.icon-4x
+          %p Email

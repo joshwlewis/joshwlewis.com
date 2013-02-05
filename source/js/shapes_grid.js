@@ -26,7 +26,6 @@ function shapes_grid(canvas, max_diameter, columns, rows) {
   this.letters = [];
   this.spacing = max_diameter * 1.2;
   this.side_counts = [1, 3, 4, 5, 6]
-  this.angles = [0, Math.PI / 4, Math.PI / 6]
   this.shapes = [];
   this.shrinking_shapes = [];
   this.growing_shapes = [];
@@ -40,18 +39,6 @@ function shapes_grid(canvas, max_diameter, columns, rows) {
     return (2 * this.max_diameter) / ((this.columns - 1) * (this.rows - 1) * this.speed)
   }
 
-  this.angles_for_side_count = function(side_count) {
-    switch(side_count) {
-      case 3:
-        return [0, 0.5 * Math.PI, Math.PI, 1.5 * Math.PI];
-      case 4:
-        return [0, 0.25 * Math.PI];
-      case 5:
-        return [0.5 * Math.PI, 1.5 * Math.PI];
-      default:
-        return [0]
-    }
-  }
 
   this.interval = function() {
     if (this.change_ratio() >= 1) {
@@ -71,9 +58,7 @@ function shapes_grid(canvas, max_diameter, columns, rows) {
   this.init = function() {
     for (var c = 1; c <= this.columns; c++) {
       for (var r = 1; r <= this.rows; r++) {
-        side_count = this.side_counts.sample();
-        angle = this.angles_for_side_count(side_count);
-        this.shapes.push( new grid_shape(this, c, r, 0, side_count, this.shape_colors.sample(), angle, this.letter_for(c,r)));
+        this.shapes.push( new grid_shape(this, c, r, 0, this.side_counts.sample(), this.shape_colors.sample(), this.letter_for(c,r)));
       }
     }
   }
@@ -133,10 +118,7 @@ function shapes_grid(canvas, max_diameter, columns, rows) {
   }
   this.reset_zero_shapes = function() {
     for (i = 0; i < this.zero_shapes().length; i++) {
-      side_count = this.side_counts.sample();
-      angle = this.angles_for_side_count(side_count).sample();
-      this.zero_shapes()[i].sides = side_count;
-      this.zero_shapes()[i].angle = angle;
+      this.zero_shapes()[i].sides = this.side_counts.sample();
       this.zero_shapes()[i].color = this.shape_colors.sample();
     }
   }
@@ -184,14 +166,13 @@ function animate() {
 }
 
 
-function grid_shape(grid, column, row, diameter, sides, color, angle, letter){
+function grid_shape(grid, column, row, diameter, sides, color, letter){
   this.grid = grid;
   this.column = column;
   this.row = row;
   this.diameter = diameter;
   this.sides = sides;
   this.color = color;
-  this.angle = angle;
   this.letter = letter;
   this.radius = function() {
     return (this.diameter / 2);
@@ -202,15 +183,30 @@ function grid_shape(grid, column, row, diameter, sides, color, angle, letter){
   this.y = function() {
     return (this.row - 0.5) * this.grid.spacing;
   }
+
+  this.angle = function() {
+    switch(this.sides) {
+      case 3:
+        return 1.5 * Math.PI;
+      case 4:
+        return 0.25 * Math.PI;
+      case 5:
+        return 0.5 * Math.PI;
+      case 8:
+        return 0.125 * Math.PI;
+      default:
+        return 0;
+    }
+  }
   this.draw = function(){
     context.save()
     context.beginPath();
     if (this.sides == 1) {
       context.arc(this.x(), this.y(), this.radius(), 0, 2 * Math.PI, false);
     } else {
-      context.moveTo(this.x() + this.radius() * Math.cos(this.angle), this.y() + this.radius() * Math.sin(this.angle));
+      context.moveTo(this.x() + this.radius() * Math.cos(this.angle()), this.y() + this.radius() * Math.sin(this.angle()));
       for (var i = 1; i <= this.sides; i++){
-        context.lineTo (this.x() + this.radius() * Math.cos(this.angle +( i * 2 * Math.PI / this.sides)), this.y() + this.radius() * Math.sin( this.angle + (i * 2 * Math.PI / this.sides)));
+        context.lineTo (this.x() + this.radius() * Math.cos(this.angle() +( i * 2 * Math.PI / this.sides)), this.y() + this.radius() * Math.sin( this.angle() + (i * 2 * Math.PI / this.sides)));
       }
     }
     context.closePath();

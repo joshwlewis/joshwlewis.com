@@ -1,7 +1,59 @@
+@import url(http://fonts.googleapis.com/css?family=PT+Serif)
+@import url(http://fonts.googleapis.com/css?family=PT+Sans)
+@import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono)
 
-//HTML5BP defaults
-//= require 'vendor/normalize.css'
-//= require 'vendor/html5bp.css'
-//Site CSS
-//= require 'grid'
-//= require 'main'
+$sansFontFamily: "PT Sans", "Helvetica Neue", Helvetica, Arial, sans-serif
+$serifFontFamily: "PT Serif", Georgia, "Times New Roman", Times, serif
+$monoFontFamily: "Ubuntu Mono", Menlo, Monaco, "Courier New", monospace
+$headingsFontFamily: $serifFontFamily
+@import "bootstrap"
+@import "bootstrap-responsive"
+@import "vendor/font-awesome"
+
+$maroon: #672435
+$dark_gray: #4E4E4E
+$gray: #7F7F7F
+$dark_blue: #1B344D
+$blue: #295580
+
+@import "compass/typography/links/link-colors"
+@import "compass/css3/box-shadow"
+
+a
+  text-decoration: none
+  +link-colors($blue, $maroon, $dark_gray, $dark_blue, $maroon)
+
+body
+  background-image: url("/img/whitey.png")
+  padding-left: 1.5em
+  padding-right: 1.5em
+
+.center
+  float: none
+  margin-right: auto
+  margin-left: auto
+#page
+  background-color: white
+  padding-left: 1.5em
+  padding-right: 1.5em
+  margin-top: 140px
+  +box-shadow($gray 10px 10px 5px)
+
+#banner
+  text-align: center
+  margin: 20px auto
+  position: fixed
+  width: 100%
+  top: 0px
+  left: 0px
+  z-index: -1
+  .shape-grid
+    margin: auto
+    display: block
+
+#index
+  text-align: center
+  #elsewhere
+    h3
+      text-transform: uppercase
+      border-bottom: 1px dotted $grayLight
