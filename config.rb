@@ -67,6 +67,8 @@ configure :build do
   # Use relative URLs
   activate :relative_assets
 
+  activate :favicon_maker
+
   # Compress PNGs after build
   # First: gem install middleman-smusher
   # require "middleman-smusher"
