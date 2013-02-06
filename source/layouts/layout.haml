@@ -24,7 +24,7 @@
     /[if lt IE 7] <p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p>
     %header#banner
       %a{:href => '/'}
-        %canvas.shape-grid{:height => 100, :width => 295}
+        %canvas.shape-grid{:height => 102, :width => 295}
     #page
       .container
         .content= yield
@@ -42,7 +42,7 @@
       s.parentNode.insertBefore(g,s)}(document,'script'));
     :javascript
       var shape_canvas = $('#banner .shape-grid')[0];
-      var grid = new shapes_grid(shape_canvas, 40, 6, 3);
+      var grid = new shapes_grid(shape_canvas, 40, 6, 2);
       grid.shape_colors = ["#672435","#4E4E4E", "#7F7F7E", "#1B344D", "#295580"];
       grid.font = "Ubuntu Mono"
       grid.side_counts = [[1,4,6].sample()];
