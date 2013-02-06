@@ -74,11 +74,9 @@ configure :build do
   # OR
   # Enable asset hashes
   activate :asset_hash
-  
+
   # Use relative URLs
   activate :relative_assets
-
-  activate :favicon_maker
 
   # Compress PNGs after build
   # First: gem install middleman-smusher
