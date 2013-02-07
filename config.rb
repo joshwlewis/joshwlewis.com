@@ -53,6 +53,29 @@ set :js_dir, 'js'
 
 set :images_dir, 'img'
 
+activate :syntax
+set :markdown_engine, :redcarpet
+set :markdown, :fenced_code_blocks => true,
+               :autolink => true,
+               :smartypants => true,
+               :tables => true,
+               :no_intra_emphasis => true
+
+activate :directory_indexes
+set :trailing_slash, false
+
+activate :blog do |blog|
+  blog.prefix = "articles"
+  blog.permalink = ":title"
+  blog.layout = "articles"
+  blog.default_extension = ".md"
+  blog.taglink = "tags/:tag.html"
+  blog.tag_template = "tag.html"
+  blog.paginate = true
+  blog.page_link = "p:num"
+  blog.per_page = 3
+end
+
 activate :deploy do |deploy|
   deploy.method = :rsync
   deploy.user = "jlewis"
@@ -60,6 +83,7 @@ activate :deploy do |deploy|
   deploy.host = "108.174.58.154"
   deploy.path = "/var/www/joshwlewis.com"
 end
+
 
 # Build-specific configuration
 configure :build do
