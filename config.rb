@@ -67,10 +67,10 @@ set :trailing_slash, false
 activate :blog do |blog|
   blog.prefix = "articles"
   blog.permalink = ":title"
-  blog.layout = "articles"
+  blog.layout = "post"
   blog.default_extension = ".md"
-  blog.taglink = "tags/:tag.html"
-  blog.tag_template = "tag.html"
+  #blog.taglink = "tags/:tag.html"
+  #blog.tag_template = "tag.html"
   blog.paginate = true
   blog.page_link = "p:num"
   blog.per_page = 3

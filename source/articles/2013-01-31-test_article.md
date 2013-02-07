@@ -1,5 +1,6 @@
 ---
 title: Test Article
+tags: test, article
 ---
 
 # Hey, first blog post!
