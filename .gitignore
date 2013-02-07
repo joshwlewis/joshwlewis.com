@@ -1,5 +1,5 @@
 *.DS_Store
 *.scssc
-sass-cache/
+.sass-cache/
 build/
 tmp/
