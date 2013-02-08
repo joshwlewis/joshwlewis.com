@@ -65,9 +65,9 @@ activate :directory_indexes
 set :trailing_slash, false
 
 activate :blog do |blog|
-  blog.prefix = "articles"
+  blog.prefix = "essays"
   blog.permalink = ":title"
-  blog.layout = "post"
+  blog.layout = "essay"
   blog.default_extension = ".md"
   #blog.taglink = "tags/:tag.html"
   #blog.tag_template = "tag.html"
