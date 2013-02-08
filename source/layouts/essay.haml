@@ -1,0 +1,16 @@
+= wrap_layout :layout do
+  .essay
+    .row.header
+      .span8.center
+        %h1= link_to current_article.title, current_article.url
+        %h3= "By #{link_to "Josh", '/', :rel => :author}."
+        %h4= current_article.date.strftime("%B %-d, %Y")
+
+    .row.content
+      .span10.center
+        =yield
+    .row.footer
+      .span8.center
+        %p
+          This article was categorized in
+          = current_article.tags.map{|t| link_to t, "/articles/tags/#{t}"}.to_sentence
