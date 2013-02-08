@@ -47,7 +47,13 @@
       s.parentNode.insertBefore(g,s)}(document,'script'));
     :javascript
       var shape_canvas = $('#banner .shape-grid')[0];
-      var grid = new shapes_grid(shape_canvas, 40, 6, 2);
+      shape_canvas.height = 204;
+      shape_canvas.width = 590;
+      shape_canvas.style.height = "102px";
+      shape_canvas.style.width = "295px";
+      context = shape_canvas.getContext('2d');
+      context.scale(2,2)
+      var grid = new shapes_grid(context, 40, 6, 2);
       grid.shape_colors = ["#672435","#4E4E4E", "#7F7F7E", "#1B344D", "#295580"];
       grid.font = "Ubuntu Mono"
       grid.side_counts = [[1,4,6].sample()];

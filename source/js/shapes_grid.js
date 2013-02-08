@@ -15,8 +15,7 @@ Array.prototype.remove = function() {
     return this;
 };
 
-function shapes_grid(canvas, max_diameter, columns, rows) {
-  context = canvas.getContext('2d');
+function shapes_grid(context, max_diameter, columns, rows) {
   this.max_diameter = max_diameter;
   this.rows = rows;
   this.columns = columns;
@@ -137,7 +136,7 @@ function shapes_grid(canvas, max_diameter, columns, rows) {
   }
 
   this.clear = function() {
-    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.clearRect(0, 0, context.canvas.width, context.canvas.height);
   }
   this.draw = function() {
     for (var i = 0; i < this.shapes.length; i++) {
