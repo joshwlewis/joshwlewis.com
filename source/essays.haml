@@ -1,0 +1,10 @@
+---
+title: Essays
+pageable: true
+---
+
+#articles
+  %h1.center Essays
+  - page_articles.each do |a|
+    .row
+      .span10.offset1= partial(:article_preview, :locals => {:article => a})

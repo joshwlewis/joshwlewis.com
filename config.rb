@@ -69,8 +69,8 @@ activate :blog do |blog|
   blog.permalink = ":title"
   blog.layout = "essay"
   blog.default_extension = ".md"
-  #blog.taglink = "tags/:tag.html"
-  #blog.tag_template = "tag.html"
+  blog.taglink = "categories/:tag"
+  blog.tag_template = "categories.html"
   blog.paginate = true
   blog.page_link = "p:num"
   blog.per_page = 3
@@ -80,7 +80,7 @@ activate :deploy do |deploy|
   deploy.method = :rsync
   deploy.user = "jlewis"
   deploy.port = 2442
-  deploy.host = "108.174.58.154"
+  deploy.host = "joshwlewis.com"
   deploy.path = "/var/www/joshwlewis.com"
 end
 

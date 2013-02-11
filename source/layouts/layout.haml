@@ -22,23 +22,30 @@
     = stylesheet_link_tag "application"
   %body
     /[if lt IE 7] <p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p>
-    %header#banner
+    #fixed_banner
       %a{:href => '/'}
-        %canvas.shape-grid{:height => 102, :width => 295}
+        %canvas.shape-grid
     #page
       .container
-        .row
-          .span12
-            .content= yield
-        .row
-          .span6.articles
-            %h3 Recent Essays
-            - blog.articles[0..5].each do |article|
-              = link_to(article.data.title, article.url)
-          .span6.tags
-            %h3 Essay Categories
-            - blog.tags.each do |tag, articles|
-              = link_to(tag, "#")
+        %section.content= yield
+        - if blog.articles.present?
+          %footer.explore.center
+            .row
+              .span8.offset2
+                %h3 Explore the Blog
+                .row
+                  .span4.articles
+                    %h4= link_to "Essays", "/essays"
+                    - blog.articles.first(article_tag_count).each do |article|
+                      %p= link_to(article.data.title, article.url)
+                  .span4.categories
+                    %h4 Categories
+                    - blog.tags.map{|k,v| k.to_s}.first(article_tag_count).each do |tag, articles|
+                      %p= link_to tag, "/essays/categories/#{tag}"
+    %footer.copyright
+      Copyright © 2013 Josh W Lewis
+      = "(#{link_to '@joshwlewis', 'http://www.twitter.com/joshwlewis'})"
+
 
     = javascript_include_tag "//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"
     :javascript
@@ -51,11 +58,9 @@
       g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
       s.parentNode.insertBefore(g,s)}(document,'script'));
     :javascript
-      var shape_canvas = $('#banner .shape-grid')[0];
-      shape_canvas.height = 204;
-      shape_canvas.width = 590;
-      shape_canvas.style.height = "102px";
-      shape_canvas.style.width = "295px";
+      var shape_canvas = $('#fixed_banner canvas')[0];
+      shape_canvas.height = 192;
+      shape_canvas.width = 576;
       context = shape_canvas.getContext('2d');
       context.scale(2,2)
       var grid = new shapes_grid(context, 40, 6, 2);

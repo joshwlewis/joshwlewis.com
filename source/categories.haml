@@ -1,0 +1,9 @@
+.categories
+  .row
+    .span8.offset2.center
+      %h1= "Essays Filed Under '#{tagname}'"
+  .row
+    .span10.offset1
+      - if articles
+        - articles.each do |a|
+          = partial :article_preview, :locals => {:article => a}

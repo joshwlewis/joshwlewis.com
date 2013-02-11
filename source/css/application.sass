@@ -2,19 +2,24 @@
 @import url(http://fonts.googleapis.com/css?family=PT+Sans)
 @import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono)
 
-$sansFontFamily: "PT Sans", "Helvetica Neue", Helvetica, Arial, sans-serif
-$serifFontFamily: "PT Serif", Georgia, "Times New Roman", Times, serif
-$monoFontFamily: "Ubuntu Mono", Menlo, Monaco, "Courier New", monospace
-$headingsFontFamily: $serifFontFamily
-@import "bootstrap"
-@import "bootstrap-responsive"
-@import "vendor/font-awesome"
-
 $maroon: #672435
 $dark_gray: #4E4E4E
 $gray: #7F7F7F
 $dark_blue: #1B344D
 $blue: #295580
+
+$textColor: $dark_gray
+$sansFontFamily: "PT Sans", "Helvetica Neue", Helvetica, Arial, sans-serif
+$serifFontFamily: "PT Serif", Georgia, "Times New Roman", Times, serif
+$monoFontFamily: "Ubuntu Mono", Menlo, Monaco, "Courier New", monospace
+$headingsFontWeight: normal
+$headingsFontFamily: $serifFontFamily
+$baseFontSize: 18px
+$baseLineHeight: 28px
+
+@import "bootstrap"
+@import "bootstrap-responsive"
+@import "vendor/font-awesome"
 
 @import "compass/typography/links/link-colors"
 @import "compass/css3/box-shadow"
@@ -25,39 +30,67 @@ a
 
 body
   background-image: url("/img/fabric_plaid.png")
+  background-attachment: fixed
 
+section.content
+  padding-bottom: 2em
+  border-bottom: 1px solid $grayLighter
 .center
-  float: none
-  margin-right: auto
-  margin-left: auto
+  text-align: center
 #page
+  position: relative
   background-color: white
+  z-index: 2
   padding: 1.5em
   width: 955px
   margin: auto
-  margin-top: 140px
   +box-shadow($grayLight 7px 7px 5px, $grayLight -2px 7px 7px)
 
-#banner
-  text-align: center
-  margin: 20px auto
-  position: fixed
-  width: 100%
-  top: 0px
-  left: 0px
-  z-index: -1
-  .shape-grid
-    margin: auto
-    display: block
+.article_preview
+  margin-top: 1em
+  margin-bottom: 1em
+  .title
+    border-bottom: 2px solid $grayLighter
+    h3
+      margin-top: 0
+  .info
+    border-right: 2px solid $grayLighter
+  .preview
+    margin-top: 1em
+
+.tags span
+  margin: 0 3px
+
+#fixed_banner
+  width: 288px
+  height: 96px
+  margin: 2em auto
+  position: relative
+  top: 0
+  z-index: 0
+  canvas
+    width: 288px
+    height: 96px
+    position: fixed
+    z-index: 1
+    top: 2em
+
+footer.explore
+  margin-top: 2em
+  margin-bottom: 2em
+
 
 #index
-  text-align: center
   #elsewhere
-    h3
-      text-transform: uppercase
-      border-bottom: 1px dotted $grayLight
+    .row
+      margin-top: 1em
+      margin-bottom: 1em
     a
       text-decoration: none
+
+footer.copyright
+  margin: 1em auto
+  text-align: center
 
 .essay
   .header
