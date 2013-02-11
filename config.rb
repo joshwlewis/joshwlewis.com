@@ -69,7 +69,7 @@ activate :blog do |blog|
   blog.permalink = ":title"
   blog.layout = "essay"
   blog.default_extension = ".md"
-  blog.taglink = "categories/:tag"
+  blog.taglink = "categories/:tag.html"
   blog.tag_template = "categories.html"
   blog.paginate = true
   blog.page_link = "p:num"

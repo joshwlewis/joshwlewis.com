@@ -1,6 +1,6 @@
 ---
 title: Static Site Creation with Middleman
-tags: middleman, html, ruby
+tags: ruby, html, middleman
 ---
 
 I've put off building my personal website for a while. For two reasons really:
