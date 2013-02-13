@@ -61,9 +61,6 @@ set :markdown, :fenced_code_blocks => true,
                :tables => true,
                :no_intra_emphasis => true
 
-activate :directory_indexes
-set :trailing_slash, false
-
 activate :blog do |blog|
   blog.prefix = "essays"
   blog.permalink = ":title"
@@ -83,6 +80,9 @@ activate :deploy do |deploy|
   deploy.host = "joshwlewis.com"
   deploy.path = "/var/www/joshwlewis.com"
 end
+
+activate :directory_indexes
+set :trailing_slash, false
 
 
 # Build-specific configuration
