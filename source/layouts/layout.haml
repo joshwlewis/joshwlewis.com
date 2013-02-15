@@ -43,7 +43,9 @@
                     - blog.tags.map{|k,v| k.to_s}.first(article_tag_count).each do |tag, articles|
                       %p= link_to tag, "/essays/categories/#{tag}"
     %footer.copyright
-      Copyright © 2013 Josh W Lewis
+      Copyright &copy
+      = Time.now.year
+      Josh W Lewis
       = "(#{link_to '@joshwlewis', 'http://www.twitter.com/joshwlewis'})"
 
 
