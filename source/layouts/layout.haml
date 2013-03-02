@@ -32,10 +32,10 @@
           %footer.explore.center
             .row
               .span8.offset2
-                %h3 Explore the Blog
+                %h3= link_to "Explore the Blog", "/essays"
                 .row
                   .span4.articles
-                    %h4= link_to "Essays", "/essays"
+                    %h4 Essays
                     - blog.articles.first(article_tag_count).each do |article|
                       %p= link_to(article.data.title, article.url)
                   .span4.categories
