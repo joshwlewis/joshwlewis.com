@@ -1,5 +1,5 @@
 ---
-title: ActiveSupport try
+title: Rails' ActiveSupport try
 tags: rails, ruby
 ---
 
