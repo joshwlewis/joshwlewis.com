@@ -79,6 +79,7 @@ GEM
       middleman-core (~> 3.0)
       pygments.rb (~> 0.3)
     multi_json (1.7.2)
+    nokogiri (1.5.9)
     padrino-core (0.10.7)
       activesupport (~> 3.2.0)
       http_router (~> 0.10.2)
@@ -138,5 +139,6 @@ DEPENDENCIES
   middleman-deploy
   middleman-livereload
   middleman-syntax
+  nokogiri
   redcarpet
   sass
