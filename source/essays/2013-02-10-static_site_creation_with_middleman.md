@@ -27,32 +27,38 @@ It's built on Ruby, and it's got a bunch of Rails already baked in. For example.
 
 I can use link_to, just like Rails:
 
-    link_to "Home", "/"
+```ruby
+link_to "Home", "/"
+```
 
 Or render a partial, just like Rails:
 
-    partial :article_preview, :locals => {:article => article}
+```ruby
+partial :article_preview, :locals => {:article => article}
+```
 
 I can use Haml for layouts, just like Rails:
 
-    #page
-      .container
-        %section.content= yield
-        - if blog.articles.present?
-          %footer.explore.center
+```haml
+#page
+  .container
+    %section.content= yield
+    - if blog.articles.present?
+      %footer.explore.center
+```
 
 And I can even write some Ruby to keep things DRY:
 
-      def sentence_tag_list(article)
-        if tags = article.tags
-          "This article was filed under " +
-          content_tag(:div, class: :tags) do
-            article.tags.map{|t| link_to t, "/essays/categories/#{t}"}.to_sentence
-          end
-        else
-          nil
-        end
-      end
+```ruby
+def sentence_tag_list(article)
+  if tags = article.tags
+    "This article was filed under " +
+    content_tag(:div, class: :tags) do
+      article.tags.map{|t| link_to t, "/essays/categories/#{t}"}.to_sentence
+    end
+  end
+end
+```
 
 #### Best of Both Worlds
 

@@ -54,13 +54,16 @@ set :js_dir, 'js'
 
 set :images_dir, 'img'
 
-activate :syntax
+set :haml, { :ugly => true }
+
 set :markdown_engine, :redcarpet
 set :markdown, :fenced_code_blocks => true,
                :autolink => true,
                :smartypants => true,
                :tables => true,
                :no_intra_emphasis => true
+
+activate :syntax
 
 activate :blog do |blog|
   blog.prefix = "essays"
