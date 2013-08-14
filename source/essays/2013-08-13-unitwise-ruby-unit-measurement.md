@@ -25,7 +25,7 @@ So, like any good Rubyist, I searched for a RubyGem that could track units as I 
 
 During my search, I ended up stumbling across [The Unified Code for Units of Measurement (UCUM)](http://www.unitsofmeasure.org/) -- which had all the units I needed ready to go in XML format. From that [Unitwise](https://github.com/joshwlewis/unitwise) was born.
 
-Now, for our example problem it's really easy to track units
+Now, it's really easy to track units for our example problem:
 
 ```ruby
 mass = 86.kg
@@ -47,3 +47,5 @@ force.newton
 ```
 
 Obviously, this is a very simple example, but the possibilities are certainly endless. UCUM (and by extension Unitwise) features 95 metric units, 199 non-metric units, and 24 unit prefixes. That's approximately 2,500 basic units to start you with, but these can be combined with multiplication and division for infinite combinations.
+
+You can find Unitwise at [github.com/joshwlewis/unitwise](https://github.com/joshwlewis/unitwise). Check out the README there for installation and additional usage instructions.
