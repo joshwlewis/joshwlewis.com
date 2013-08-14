@@ -1,5 +1,6 @@
 ---
 title: 'Unitwise: Ruby Unit Measurement Math and Conversion'
+description: 'Unitwise is a RubyGem for unit measurement math and conversion, based on The Unified Code for Units of Measure.'
 tags: ruby, gem, math, science
 ---
 
