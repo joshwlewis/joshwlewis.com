@@ -28,6 +28,9 @@ page "/feed.xml", layout: false
 # with_layout :admin do
 #   page "/admin/*"
 # end
+with_layout :slides do
+  page "/slides/*"
+end
 
 # Proxy (fake) files
 # page "/this-page-has-no-template.html", :proxy => "/template-file.html" do
@@ -48,11 +51,11 @@ page "/feed.xml", layout: false
 #   end
 # end
 
-set :css_dir, 'css'
+set :css_dir, 'stylesheets'
 
-set :js_dir, 'js'
+set :js_dir, 'javascripts'
 
-set :images_dir, 'img'
+set :images_dir, 'images'
 
 set :haml, { :ugly => true }
 

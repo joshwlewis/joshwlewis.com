@@ -1,36 +1,7 @@
-@import url(http://fonts.googleapis.com/css?family=PT+Serif)
-@import url(http://fonts.googleapis.com/css?family=PT+Sans)
-@import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono)
-
-$maroon: #672435
-$dark_gray: #4E4E4E
-$gray: #7F7F7F
-$dark_blue: #1B344D
-$blue: #295580
-
-$textColor: $dark_gray
-$sansFontFamily: "PT Sans", "Helvetica Neue", Helvetica, Arial, sans-serif
-$serifFontFamily: "PT Serif", Georgia, "Times New Roman", Times, serif
-$monoFontFamily: "Ubuntu Mono", Menlo, Monaco, "Courier New", monospace
-$headingsFontWeight: normal
-$headingsFontFamily: $serifFontFamily
-$baseFontSize: 18px
-$baseLineHeight: 28px
-
-@import "bootstrap"
-@import "bootstrap-responsive"
-@import "vendor/font-awesome"
-@import "vendor/solarized"
-
-@import "compass/typography/links/link-colors"
-@import "compass/css3/box-shadow"
-
-a
-  text-decoration: none
-  +link-colors($blue, $maroon, $dark_gray, $dark_blue, $maroon)
+@import "base"
 
 body
-  background-image: url("/img/fabric_plaid.png")
+  background-image: url("/images/fabric_plaid.png")
   background-attachment: fixed
 
 section.content

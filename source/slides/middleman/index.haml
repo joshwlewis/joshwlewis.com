@@ -1,0 +1,186 @@
+---
+title: Fast Sites with Middleman
+published: true
+description: Create fast sites fast with your favorite Ruby tools
+---
+
+= step "title" do
+  %h1 Fast Sites with Middleman
+  %h4
+    Josh W Lewis
+    %a{href: "//twitter.com/joshwlewis"} @joshwlewis
+  %date 5/23/2013
+
+= step "project", y: 1000, z: -1000 do
+  %h2 I want to create an application to build and display my slide decks!
+
+= step "options", x: 951, y: 1000, z: -309, 'rotate-y' => -72 do
+  %h2 What could I use?
+  %ul
+    %li Rails?
+    %li Sinatra?
+    %li Django?
+    %li Node?
+
+= step "needs", x: 588, y: 1000, z: 809, 'rotate-y' => -144 do
+  %h3 Do I really need all this?
+  %ul
+    %li Authentication
+    %li Admin Panel
+    %li WYSIWYG Editor
+    %li Dynamic Page Handling
+    %li Database storage
+    %li Sophisticated Caching
+
+= step "static-site", x: -588, y: 1000, z: 809, 'rotate-y' => -216 do
+  %h2 What about a plain HTML site?
+  %h4
+    %ul
+      %li It would be fast...
+      %li I could put it on ANY server...
+
+= step "sucks", x: -951, y: 1000, z: -309, 'rotate-y' => -288 do
+  = partial 'html'
+  %h3 ....ugh! No Thanks!
+
+= step "middleman", y: 2000, 'rotate-y' => -360 do
+  %h2 Enter Middleman
+  %h4 Ruby based Static Site Generator
+  %h4
+    %a{href: '//middlemanapp.com'} middlemanapp.com
+
+= step "benefits", y: 2750, 'rotate-y' => -360 do
+  %h3 Middleman lets you:
+  %ul
+    %li Write Ruby code
+    %li Use layouts, views and paritals
+    %li Use Rails-like helpers
+    %li Deploy anywhere
+    %li
+      %b Build incredibly fast sites
+    %li
+      %b Build sites incredibly fast
+
+= step "installation", y: 3750, z: -750, 'rotate-y' => -360 do
+  %h3 Prerequisites
+  %ul
+    %li Ruby (1.9+)
+    %li RubyGems
+    %li Bundler
+  %h3 Installation
+  = code "bash" do
+    gem install middleman
+
+= step "workflow", y: 3750, x: 650, z: 375, 'rotate-y' => -480 do
+  %h3 Middleman Workflow
+  %ol
+    %li
+      Create project
+      = code "bash" do
+        middleman init sample
+    %li
+      Install dependencies
+      = code "bash" do
+        cd sample
+        bundle install
+    %li
+      Run development server (localhost:4567)
+      = code "bash" do
+        bundle exec middleman server
+    %li ... ?
+    %li
+      Build static files
+      = code "bash" do
+        bundle exec middleman build
+    %li Profit!
+
+= step "structure", y: 3750, x: -650, z: 375, 'rotate-y' => -600 do
+  %h3 Sample Project Structure
+  = partial "structure"
+
+= step "meta-outside", y: 4750, 'rotate-y' => -720 do
+  %h2 The code in this presentation...
+
+= step "meta-inside", x: 431.5, y: 4766, 'rotate-y' => -720, scale: 0.005 do
+  %h2 ...built this presentation.
+  %dl
+    %dt Source Code
+    %dd
+      %a{href: "//github.com/joshwlewis/slides"} github.com/joshwlewis/slides
+    %dt In Production
+    %dd
+      %a{href: "//slides.joshwlewis.com/middleman"} slides.joshwlewis.com/middleman
+
+= step "layouts", x: 2000, y: 6000 do
+  %h2 Layouts
+  %p source/layouts/layout.haml
+  = partial "layout"
+
+= step "helpers", x: 1247, y: 6000, z: -1564, 'rotate-y' => 51.5 do
+  %h2 Helpers
+  %p source/helpers/site_helper.rb
+  = partial "helpers"
+
+= step "views", x: -445, y: 6000, z: -1950, 'rotate-y' => 103 do
+  %h2 Views
+  %p source/middleman/index.haml
+  = partial "views"
+
+= step "partials", x: -1802, y: 6000, z: -868, 'rotate-y' => 154.5 do
+  %h2 Partials
+  %p source/_fallback.md
+  = partial "partials"
+
+= step "stylesheets", x: -1802, y: 6000, z: 868, 'rotate-y' => 206 do
+  %h2 Stylesheets
+  %p source/stylesheets/application.sass
+  = partial 'stylesheets'
+
+= step "javascripts", x: -445, y: 6000, z: 1950, 'rotate-y' => 257.5 do
+  %h2 Javascripts
+  %p source/javascripts/application/tweet.coffee
+  = partial 'javascripts'
+  .well
+    .tweets
+
+= step "minification", x: 1247, y: 6000, z: 1564, 'rotate-y' => 309 do
+  %h2 Asset Minification and Hashes
+  = partial 'minification'
+
+= step "demo", y: 6000, 'rotate-y' => 360, scale: 1.5 do
+  %h2 Live Demo
+  %p What could go wrong?
+
+= step "extensions", y: 7000 do
+  %h2 Middleman Extensions
+  %dl
+    %dt Blogging functionality
+    %dd
+      %a{href: '//github.com/middleman/middleman-blog'} github.com/middleman/middleman-blog
+    %dt Syntax highlighting
+    %dd
+      %a{href: '//github.com/middleman/middleman-syntax'} github.com/middleman/middleman-syntax
+    %dt Deploy to Github Pages
+    %dd
+      %a{href: '//github.com/neo/middleman-gh-pages'} github.com/neo/middleman-gh-pages
+    %dt Deploy to most servers
+    %dd
+      %a{href: '//github.com/tvaughan/middleman-deploy'} github.com/tvaughan/middleman-deploy
+
+= step "resources", x: -200, y: 7500, 'rotate-x' => -90 do
+  %h2 Resources
+  %dl
+    %dt Middleman
+    %dd
+      %a{href: "//middlemanapp.com"} middlemanapp.com
+    %dt impress.js (3D slides)
+    %dd
+      %a{href: "//bartaz.github.io/impress.js"} bartaz.github.io/impress.js
+    %dt This Presentation
+    %dd
+      %a{href: "//slides.joshwlewis.com/middleman"} slides.joshwlewis.com/middleman
+    %dt Presentation Source
+    %dd
+      %a{href: "//github.com/joshwlewis/slides"} github.com/joshwlewis/slides
+
+= step "overview", y: 3750, scale: 6.5, 'rotate-x' => 20, 'rotate-z' => 70

@@ -1,0 +1,112 @@
+---
+title: Build Your Own Ruby Gems
+published: true
+description: A brief walkthrough on the process of creating your own RubyGems
+---
+
+= step "title" do
+  %h1 Build Your Own RubyGems
+  %br
+  %h4
+    Josh W Lewis
+    %a{href: "//twitter.com/joshwlewis"} @joshwlewis
+  %h4 
+    Memphis Ruby Users Group
+  %date 8/26/2013
+
+= step "rubygems", y: 2000, 'rotate-z' => 180 do
+  %h2 RubyGems are:
+  %ul
+    %li Ruby code (mostly)
+    %li Open Source
+    %li APIs
+    %li Programs
+    %li Tools
+    %li Extensions
+
+= step "gem_list", x: 1902, y: 618, 'rotate-z' => 108 do
+  %h2 Over 60,000 gems at Rubygems.org
+  %ul
+    %li
+      %a{href: "//rubygems.org/gems/rails"} Ruby on Rails
+    %li 
+      %a{href: "//rubygems.org/gems/sinatra"} Sinatra
+    %li
+      %a{href: "//rubygems.org/gems/vagrant"} Vagrant
+    %li
+      %a{href: "//rubygems.org/gems/rspec"} Rspec
+    %li
+      %a{href: "//rubygems.org/gems/rspec"} Rake
+
+= step "install_gems", x: 1176, y: -1618, 'rotate-z' => 36 do
+  %h2 Installing a gem is easy:
+  = partial 'install'
+
+= step "periodic_table", x: -1176, y: -1618, 'rotate-z' => -36 do
+  %img{src: "//upload.wikimedia.org/wikipedia/commons/9/98/Periodic_table_%28polyatomic%29.svg"}
+
+= step "reinvent", x: -1902, y: 618, 'rotate-z' => -108 do
+  %h2 Don't reinvent the wheel
+  %p 
+    Check
+    %a{href: "//www.ruby-toolbox.com/"} Ruby-Toolbox.com
+    and
+    %a{href: "//rubygems.org/"} RubyGems.org
+    first.
+
+= step "skeleton", y: -4000, 'rotate-z' => 360 do
+  %h2 Build a gem skeleton:
+  = partial 'skeleton'
+  
+= step "gemspec", x: 2000, y: -3464, 'rotate-z' => 390 do
+  %h2 Modify Gemspec
+  = partial 'gemspec'
+
+= step "data", x: 3464, y: -2000, 'rotate-z' => 420 do
+  %h2 Add Data
+  = partial 'data'
+
+= step "code", x: 4000, 'rotate-z' => 450 do
+  %h2 Add Code
+  = partial 'code'
+
+= step "tests", y: 2000, x: 3464, 'rotate-z' => 480 do
+  %h2 Add Tests
+  = partial 'tests'
+
+= step "documentation", y: 3464, x: 2000, 'rotate-z' => 510 do
+  %h2 Add Documentation
+  = partial 'doc'
+
+= step "executable", y: 4000, 'rotate-z' => 540 do
+  %h2 Add Executables
+  = partial 'executable'
+
+= step "version", x: -2000, y: 3464, 'rotate-z' => 570 do
+  %h2 Change Version
+  = partial 'version'
+
+= step "build", x: -3464, y: 2000, 'rotate-z' => 600 do
+  %h2 Build Gem
+  = partial 'build'
+
+= step "push", x: -4000, 'rotate-z' => 630 do
+  %h2 Push to Rubygems
+  = partial 'push'
+
+= step "live", x: -3464, y: -2000, 'rotate-z' => 660 do
+  %h2 It's alive!
+  = partial 'live'
+
+= step "info", x: -2000, y: -3464, 'rotate-z' => 690 do
+  %h2 More info
+  %ul
+    %li
+      %a{ href: "//rubygems.org/gems/elementy" } Elementy on Rubygems
+    %li
+      %a{ href: "//github.com/joshwlewis/elementy" } Elementy on Github
+    %li
+      %a{ href: "//rubydoc.info/gems/elementy/0.1.1/frames"} Elementy on Rubydoc
+
+= step "overview", scale: 12, 'rotate-z' => 360
+

@@ -84,4 +84,9 @@ module SiteHelpers
     end
   end
 
+  def step(id, opts={}, &block)
+    content_tag :div, id: id, class: :step, data: opts do
+      capture(&block) if block_given?
+    end
+  end
 end
