@@ -217,7 +217,7 @@ function grid_shape(grid, column, row, diameter, sides, color, letter){
     context.fill();
     context.restore();
     if (this.letter != undefined) {
-      context.font = "".concat(this.diameter * 0.5625).concat("px ").concat(this.grid.font);
+      context.font = "".concat(this.diameter * 0.5).concat("px ").concat(this.grid.font);
       context.textAlign = "center";
       context.textBaseline = "middle";
       context.fillStyle = this.grid.letter_color;

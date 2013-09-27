@@ -89,4 +89,8 @@ module SiteHelpers
       capture(&block) if block_given?
     end
   end
+
+  def slide_decks
+    sitemap.resources.select{|r| r.data.published }
+  end
 end

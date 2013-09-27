@@ -15,7 +15,6 @@
   %body.impress-not-supported
     .fallback-message= partial 'slides/fallback'
     #impress
-      = sitemap.resources.inspect
       = yield
 
     = javascript_include_tag "application/body", "slides/body"
