@@ -81,11 +81,7 @@ activate :blog do |blog|
 end
 
 activate :deploy do |deploy|
-  deploy.method = :rsync
-  deploy.user = "jlewis"
-  deploy.port = 2442
-  deploy.host = "joshwlewis.com"
-  deploy.path = "/var/www/joshwlewis.com"
+  deploy.method = :git
 end
 
 activate :directory_indexes
