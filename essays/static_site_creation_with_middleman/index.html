@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<html class='no-js'>
+<head>
+<meta charset='utf-8'>
+<meta content='IE=edge,chrome=1' http-equiv='X-UA-Compatible'>
+<title>Static Site Creation with Middleman | Josh W Lewis: Software Engineer</title>
+<meta content='Josh W Lewis: Software Engineer, Web Developer, Rubyist, Entrepreneur, Husband, Dad, Memphian, and Disc Golfer' name='description'>
+<meta content='width=device-width, initial-scale=1.0' name='viewport'>
+<script src="../../javascripts/application/head-cfe85c0f.js" type="text/javascript"></script>
+<link href="../../stylesheets/essays-40d41161.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!--[if lt IE 7]> <p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p> <![endif]-->
+<div id='fixed_banner'>
+<a href='/'>
+<canvas class='shape-grid'></canvas>
+</a>
+</div>
+<div id='page'>
+<div class='container'>
+<section class='content'><div class='essay'>
+<div class='row header'>
+<div class='span8 offset2'>
+<h1><a href="/essays/static_site_creation_with_middleman">Static Site Creation with Middleman</a></h1>
+<h3>
+By
+<a rel="author" href="/">Josh</a>
+</h3>
+<h4>February 10, 2013</h4>
+</div>
+</div>
+<div class='row content'>
+<div class='span10 offset1'>
+<p>I&#39;ve put off building my personal website for a while. For two reasons really:</p>
+
+<ol>
+<li>I am cheap, and I didn&#39;t want to buy a VPS for a Rails/Sinatra application.</li>
+<li>I am lazy, and I don&#39;t want to write a bunch of html files for a static site.</li>
+</ol>
+
+<h4>Enter Static Site Generators</h4>
+
+<p>Turns out there are tools out there to bridge the gap. They let you use all the
+great tools for making development easier, but compile to static HTML files. Some
+examples of these:</p>
+
+<ul>
+<li>Jekyll</li>
+<li>Octopress</li>
+<li>Middleman</li>
+<li>Nanoc</li>
+</ul>
+
+<p>I won&#39;t go into the virtues of each of these, but my eventual choice was Middleman.</p>
+
+<h3>Middleman</h3>
+
+<p>It&#39;s built on Ruby, and it&#39;s got a bunch of Rails already baked in. For example&hellip;</p>
+
+<p>I can use link_to, just like Rails:</p>
+<pre class="highlight ruby"><span class="n">link_to</span> <span class="s2">&quot;Home&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span>
+</pre>
+<p>Or render a partial, just like Rails:</p>
+<pre class="highlight ruby"><span class="n">partial</span> <span class="ss">:article_preview</span><span class="p">,</span> <span class="ss">:locals</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:article</span> <span class="o">=&gt;</span> <span class="n">article</span><span class="p">}</span>
+</pre>
+<p>I can use Haml for layouts, just like Rails:</p>
+<pre class="highlight haml"><span class="nf">#page</span>
+  <span class="nc">.container</span>
+    <span class="nt">%section</span><span class="nc">.content</span><span class="p">=</span> <span class="k">yield</span>
+    <span class="p">-</span> <span class="k">if</span> <span class="n">blog</span><span class="nf">.articles.present?</span>
+      <span class="nt">%footer</span><span class="nc">.explore.center</span>
+</pre>
+<p>And I can even write some Ruby to keep things DRY:</p>
+<pre class="highlight ruby"><span class="k">def </span><span class="nf">sentence_tag_list</span><span class="p">(</span><span class="n">article</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">tags</span> <span class="o">=</span> <span class="n">article</span><span class="nf">.tags</span>
+    <span class="s2">&quot;This article was filed under &quot;</span> <span class="o">+</span>
+    <span class="n">content_tag</span><span class="p">(</span><span class="ss">:div</span><span class="p">,</span> <span class="ss">class: :tags</span><span class="p">)</span> <span class="k">do</span>
+      <span class="n">article</span><span class="nf">.tags.map</span><span class="p">{</span><span class="o">|</span><span class="n">t</span><span class="o">|</span> <span class="n">link_to</span> <span class="n">t</span><span class="p">,</span> <span class="s2">&quot;/essays/categories/</span><span class="si">#{</span><span class="n">t</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span><span class="nf">.to_sentence</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+<h4>Best of Both Worlds</h4>
+
+<p>So in development, I can use Ruby, Sass, Coffeescript, Markdown, and Haml.
+So it&#39;s a pleasure to build sites, and I&#39;m a happy developer. However, my
+production machine is just basic Apache with static files. This allows me to implement
+several layers of caching.</p>
+
+<h3>So its BLAZING FAST.</h3>
+
+</div>
+</div>
+<div class='row footer'>
+<div class='span8 offset2 well'>
+This article was categorized as
+<a href="/essays/categories/ruby">ruby</a>, <a href="/essays/categories/html">html</a>, and <a href="/essays/categories/middleman">middleman</a>
+</div>
+</div>
+</div>
+</section>
+<footer class='explore center'>
+<div class='row'>
+<div class='span8 offset2'>
+<h3><a href="/essays">Explore the Blog</a></h3>
+<div class='row'>
+<div class='span4 articles'>
+<h4>Essays</h4>
+<p><a href="/essays/unitwise-ruby-unit-measurement">Unitwise: Ruby Unit Measurement Math and Conversion</a></p>
+<p><a href="/essays/rails-active-support-try">Rails' ActiveSupport try</a></p>
+<p><a href="/essays/rails_flash_messages_with_twitter_bootstrap">Rails Flash Messages with Twitter Bootstrap</a></p>
+<p><a href="/essays/static_site_creation_with_middleman">Static Site Creation with Middleman</a></p>
+</div>
+<div class='span4 categories'>
+<h4>Categories</h4>
+<p><a href="/essays/categories/ruby">ruby</a></p>
+<p><a href="/essays/categories/html">html</a></p>
+<p><a href="/essays/categories/middleman">middleman</a></p>
+<p><a href="/essays/categories/rails">rails</a></p>
+</div>
+</div>
+</div>
+</div>
+</footer>
+</div>
+</div>
+<footer class='copyright'>
+Copyright &copy
+2013
+Josh W Lewis
+(<a href="http://www.twitter.com/joshwlewis">@joshwlewis</a>)
+<a href='//feeds.feedburner.com/JoshWLewis'>
+<i class='icon-rss'></i>
+</a>
+</footer>
+<script src="../../javascripts/essays/shapes_grid-f7559597.js" type="text/javascript"></script>
+<script>
+  var _gaq=[['_setAccount','UA-38264259-1'],['_trackPageview']];
+  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+  s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+<script>
+  var shape_canvas = $('#fixed_banner canvas')[0];
+  shape_canvas.height = 192;
+  shape_canvas.width = 576;
+  context = shape_canvas.getContext('2d');
+  context.scale(2,2)
+  var grid = new shapes_grid(context, 40, 6, 2);
+  grid.shape_colors = ["#672435","#4E4E4E", "#7F7F7E", "#1B344D", "#295580"];
+  grid.font = "Droid Sans Mono"
+  grid.side_counts = [[1,4,6].sample()];
+  grid.letters.push({letter: 'j', c: 1, r: 1});
+  grid.letters.push({letter: 'o', c: 2, r: 1});
+  grid.letters.push({letter: 's', c: 3, r: 1});
+  grid.letters.push({letter: 'h', c: 4, r: 1});
+  grid.letters.push({letter: 'w', c: 6, r: 1});
+  grid.letters.push({letter: 'l', c: 2, r: 2});
+  grid.letters.push({letter: 'e', c: 3, r: 2});
+  grid.letters.push({letter: 'w', c: 4, r: 2});
+  grid.letters.push({letter: 'i', c: 5, r: 2});
+  grid.letters.push({letter: 's', c: 6, r: 2});
+  grid.init();
+  animations.push(grid);
+  animate();
+</script>
+</body>
+</html>
+
