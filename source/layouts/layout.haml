@@ -42,6 +42,8 @@
                     %h4 Categories
                     - blog.tags.map{|k,v| k.to_s}.first(article_tag_count).each do |tag, articles|
                       %p= link_to tag, "/essays/categories/#{tag}"
+              .span8.offset2
+                %h4= link_to "Or Browse Slide Decks", "/slides"
     %footer.copyright
       Copyright &copy
       = Time.now.year
