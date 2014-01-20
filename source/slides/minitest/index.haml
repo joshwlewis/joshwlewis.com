@@ -1,18 +1,20 @@
 ---
 title: Unit Testing with Minitest
 published: false
-description: Introduction to Unit Testing using Minitest::Spec
+description: Introduction to Unit Testing using Minitest
 ---
 
 = step "title" do
   %h1 Unit Testing with Minitest
   %br
-  %h4
-    Josh W Lewis
-    %a{href: "//twitter.com/joshwlewis"} @joshwlewis
-  %h4 
-    Memphis Ruby Users Group
+  %h4 Memphis Ruby Users Group
   %date 1/21/2013
+  %br
+  %h4
+    Josh W Lewis -
+    %a{href: "//twitter.com/joshwlewis"} @joshwlewis
+  %h4
+    %a{href: '//plia.com'} Plia Systems
 
 = step "definition", x: 2000 do
   %blockquote In computer programming, unit testing is a method by which individual units of source code, sets of one or more computer program modules together with associated control data, usage procedures, and operating procedures are tested to determine if they are fit for use.
@@ -32,5 +34,70 @@ description: Introduction to Unit Testing using Minitest::Spec
     %li Reliability
     %li Documentation
 
-= step "no-test-flow", x: 8000 do
+= step "minitest", x: 8000 do
+  %h2 Minitest is Awesome
+  %h4
+    %a{href: '//github.com/seattlerb/minitest'} github.com/seattlerb/minitest
+  %ul
+    %li Lightweight
+    %li Ships with Ruby
+    %li Rails default
+    %li Unit or Spec style tests
+    %li Mocking and Stubbing
+    %li Benchmarking
+
+= step 'unit-example', x: 10000 do
+  %h3 Test/Unit style tests are standard with Minitest
   = partial 'initials'
+  = partial 'initials_unit'
+
+= step 'spec-example', x: 12000 do
+  %h3 Spec style tests are also available with Minitest
+  = partial 'initials'
+  = partial 'initials_spec'
+
+= step 'continuous-integration', x: 24000 do
+  %a{href: '//travis-ci.org/joshwlewis/pig_latin'}
+    %img{src: '//travis-ci.org/joshwlewis/pig_latin.png?branch=master'}
+  %h3 Continuous integration ensures quality commits
+  %ul
+    %li
+      %a{href: '//travis-ci.org'} Travis CI
+    %li
+      %a{href: '//wercker.com'} Wercker
+    %li
+      %a{href: '//jenkins-ci.org'} Jenkins
+    %li etc.
+
+= step 'code-coverage', x: 26000 do
+  %a{href: '//coveralls.io/r/joshwlewis/pig_latin'}
+    %img{src: '//coveralls.io/repos/joshwlewis/pig_latin/badge.png'}
+  %h3 Monitor code coverage to ensure code is tested
+  %ul
+    %li
+      %a{href: '//github.com/colszowka/simplecov'} SimpleCov
+    %li
+      %a{href: '//coveralls.io'} Coveralls
+
+= step 'continuous-deployment', x: 28000 do
+  %h3 Passing code can be deployed automatically
+  %a{href: '//pig-latin.herokuapp.com'} pig-latin.herokuapp.com
+
+= step 'resources', y: 4000 do
+  %h2 Resources
+  %dl
+    %dt Minitest documentation
+    %dl
+      %a{href: '//github.com/seattlerb/minitest'} github.com/seattlerb/minitest
+    %dt Minitest Quick Reference
+    %dl
+      %a{href: '//mattsears.com/articles/2011/12/10/minitest-quick-reference'} mattsears.com/articles/2011/12/10/minitest-quick-reference
+    %dt Rails Assertions
+    %dl
+      %a{href: '//topfunky.com/clients/rails/ruby_and_rails_assertions.pdf'} topfunky.com/clients/rails/ruby_and_rails_assertions.pdf
+    %dt Pig Latin Translator
+    %dl
+      %a{href: '//github.com/joshwlewis/pig_latin'} github.com/joshwlewis/pig_latin
+    %dt This Presentation
+    %dl
+      %a{href: '//joshwlewis.com/slides/minitest/'} joshwlewis.com/slides/minitest
