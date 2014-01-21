@@ -35,13 +35,12 @@ description: Introduction to Unit Testing using Minitest
     %li Documentation
 
 = step "minitest", y: 1500, x: 1060, z: 1060, 'rotate-y' => 45 do
-  %h2 Minitest is Awesome
+  %h2 Minitest is Awesome!
   %h4
     %a{href: '//github.com/seattlerb/minitest'} github.com/seattlerb/minitest
   %ul
     %li Lightweight
     %li Ships with Ruby
-    %li Rails default
     %li Unit or Spec style tests
     %li Mocking and Stubbing
     %li Benchmarking
@@ -60,6 +59,10 @@ description: Introduction to Unit Testing using Minitest
   %h3 Let's make an app for that...
   %p My boss wants something to translate English to Pig Latin and Pig Latin to English. And he wants it to remember previous translations.
   = partial 'rails_new'
+  %p
+    Source available at:
+    %a{href: '//github.com/joshwlewis/pig_latin'} github.com/joshwlewis/pig_latin
+  
 
 = step 'minitest-rails', y: 3500, x: -1060, z: -1060, 'rotate-y' => 225 do
   %h3 Use minitest-rails to bootstrap your test suite
@@ -69,33 +72,20 @@ description: Introduction to Unit Testing using Minitest
   %h3 Automated testing enables TDD workflow
   = partial 'guard'
 
-= step 'continuous-integration', y: 4500, x: -1060, z: 1060, 'rotate-y' => 315 do
-  %a{href: '//travis-ci.org/joshwlewis/pig_latin'}
-    %img{src: '//travis-ci.org/joshwlewis/pig_latin.png?branch=master'}
-  %h3 Continuous integration ensures quality commits
+= step 'payoff', y: 4500, x: -1060, z: 1060, 'rotate-y' => 315 do
+  %h3 The Payoff...
   %ul
+    %li 
+      Code Test Coverage:
+      %a{href: '//coveralls.io/r/joshwlewis/pig_latin'}
+        %img{src: '//coveralls.io/repos/joshwlewis/pig_latin/badge.png'}
+    %li 
+      Continuous Integration:
+      %a{href: '//travis-ci.org/joshwlewis/pig_latin'}
+        %img{src: '//travis-ci.org/joshwlewis/pig_latin.png?branch=master'}
     %li
-      %a{href: '//travis-ci.org'} Travis CI
-    %li
-      %a{href: '//wercker.com'} Wercker
-    %li
-      %a{href: '//jenkins-ci.org'} Jenkins
-    %li etc.
-
-= step 'code-coverage', y: 5000, z: 1500, 'rotate-y' => 360 do
-  %a{href: '//coveralls.io/r/joshwlewis/pig_latin'}
-    %img{src: '//coveralls.io/repos/joshwlewis/pig_latin/badge.png'}
-  %h3 Monitor code coverage to ensure code is tested
-  %ul
-    %li
-      %a{href: '//github.com/colszowka/simplecov'} SimpleCov
-    %li
-      %a{href: '//coveralls.io'} Coveralls
-
-= step 'continuous-deployment', y: 5500, x: 1060, z: 1060, 'rotate-y' => 405 do
-  %h3 Automatic deployment for passing builds
-  %h4
-    %a{href: '//pig-latin.herokuapp.com'} pig-latin.herokuapp.com
+      Continuous Deployment:
+      %a{href: '//pig-latin.herokuapp.com'} pig-latin.herokuapp.com
 
 = step 'resources', x: -2500, y: 2750, z: 8000 do
   %h2 Resources
