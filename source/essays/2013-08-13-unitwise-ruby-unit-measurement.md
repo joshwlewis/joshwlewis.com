@@ -30,7 +30,7 @@ Now, it's really easy to track units for our example problem:
 ```ruby
 mass = 86.kg
 # => <Unitwise::Measurement 86 kg>
-acceleration = 9.8.convert('m/s2') / 6
+acceleration = 9.8.convert_to('m/s2') / 6
 # => <Unitwise::Measurement 1.6333333333333335 m/s2>
 force = mass * acceleration
 # => <Unitwise::Measurement 140.4666666666667 kg.m/s2>
@@ -39,10 +39,10 @@ force = mass * acceleration
 And of course it does conversion:
 
 ```
-mass.pound
+mass.to_pound
 => <Unitwise::Measurement 189.5975454789947 pound>
 
-force.newton
+force.to_newton
 => <Unitwise::Measurement 140.4666666666667 newton>
 ```
 

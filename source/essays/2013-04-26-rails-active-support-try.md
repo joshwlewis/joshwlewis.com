@@ -19,7 +19,7 @@ Consider using try instead:
 name = user.try :name
 ```
 
-It's basically like using send, but it will return nil if the reciever is nil.
+It's basically like using send, but it will return nil if the receiver is nil.
 
 Here it works like send:
 
@@ -37,4 +37,7 @@ user.send :name                 #=> NoMethodError
 user.try :name                  #=> nil
 ```
 
-It comes in handy fairly often.
+EDIT: I still find try helpful in some cases, but I think it's best to
+exercise caution with it. Many times delegation or the null object pattern
+can solve your problem a little more eloquently. If you find yourself chaining
+`try` you should probably look at another way to factor your code.
