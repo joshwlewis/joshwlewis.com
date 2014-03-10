@@ -9,17 +9,17 @@ regards to the units of measurement. Models needed to store heat transfer or
 fluid dynamics properties in either english or SI units. This is can be a bit
 of a pain, so I thought I'd share my methods and save someone else the trouble.
 
-My problem scenario was in an engineering realm, but there are plenty of more
-mainstream domains that have the same problem. Consider foot races -- they are
-commonly defined in either mileage (like 26.1 miles for a marathon) or kilomters
+My problem scenario was in an engineering realm, but there are plenty of other
+mainstream domains that exhibit the problem. Consider foot races -- they are
+commonly defined in either mileage (like 26.1 miles for a marathon) or kilometers
 (like a 5K). Or consider a mechanic's wrenches -- they have a metric set with
-sized like 10 mm, but also have an english set with sizes like 5/8 inch.
+sizes like 10 mm, but also have an english set with sizes like 5/8 inch.
 
 To demonstrate the problem and solution, say you are creating an app for cooks.
 Maybe it would let cooks share recipes, perhaps it might be used to help
 them decide what to offer on tonight's menu, or perhaps it just tracks ingredient
 inventory. In any of those cases, you probably need a model for a recipe and
-it's ingredients.
+its ingredients.
 
 ```ruby
 # create_table :recipes do |t|
@@ -88,7 +88,7 @@ Ingredient.last.quantity # => #<Unitwise::Measurement value=1 unit=tablespoon>
 ```
 
 Unitwise comes with a handy `to_s` method that should get invoked by your views,
-which means you can display this value in a view as `'1 tablespoon'`.
+which means you can display this value to your users as `'1 tablespoon'`.
 
 Cool, but we can make this a little better yet.
 
@@ -109,7 +109,7 @@ with tablespoons -- that is, any volumetric unit.
 
 ```ruby
 tomatos = Ingredient.create(name: 'Crushed Tomatos', quantity: 8.fluid_ounce)
-tomatoes.quantity # => #<Unitwise::Measurement value=16 unit=tablespoon>
+tomatos.quantity # => #<Unitwise::Measurement value=16 unit=tablespoon>
 ```
 
 With this change, we can now set the quantity with any compatible unit. When
