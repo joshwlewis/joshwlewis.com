@@ -1,24 +1,25 @@
 ---
 title: Rails Unit Measurement Persistence
-description: Use Unitwise and ActiveRecord to store your numeric data as a length, time, mass, weight, or any other measurement.
+description: Use Unitwise to persist your Rails ActiveRecord model data as a convertible scientific measurement.
 tags: ruby, rails, gem, math, science
 ---
 
-I've worked on a few apps in the past that had some cumbersome constraints in 
-regards to the units of measurement. Models needed to store heat transfer or 
+I've worked on a few apps in the past that had some cumbersome constraints in
+regards to the units of measurement. Models needed to store heat transfer or
 fluid dynamics properties in either english or SI units. This is can be a bit
 of a pain, so I thought I'd share my methods and save someone else the trouble.
 
 My problem scenario was in an engineering realm, but there are plenty of more
-mainstream domains that have the same problem. Consider foot races -- they are 
-commonly defined in either mileage (like 26.1 miles for a marathon) or kilomters 
-(like a 5K). Or consider a mechanic's wrenches -- they have a metric set with 
+mainstream domains that have the same problem. Consider foot races -- they are
+commonly defined in either mileage (like 26.1 miles for a marathon) or kilomters
+(like a 5K). Or consider a mechanic's wrenches -- they have a metric set with
 sized like 10 mm, but also have an english set with sizes like 5/8 inch.
 
-To demonstrate the problem and solution, say you are creating an app for cooks. 
-Maybe it would let cooks share recipes, or perhaps it might be used to help 
-them decide what to offer on tonight's menu or just track inventory. In any of 
-those cases, you probably need a model for a recipe and it's ingredients.
+To demonstrate the problem and solution, say you are creating an app for cooks.
+Maybe it would let cooks share recipes, perhaps it might be used to help
+them decide what to offer on tonight's menu, or perhaps it just tracks ingredient
+inventory. In any of those cases, you probably need a model for a recipe and
+it's ingredients.
 
 ```ruby
 # create_table :recipes do |t|
@@ -33,7 +34,7 @@ end
 # create_table :ingredients do |t|
 #   t.string  :substance,     null: false
 #   t.decimal :quantity,      null: false,  default: 0
-#   t.string  :quantity_unit, null: false, default: 'tablespoon'
+#   t.integer :recipe_id
 # end
 class Ingredient < ActiveRecord::Base
   belongs_to :recipe
@@ -47,7 +48,7 @@ any case, we can setup a new ingredient pretty easily.
 Ingredient.create(substance: 'Olive Oil', quantity: 1)
 ```
 
-Now we can see the problem. The obvious question here is how much olive oil is 
+Now we can see the problem. The obvious question here is how much olive oil is
 '1'? Is that one teaspoon, tablespoon, ounce, or maybe even pint or gallon?
 
 In a lot of apps, you might just have some tribal knowledge where everyone
@@ -127,7 +128,8 @@ ingredient.
 # create_table :ingredients do |t|
 #   t.string  :substance,     null: false
 #   t.decimal :quantity,      null: false,  default: 0
-#   t.string  :quantity_unit, null: false, default: 'tablespoon'
+#   t.string  :quantity_unit, null: false,  default: 'tablespoon'
+#   t.integer :recipe_id,     null: false
 # end
 
 class Ingredient < ActiveRecord::Base
@@ -159,7 +161,7 @@ beer = Ingredient.create(wine: 'Beer', quantity: 1.pint)
 beer.quantity # => #<Unitwise::Measurmeent value=1 unit=pint>
 ```
 
-This example is fairly simple, but it should give you an idea of how to do 
+This example is fairly simple, but it should give you an idea of how to do
 something similar in your own domain.
 [Unitwise](//github.com/joshwlewis/unitwise/) supports a ton of units, and has
 some other really nice features -- Check it out.
