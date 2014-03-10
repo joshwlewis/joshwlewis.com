@@ -108,8 +108,8 @@ Now we have the advantage of setting the quantity with any unit compatible
 with tablespoons -- that is, any volumetric unit.
 
 ```ruby
-tomatos = Ingredient.create(name: 'Crushed Tomatos', quantity: 8.fluid_ounce)
-tomatos.quantity # => #<Unitwise::Measurement value=16 unit=tablespoon>
+tomatoes = Ingredient.create(name: 'Crushed tomatoes', quantity: 8.fluid_ounce)
+tomatoes.quantity # => #<Unitwise::Measurement value=16 unit=tablespoon>
 ```
 
 With this change, we can now set the quantity with any compatible unit. When
@@ -117,7 +117,7 @@ we retrieve the value, it comes back in tablespoons.
 
 We are definitely making progress here. All the values stored and retrieved are
 based on tablespoons, no matter what unit you set it with. But, who buys tomatoes
-by the tablespoon? When the amount of tomatos is displayed to the user, they
+by the tablespoon? When the amount of tomatoes is displayed to the user, they
 probably just want to know how many cans (8 fluid ounces) or cups to use.
 
 Lets make one more enhancement. This time, we are going to add a string column
