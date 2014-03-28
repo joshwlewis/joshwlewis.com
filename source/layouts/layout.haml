@@ -56,10 +56,12 @@
     = javascript_include_tag "essays/shapes_grid"
 
     :javascript
-      var _gaq=[['_setAccount','UA-38264259-1'],['_trackPageview']];
-      (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-      g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-      s.parentNode.insertBefore(g,s)}(document,'script'));
+      var _gaq = [['_setAccount','UA-38264259-1'],['_trackPageview']];
+      (function(d,t) { 
+        var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
+        g.src = (location.protocol + '//') + 'stats.g.doubleclick.net/dc.js';
+        s.parentNode.insertBefore(g,s)
+      }(document,'script'));
     :javascript
       var shape_canvas = $('#fixed_banner canvas')[0];
       shape_canvas.height = 192;

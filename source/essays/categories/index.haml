@@ -1,0 +1,10 @@
+---
+title: Essay Categories
+description: I tag most of my essays with a category, here you can see the full list.
+---
+
+%h2.text-centered Essay Category Tags
+%ul.text-centered
+  - blog.tags.each do |tag, articles|
+    %li
+      %a{ href: tag_path(tag) }= "#{tag} (#{articles.count} Essays)"

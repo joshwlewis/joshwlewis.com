@@ -13,7 +13,7 @@ module SiteHelpers
     end
 
     def extension_keywords
-      ["Software Engineer", "Web Developer", "Rubyist", "Entrepreneur", "Husband", "Dad", "Memphian", "Disc Golfer"]
+      ["Ruby Developer", "JavaScript Engineer", "Consultant", "Entrepreneur", "Husband", "Dad", "Memphian", "Disc Golfer"]
     end
 
     def extensions
@@ -50,11 +50,11 @@ module SiteHelpers
   end
 
   def page_title
-    MetaString.new(data.page.title, 70)
+    MetaString.new(current_page.data.title, 70)
   end
 
   def page_description
-    MetaString.new(data.page.description, 155)
+    MetaString.new(current_page.data.description, 155)
   end
 
   def article_tag_count

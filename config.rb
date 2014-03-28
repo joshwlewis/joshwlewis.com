@@ -74,7 +74,7 @@ activate :blog do |blog|
   blog.layout = "essay"
   blog.default_extension = ".md"
   blog.taglink = "categories/:tag.html"
-  blog.tag_template = "categories.html"
+  blog.tag_template = "essays/categories/category.html"
   blog.paginate = true
   blog.page_link = "p:num"
   blog.per_page = 3
