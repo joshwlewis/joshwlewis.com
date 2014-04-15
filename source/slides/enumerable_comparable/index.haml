@@ -1,0 +1,57 @@
+---
+title: Exploring Ruby's Enumerable and Comparable
+published: true
+description: Exploring Ruby's Enumerable and Comparable with something that resembles a game with Memphis Ruby.
+---
+
+= step "title" do
+  %h1 Exploring Ruby's Enumerable and Comparable
+  %br
+  %h4 Memphis Ruby Users Group
+  %date 4/15/2013
+  %br
+  %h4
+    Josh W Lewis -
+    %a{href: "//twitter.com/joshwlewis"} @joshwlewis
+  %h4
+    %a{href: '//plia.com'} Plia Systems
+
+= step "enumerable", x: 2000 do
+  %h3 What is Enumerable?
+  = partial 'enumerable'
+  %p
+    Enumerable is a
+    %i mixin
+    designed to work with collection type objects. It's
+    methods provide traversal and searching of members.
+
+= step "methods", x: 4000 do
+  = partial 'methods'
+
+= step "house_1", x: 6000 do
+  %h3 Enumerable relies on #each
+  = partial 'house_1'
+
+= step "bannerman_1", x: 8000 do
+  %h3 Make Bannerman more Interesting
+  = partial 'bannerman_1'
+
+= step "house_2", x: 10000 do
+  %h3 Extend the Metaphor
+  = partial 'house_2'
+
+= step "bannerman_2", x: 12000 do
+  %h3 Comparable relies on #<=> (spaceship)
+  = partial 'bannerman_2'
+
+= step "enumerable_spaceship", x: 14000 do
+  %h3 Enumerable also relies on #<=> (spaceship)
+  = partial 'house_3'
+
+= step "alternative_enumeration", x: 16000 do
+  %h3 Enumerable doesn't require a collection
+  = partial 'fight'
+
+= step "too_far", x: 18000 do
+  %h3 Taking this Metaphor way too far
+  = image_tag "too_far.jpg"
