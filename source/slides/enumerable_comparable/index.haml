@@ -4,85 +4,118 @@ published: true
 description: Exploring Ruby's Enumerable and Comparable with something that resembles a game with Memphis Ruby.
 ---
 
-= step "title" do
+= step "title", y: -1500 do
   %h1 Exploring Ruby's Enumerable and Comparable
+  %br
+  %h4 Josh W Lewis
+  %p
+    %a{href: 'http://joshwlewis.com'} joshwlewis.com
+    = " - "
+    %a{href: '//twitter.com'} @joshwlewis
   %br
   %h4 Memphis Ruby Users Group
   %date 4/15/2013
-  %br
-  %h4
-    Josh W Lewis -
-    %a{href: "//twitter.com/joshwlewis"} @joshwlewis
-  %h4
-    %a{href: '//plia.com'} Plia Systems
 
-= step "enumerable", x: 2000 do
+= step "enumerable", "rotate-x" => 90 do
   %h3 What is Enumerable?
   = partial 'enumerable'
   %p
-    Enumerable is a
-    %i mixin
-    designed to work with collection type objects. It's
+    Enumerable is designed to work with collection type objects. It's
     methods provide traversal and searching of members.
 
-= step "methods", x: 3000 do
+= step "methods", z: -1810 do
   %h3 Enumerable is Loaded with Methods
   = partial 'enumerable_methods'
   %p We'll cover some of these...
 
-= step "each", x: 4000 do
+= step "each", x: 1280, z: -1280, "rotate-y" => -45 do
   %h3 Enumerable Methods Rely on #each
   = partial 'each'
   %p
-    #each takes a block with an item as an argument.
-    Implementation must be provided by class.
+    #each takes a block with an item as an argument. The implementation must be provided by class.
 
-= step "select", x: 5000 do
+= step "select", x: 1810, z: 0, "rotate-y" => -90 do
   %h3 Enumerable#select
   = partial 'select'
   %p #select builds a new array of items that match selection criteria.
 
-= step "find", x: 6000 do
+= step "find", x: 1280, z: 1280, "rotate-y" => -135 do
   %h3 Enumerable#find
   = partial 'find'
   %p #find returns the first item that matches the selection criteria
 
-= step "map", x: 7000 do
+= step "map", x: 0, z: 1810, "rotate-y" => -180 do
   %h3 Enumerable#map (or #collect)
   = partial 'map'
   %p #map builds a new array based on the block results.
 
-= step "reduce", x: 8000 do
+= step "reduce", x: -1280, z: 1280, "rotate-y" => -225 do
   %h3 Enumerable#reduce (or #inject)
   = partial 'reduce'
   %p #reduce passes the result of each block as an argument to the next block.
 
+= step "multiple_arguments", x: -1810, z: 0, "rotate-y" => -270 do
+  %h3 Increased Block Arity is Sometimes Useful
+  = partial 'arity'
 
+= step "unary", x: -1280, z: -1280, "rotate-y" => -315 do
+  %h3 Use a Unary Block for Brevity
+  = partial 'unary'
 
-= step "house_1", x: 6000, y: 1000 do
+= step "mixin", y: 1500 do
+  = image_tag "mix_in.jpg"
+
+= step "house_1", y: 1500, z: -1810, "rotate-x" => 90 do
   %h3 Enumerable relies on #each
   = partial 'house_1'
 
-= step "bannerman_1", x: 8000, y: 1000 do
+= step "bannerman_1", y: 1500, x: 1280, z: -1280, "rotate-x" => 90, "rotate-z" => "45" do
   %h3 Make Bannerman more Interesting
   = partial 'bannerman_1'
 
-= step "house_2", x: 10000 do
+= step "house_2", y: 1500, x: 1810, "rotate-x" => 90, "rotate-z" => "90" do
   %h3 Extend the Metaphor
   = partial 'house_2'
 
-= step "bannerman_2", x: 12000 do
-  %h3 Comparable relies on #<=> (spaceship)
+= step "spaceship", y: 1500, x: 1280, z: 1280, "rotate-x" => 90, "rotate-z" => "135" do
+  %h3 Enumerable Also Relies on #<=> (spaceship)
+  = partial 'spaceship'
+
+= step "bannerman_2", y: 1500, z: 1810, "rotate-x" => 90, "rotate-z" => "180" do
+  %h3 Add #<=> to Bannerman for Better Sorting
   = partial 'bannerman_2'
 
-= step "enumerable_spaceship", x: 14000 do
-  %h3 Enumerable also relies on #<=> (spaceship)
+= step "bannerman_3", y: 1500, x: -1280, z: 1280, "rotate-x" => 90, "rotate-z" => "225" do
+  %h3 Comparable Also Relies on #<=> (spaceship)
+  = partial 'bannerman_3'
+
+= step "enumerable_spaceship", y: 1500, x: -1810, "rotate-x" => 90, "rotate-z" => "270" do
+  %h3 Now Houses are Correctly Sorted
   = partial 'house_3'
 
-= step "alternative_enumeration", x: 16000 do
-  %h3 Enumerable doesn't require a collection
+= step "getting_crazy", y: 1500, x: -1280, z: -1280, "rotate-x" => 90, "rotate-z" => "315" do
+  %h3 Getting Crazy
   = partial 'fight'
+  %p Enumerable doesn't require you to have a collection.
 
-= step "too_far", x: 18000 do
-  %h3 Taking this Metaphor way too far
+= step "too_far", y: 3000, "rotate-z" => 360 do
+  %h3 Taking this Metaphor Way Too Far
   = image_tag "too_far.jpg"
+  %a{href: '//github.com/joshwlewis/game_of_enums'} github.com/joshwlewis/game_of_enums
+
+= step "resources", y: 4500, "rotate-x" => -90 do
+  %h3 Resources
+  .well
+    %dl
+      %dt Enumerable
+      %dd
+        %a{href: 'http://www.ruby-doc.org/core-2.1.1/Enumerable.html'} ruby-doc.org/core-2.1.1/Enumerable.html
+      %dt Comparable
+      %dd
+        %a{href: 'http://www.ruby-doc.org/core-2.1.1/Comparable.html'} ruby-doc.org/core-2.1.1/Comparable.html
+      %dt Game of Enums
+      %dd
+        %a{href: '//github.com/joshwlewis/game_of_enums'} github.com/joshwlewis/game_of_enums
+      %dt This Presentation
+      %dd
+        %a{href: '//joshwlewis.com/slides/enumerable'} joshwlewis.com/slides/enumerable

@@ -13,4 +13,6 @@ lannister = House.new(name: 'Lannister')
 
 lannister.reduce { |sum, bannerman| sum + bannerman.health }
 # => 300
-lannister.max # => #<Bannerman name="Tyrion Lannister", health=25>
+
+lannister.any? { |bannerman| bannerman.name == 'Tywin Lannister' }
+# => true
