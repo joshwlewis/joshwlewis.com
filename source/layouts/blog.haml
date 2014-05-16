@@ -18,8 +18,8 @@
     -#OR, place favicon.ico and apple-touch-icon.png in /source and deactivate :favicon_maker in config.rb
 
 
-    = javascript_include_tag "application/head"
-    = stylesheet_link_tag "essays"
+    = javascript_include_tag "blog/head"
+    = stylesheet_link_tag "blog"
   %body
     /[if lt IE 7] <p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p>
     #fixed_banner
@@ -53,15 +53,8 @@
         %i.icon-rss
 
 
-    = javascript_include_tag "essays/shapes_grid"
+    = javascript_include_tag "blog/body"
 
-    :javascript
-      var _gaq = [['_setAccount','UA-38264259-1'],['_trackPageview']];
-      (function(d,t) { 
-        var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
-        g.src = (location.protocol + '//') + 'stats.g.doubleclick.net/dc.js';
-        s.parentNode.insertBefore(g,s)
-      }(document,'script'));
     :javascript
       var shape_canvas = $('#fixed_banner canvas')[0];
       shape_canvas.height = 192;

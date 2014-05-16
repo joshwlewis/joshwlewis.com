@@ -1,4 +1,4 @@
-= wrap_layout :layout do
+= wrap_layout :blog do
   .essay
     .row.header
       .span8.offset2
@@ -11,7 +11,10 @@
     .row.content
       .span10.offset1
         =yield
-    .row.footer
-      .span8.offset2.well
-        This article was categorized as
-        = current_article.tags.map{|t| link_to t, "/essays/categories/#{t}"}.to_sentence
+        %hr
+        .well
+          This article was categorized as
+          = current_article.tags.map{|t| link_to t, "/essays/categories/#{t}"}.to_sentence
+        #disqus_thread
+
+    = javascript_include_tag "app/integrations/disqus"
