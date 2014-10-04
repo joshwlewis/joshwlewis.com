@@ -13,7 +13,8 @@ module SiteHelpers
     end
 
     def extension_keywords
-      ["Ruby Developer", "JavaScript Engineer", "Consultant", "Entrepreneur", "Husband", "Dad", "Memphian", "Disc Golfer"]
+      ["Ruby Developer", "JavaScript Engineer", "Consultant", "Entrepreneur",
+       "Husband", "Dad", "Memphian", "Disc Golfer"]
     end
 
     def extensions
