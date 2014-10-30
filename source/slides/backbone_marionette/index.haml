@@ -1,0 +1,167 @@
+---
+title: Single Page Applications with Backbone.js and Marionette.js
+published: false
+description: Use Backbone.js and Marionette.js to create a fully featured single page application.
+---
+
+= step "title" do
+  %h1 Single Page Applications with Backbone.js and Marionette.js
+  %br
+  %h4 Tech Camp Memphis
+  %date 10/1/2014
+  %br
+  %h4
+    Josh W Lewis -
+    %a{href: "//twitter.com/joshwlewis"} @joshwlewis
+  %h4
+    %a{href: '//tradeinformatics.com'} Trade Informatics
+
+= step 'traditional-web-applications', x: 2000 do
+  .text-center
+    %h2 Traditional Web Applications
+    %img{ src: '/images/traditional-web-app.png' }
+
+= step 'single-page-applications', x: 4000 do
+  .text-center
+    %h2 Single Page Application
+    %img{ src: '/images/single-page-web-app.png' }
+
+= step 'traditional-vs-single-page', x: 6000 do
+  %div.row
+    %div.span5
+      %h4 Traditional
+      %ul
+        %li HTML rendered on server.
+        %li Each link loads an entirely new page.
+        %li Simple page interactions.
+        %li Higher server load.
+        %li Increased caching complexity.
+        %li Server is difficult to consume by non-html clients.
+    %div.span5
+      %h4 Single Page
+      %ul
+        %li HTML rendered in browser.
+        %li Pages and content are built dynamically.
+        %li Rich user experience.
+        %li Simpler caching strategies
+        %li Reduced server load.
+        %li May use the same server to build other client applications.
+
+= step 'examples', x: 8000 do
+  %div.row
+    %div.span5
+      %h4 Traditional
+      %ul
+        %li Reddit
+        %li Wikipedia
+        %li Hacker News
+    %div.span5
+      %h4 Single Page
+      %ul
+        %li Twitter
+        %li Facebook
+        %li Gmail
+
+= step 'warning', x: 10000 do
+  %img{ src: '/images/not-easy-button.jpg' }
+  %h3 Difficulties
+  %ul
+    %li State Management
+    %li Search Engine Optimization
+    %li Browser Compatibility
+    %li More Code
+
+= step 'options', x: 12000 do
+  %h2 Many Framework Options
+  %ul
+    %li Backbone
+    %li Angular
+    %li Ember
+    %li React
+    %li Knockout
+    %li Many many more...
+
+= step 'backbone', x: 14000 do
+  %h1 Backbone
+  %a{ href: '//backbonejs.org'} backbonejs.org
+  %ul
+    %li Models
+    %li Collections
+    %li Views
+    %li Eventing
+    %li API Integration
+
+= step 'marionette', x: 16000 do
+  %h2 Marionette
+  %a{ href: '//marionettejs.com' } marionettejs.com
+  %ul
+    %li Application
+    %li ItemView
+    %li CollectionView
+    %li LayoutView
+
+// backbone model
+// backbone collection
+// marionette item view
+// underscore template
+// marionette collection view
+// marionette layout
+// marionette application
+
+= step 'resources', x: 1000000 do
+  %h2 Resources
+  %dl
+    %dt This Presentation
+    %dd
+      %a{href: '//joshwlewis.com/slides/backbone_marionette'} joshwlewis.com/slides/backbone_marionette
+    %dt Backbone.js
+    %dd
+      %a{href: '//backbonejs.org'} backbonejs.org
+    %dt Marionette.js
+    %dd
+      %a{href: '//marionettejs.com'} marionettejs.com
+    %dt MeowMeow (Client Application)
+    %dd
+      %a{href: '//meowmeow.joshwlewis.com'} beenz.joshwlewis.com
+      %br
+      %a{href: '//github.com/joshwlewis/meowmeow'} github.com/joshwlewis/meowmeow
+    %dt Beenz (Rails JSON API)
+    %dd
+      %a{href: '//beenz.joshwlewis.com'} beenz.joshwlewis.com
+      %br
+      %a{href: '//github.com/joshwlewis/beenz'} github.com/joshwlewis/beenz
+
+
+// web app vs single page
+// restful API
+// beenz API
+// backbone model
+// backbone collection
+// marionette item view
+// underscore template
+// marionette collection view
+// marionette layout
+// marionette application
+
+= step 'resources', x: 1000000 do
+  %h2 Resources
+  %dl
+    %dt This Presentation
+    %dd
+      %a{href: '//joshwlewis.com/slides/backbone_marionette'} joshwlewis.com/slides/backbone_marionette
+    %dt Backbone.js
+    %dd
+      %a{href: '//backbonejs.org'} backbonejs.org
+    %dt Marionette.js
+    %dd
+      %a{href: '//marionettejs.com'} marionettejs.com
+    %dt MeowMeow (Client Application)
+    %dd
+      %a{href: '//meowmeow.joshwlewis.com'} beenz.joshwlewis.com
+      %br
+      %a{href: '//github.com/joshwlewis/meowmeow'} github.com/joshwlewis/meowmeow
+    %dt Beenz (Rails JSON API)
+    %dd
+      %a{href: '//beenz.joshwlewis.com'} beenz.joshwlewis.com
+      %br
+      %a{href: '//github.com/joshwlewis/beenz'} github.com/joshwlewis/beenz
