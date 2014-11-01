@@ -7,11 +7,6 @@ app.reqres.setHandler('profile', function() {
   }
   return app.profile;
 });
-app.reqres.setHandler('rating', function(user_id) {
-  var rating = app.request('ratings').findWhere({ ratee_id: user_id });
-  return rating || app.ratings.add({ ratee_id: user_id });
-});
-
 // src/scripts/views/user_item_view.js
 UserItemView = Marionette.LayoutView.extend({
   showRating: function() {

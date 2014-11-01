@@ -1,6 +1,6 @@
 ---
 title: Single Page Applications with Backbone.js and Marionette.js
-published: false
+published: true
 description: Use Backbone.js and Marionette.js to create a fully featured single page application.
 ---
 
@@ -16,7 +16,7 @@ description: Use Backbone.js and Marionette.js to create a fully featured single
   %h4
     %a{href: '//tradeinformatics.com'} Trade Informatics
 
-= step 'expectations', x: 2000 do
+= step 'expectations', x: 2500 do
   %h3 Expectations for Web Applications are Changing
   %ul
     %li Infinite scrolling
@@ -26,56 +26,47 @@ description: Use Backbone.js and Marionette.js to create a fully featured single
     %li Animation
     %li Audio and video
 
-= step 'javascript', x: 4000 do
+= step 'javascript', x: 5000 do
   .text-center
     %img{ src: '/images/javascript-use-you-must.jpg'}
 
-= step 'traditional-web-applications', x: 6000 do
+= step 'traditional-web-applications', x: 7500 do
   .text-center
     %h2 Traditional Web Applications
     %img{ src: '/images/traditional-web-app.png' }
     %h4 Reddit, Wikipedia, Hacker News
 
-= step 'single-page-applications', x: 8000 do
+= step 'single-page-applications', x: 10000 do
   .text-center
     %h2 Single Page Application
     %img{ src: '/images/single-page-web-app.png' }
     %h4 Twitter, Facebook, Gmail
 
-= step 'traditional-vs-single-page', x: 10000 do
-  %div.row
-    %div.span5
-      %h4 Traditional
-      %ul
-        %li HTML rendered on server.
-        %li Each link wipes page and loads a new one.
-        %li Simple page interactions.
-        %li Higher server load.
-        %li Server is difficult to consume by non-html clients.
-    %div.span5
-      %h4 Single Page
-      %ul
-        %li HTML rendered in browser.
-        %li Pages and content are built dynamically.
-        %li Rich, dynamic user experience.
-        %li Reduced server load.
-        %li May use the same server to build other client applications.
+= step 'single-page-advantages', x: 12500 do
+  %h3 Advantages of an SPA
+  %ul
+    %li Rich, dynamic user experience.
+    %li Fast user interfaces.
+    %li Reduced server load.
+    %li Increased Cacheability
+    %li Offline capabilities.
+    %li Separation of Concerns
+    %li May use the same server to build other client applications.
 
-
-= step 'warning', x: 12000 do
+= step 'warning', x: 15000 do
   .text-center
     %img{ src: '/images/simply-write-javascript.jpg' }
-    %br
+    %p
     %p Rendering
     %p Routing
     %p Browser history
     %p State Management
-    %p Session Data
     %p Search Engine Optimization
     %p Browser Compatibility
+    %p API Integration
     %p More Code
 
-= step 'frameworks', x: 14000 do
+= step 'frameworks', x: 17500 do
   %h3 Client-side JavaScript Frameworks
   %h4 Reduce the Complexity
   %ul
@@ -84,7 +75,7 @@ description: Use Backbone.js and Marionette.js to create a fully featured single
     %li Underscore
     %li jQuery
 
-= step 'backbone', x: 16000 do
+= step 'backbone', x: 20000 do
   %img{ src: '/images/backbone.png', style: 'height: 75px;' }
   %h3 A lightweight foundation to build on.
   %ul
@@ -96,7 +87,7 @@ description: Use Backbone.js and Marionette.js to create a fully featured single
   %h4
     %a{ href: '//backbonejs.org' } backbonejs.org
 
-= step 'marionette', x: 18000 do
+= step 'marionette', x: 22500 do
   %img{ src: '/images/marionette.png', style: 'height: 175px;' }
   %h3 Common design patterns and components.
   %ul
@@ -108,72 +99,72 @@ description: Use Backbone.js and Marionette.js to create a fully featured single
   %h4
     %a{ href: '//marionettejs.com' } marionettejs.com
 
-= step 'meowmeowbeenz', x: 20000 do
+= step 'meowmeowbeenz', x: 25000 do
   %div.text-center
     %h2 Meow Meow Beenz
     %img{ src: '/images/meowmeowbeenz.png' }
     %br
     %a{ href: '//meowmeow.joshwlewis.com' } meowmeow.joshwlewis.com
 
-= step 'json_api', x: 22000 do
+= step 'json_api', x: 27500 do
   %h3 Data is persisted via JSON API
   = partial 'endpoints'
 
-= step 'model', x: 24000 do
+= step 'model', x: 30000 do
   %h3 Backbone.Model
   %h4 Encapsulates Data
   = partial 'model'
 
-= step 'templates', x: 26000 do
+= step 'templates', x: 32500 do
   %h3 Underscore Templates
   %h4 Pre-configured html
   = partial 'template'
 
-= step 'item_view', x: 28000 do
+= step 'item_view', x: 35000 do
   %h3 Marionette.ItemView
   %h4 Manages Model-DOM Relationship
   = partial 'item_view'
 
-= step 'collection', x: 30000 do
+= step 'collection', x: 37500 do
   %h3 Backbone.Collection
   %h4 Manages Model Lists
   = partial 'collection'
 
-= step 'collection_view', x: 32000 do
+= step 'collection_view', x: 40000 do
   %h3 Marionette.CollectionView
   %h4 Manages lists of ItemViews
   = partial 'collection_view'
 
-= step 'index', x: 34000 do
+= step 'index', x: 42500 do
   %h3 The browser needs an initial DOM
   = partial 'index_html'
 
-= step 'app', x: 36000 do
+= step 'app', x: 45000 do
   %h3 Marionette.Application
   %h4 Bootstraps the Environment
   = partial 'app'
 
-= step 'controller', x: 37000 do
+= step 'controller', x: 47500 do
   %h3 Marionette.Controller
   %h4 Sets up Individual Components
   = partial 'controller'
 
-= step 'router', x: 38000 do
+= step 'router', x: 50000 do
   %h3 Marionette.AppRouter
   %h4 Maps urls to Controller Methods
   = partial 'router'
 
-= step 'events', x: 39000 do
+= step 'events', x: 52500 do
   %h3 Backbone.Events
   %h4 Allow loosely coupled object communicate messages
   = partial 'events'
 
-= step 'request_response', x: 40000 do
+= step 'request_response', x: 55000 do
   %h3 Marionette.reqres
   %h4 Application can manage global state
   = partial 'request_response'
 
-= step 'resources', x: 42000 do
+= step 'resources', x: 57500 do
   %h2 Resources
   %dl
     %dt This Presentation
