@@ -1,0 +1,6 @@
+```html
+<!-- src/templates/profile.html -->
+<img class='avatar img-circle' src='{{ gravatar_url }}'>
+<h3 class='name'>{{ name }}</h3>
+<div class='beenz-line'></div>
+```

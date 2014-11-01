@@ -1,4 +1,5 @@
 ```javascript
+// src/scripts/views/profile_view.js
 ProfileView = Marionette.ItemView.extend({
   template: 'profile',
   className: 'profile-view',
@@ -6,13 +7,13 @@ ProfileView = Marionette.ItemView.extend({
     'beenz_line': '.beenz-line'
   },
   onRender: function() {
-    // Add color appropriate cat images based on beenz
+    var beenz = this.model.get('beenz');
+    for (var been = 1; been <= beenz; been++ ) {
+      var img = $('<img>')
+                    .addClass('beenz beenz-' + beenz);
+                    .attr('src', 'beenz-' + beenz + '.png');
+      this.ui.beenz_line.append(img);
+    }
   }
 });
-```
-
-```html
-<img class='avatar img-circle' src='{{ gravatar_url }}'>
-<h3 class='name'>{{ name }}</h3>
-<div class='beenz-line'></div>
 ```

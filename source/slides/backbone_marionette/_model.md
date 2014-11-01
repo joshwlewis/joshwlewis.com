@@ -1,4 +1,5 @@
 ```javascript
+// src/scripts/models/rating.js
 Rating = Backbone.Model.extend({
   urlRoot: config.apiHost + '/ratings',
   defaults: {
