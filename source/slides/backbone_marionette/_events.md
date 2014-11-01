@@ -8,7 +8,6 @@ Session = Backbone.Model.extend({
     });
   }
 });
-
 // src/scripts/app.js
 app.vent.on("change:token", function(token) {
   localStorage.setItem('token', token);

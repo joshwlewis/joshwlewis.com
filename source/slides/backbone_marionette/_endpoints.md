@@ -14,7 +14,7 @@ POST beenz.joshwlewis.com/ratings
 { "ratee_id": 5, "beenz": 1 }
 ```
 
-PUT beenz.joshwlewis.com/2
+PUT beenz.joshwlewis.com/ratings/2
 
 ```json
 { "beenz": 3 }
