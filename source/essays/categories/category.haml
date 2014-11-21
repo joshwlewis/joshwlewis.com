@@ -1,9 +1,13 @@
-.categories
-  .row
-    .span8.offset2.center
-      %h1= "Essays Filed Under '#{tagname}'"
-  .row
-    .span10.offset1
-      - if articles
-        - articles.each do |a|
-          = partial :article_preview, :locals => {:article => a}
+#headline.space
+  %img.avatar{ src: '/images/joshwlewis.jpg', alt: 'Josh W Lewis' }
+  %a.name{ href: '/' } Josh W Lewis
+  %span /
+  = link_to 'Essays', '/essays'
+  %span /
+  = link_to 'Categories', '/essays/categories'
+  %span /
+  = link_to tagname, "/essays/categories/#{tagname}"
+
+- if articles
+  - articles.each do |a|
+    .surface= partial :article_preview, :locals => {:article => a}

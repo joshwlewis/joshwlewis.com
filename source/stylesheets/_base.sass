@@ -1,19 +1,37 @@
-@import url(http://fonts.googleapis.com/css?family=PT+Serif|PT+Sans|Droid+Sans+Mono)
+@import url(http://fonts.googleapis.com/css?family=Lato:300|Droid+Sans+Mono)
 
-$maroon: #672435
-$dark_gray: #4E4E4E
-$gray: #7F7F7F
-$dark_blue: #1B344D
-$blue: #295580
+$p50: #E1F5FE
+$p100: #B3E5FC
+$p200: #81D4FA
+$p300: #4FC3F7
+$p400: #29B6F6
+$p500: #03A9F4
+$p600: #039BE5
+$p700: #0288D1
+$p800: #0277BD
+$p900: #01579B
 
-$textColor: $dark_gray
-$sansFontFamily: "PT Sans", "Helvetica Neue", Helvetica, Arial, sans-serif
-$serifFontFamily: "PT Serif", Georgia, "Times New Roman", Times, serif
+$a100: #80D8FF
+$a200: #40C4FF
+$a400: #00B0FF
+$a700: #0091EA
+
+$c50: #FBE9E7
+$c100: #FFCCBC
+$c200: #FFAB91
+$c300: #FF8A65
+$c400: #FF7043
+$c500: #FF5722
+$c600: #F4511E
+$c700: #E64A19
+$c800: #D84315
+$c900: #BF360C
+
+$sansFontFamily: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif
 $monoFontFamily: "Droid Sans Mono", Menlo, Monaco, "Courier New", monospace
-$headingsFontFamily: $serifFontFamily
-$headingsFontWeight: normal
+$headingsFontFamily: $sansFontFamily
 $baseFontSize: 21px
-$baseLineHeight: 35px
+$baseLineHeight: 30px
 
 @import "bootstrap"
 @import "bootstrap-responsive"
@@ -25,7 +43,9 @@ $baseLineHeight: 35px
 
 a
   text-decoration: none
-  +link-colors($blue, $maroon, $dark_gray, $dark_blue, $maroon)
+  &:hover i
+    text-decoration: none
+  +link-colors($p700, $p400, $c700, $p900, $c700)
 
 pre.highlight
   background-color: #F4F2EF

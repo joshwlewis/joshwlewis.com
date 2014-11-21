@@ -1,49 +1,39 @@
----
-description: Hi - I'm Josh. I'm a Ruby and JavaScript Engineer based in Memphis.
----
-#index.center
-  #introduction
-    .row
-      .span6.offset3
-        %h1 Hi — I'm Josh.
-    .row
-      .span8.offset2
-        %p
-          I am a Ruby and JavaScript developer in Memphis. Currently, I handle
-          server and user interface engineering at
-          #{ link_to "Plia Systems", "http://www.plia.com"} and co-organize
-          #{ link_to "Memphis Ruby", "http://memphisruby.org" }; 
-          previously, I co-founded 
-          #{ link_to "Emergent Coils", "http://www.emergentcoils.com"}.
-          I am lucky enough to have a great wife, two wonderful boys, and a 
-          bag full of golf discs.
-  #elsewhere
-    .row
-      .span8.offset2
-        %h3 Elsewhere
-    .row
-      .span2
-        %a{:href => "http://github.com/joshwlewis"}
-          %i.icon-github.icon-4x
-          %br
-          %p Github
-      .span2
-        %a{:href => "http://twitter.com/joshwlewis"}
-          %i.icon-twitter.icon-4x
-          %p Twitter
-      .span2
-        %a{:href => "http://www.facebook.com/josh.w.lewis"}
-          %i.icon-facebook.icon-4x
-          %p Facebook
-      .span2
-        %a{:href => "http://www.linkedin.com/in/joshwlewis"}
-          %i.icon-linkedin.icon-4x
-          %p LinkedIn
-      .span2
-        %a{:href => "https://plus.google.com/102049443107073084244", :rel => "me"}
-          %i.icon-google-plus.icon-4x
-          %p Google
-      .span2
-        %a{:href => "mailto:josh.w.lewis@gmail.com"}
-          %i.icon-envelope.icon-4x
-          %p Email
+#index.space
+  #headline
+    %img.avatar{ src: '/images/joshwlewis.jpg', alt: 'Josh W Lewis' }
+    %h1.name Josh W Lewis
+
+  .section
+    %p
+      I am a Ruby and JavaScript developer in Memphis. I build beautiful software
+      for the web. Currently, I'm building full stack applications at
+      #{ link_to "Heroku", "http://heroku.com"} and co-organize
+      #{ link_to "Memphis Ruby", "http://memphisruby.org" }.
+      Previously, I co-founded
+      #{ link_to "Emergent Coils", "http://www.emergentcoils.com"}.
+      I am lucky enough to have an awesome wife, two wonderful boys, and a
+      bag full of golf discs.
+
+  .section
+    %p
+      I occasionally write essays related to web software and development, the
+      sum of which is available #{ link_to "here", "/essays" }. Here are some of
+      my most recent:
+    %ul
+      - blog.articles.first(3).each do |article|
+        %li= link_to(article.data.title, article.url)
+
+  .section
+    %p
+      I also occasionally give talks to user groups and conferences. The slides are listed
+      #{ link_to "here", "/slides"}. Here are a few selections:
+    %ul
+      - slide_decks.first(3).each do |deck|
+        %li= link_to(deck.data.title, deck.url)
+  .section
+    %p
+      If you'd like to connect, you can also find me via
+      #{link_to 'Github', '//github.com/joshwlewis/'},
+      #{ link_to 'Twitter', '//twitter.com/joshwlewis/' },
+      #{ link_to 'LinkedIn', '//www.linkedin.com/in/joshwlewis' }, or
+      #{ link_to 'Email',    '//mailto:josh.w.lewis@gmail.com' }.

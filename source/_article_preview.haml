@@ -1,11 +1,5 @@
-.article_preview.well
-  .row-fluid
-    .span12.title
-      %h3.center= link_to article.title, article.url
-  .row-fluid.summary
-    .span4.info.center
-      %h4= "By #{link_to "Josh", '/'}"
-      %h5= "On #{long_date article.date}"
-      %p= slash_tag_list(article)
-    .span8.preview
-      = link_to article.summary, article.url
+%h3= link_to article.title, article.url
+%h4= "By #{link_to "Josh", '/'}"
+%h5= "On #{long_date article.date}"
+%p= slash_tag_list(article)
+= link_to article.summary, article.url

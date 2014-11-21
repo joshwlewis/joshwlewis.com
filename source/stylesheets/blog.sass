@@ -1,84 +1,82 @@
 @import "base"
 
+body, html
+  height: 100%
+
 body
-  background-image: url("/images/fabric_plaid.png")
-  background-attachment: fixed
+  background: $p600
 
-section.content
-  padding-bottom: 2em
-  border-bottom: 1px solid $grayLighter
-.center
-  text-align: center
-#page
-  position: relative
-  background-color: white
-  z-index: 2
-  padding: 1.5em
-  width: 955px
-  margin: auto
-  +box-shadow($grayLight 7px 7px 5px, $grayLight -2px 7px 7px)
-
-.article_preview
-  margin-top: 1em
-  margin-bottom: 1em
-  .title
-    border-bottom: 2px solid $grayLighter
-    h3
-      margin-top: 0
-  .info
-    border-right: 2px solid $grayLighter
-  .preview
-    margin-top: 1em
-
-.tags span
-  margin: 0 3px
-
-#fixed_banner
-  width: 288px
-  height: 96px
-  margin: 2em auto
-  position: relative
+#background
+  width: 100%
+  height: 100%
+  position: fixed
+  z-index: -999
   top: 0
-  z-index: 0
-  canvas
-    width: 288px
-    height: 96px
-    position: fixed
-    z-index: 1
-    top: 2em
+  bottom: 0
+  left: 0
+  right: 0
 
-footer.explore
-  margin-top: 2em
-  margin-bottom: 2em
+#headline
+  margin: 7px 0
+  .name
+    display: inline-block
+  img.avatar
+    margin-right: 10px
+    vertical-align: top
+    height: 30px
+    width:  30px
+    border-radius: 15px
 
 
 #index
-  #elsewhere
-    .row
-      margin-top: 1em
-      margin-bottom: 1em
-    a
-      text-decoration: none
+  .section
+    margin: 12px 0
+  #headline
+    margin-top: 3em
+    margin-bottom: 1em
+    img.avatar
+      margin-top: 10px
+      height: 80px
+      width: 80px
+      border-radius: 40px
+    @media (max-width: 480px)
+      .name
+        font-size: 36px
+        line-height: 42px
+      img.avatar
+        margin-right: 0
+        margin-top: 11px
+        height: 50px
+        width: 50px
+        border-radius: 25px
 
-footer.copyright
-  margin: 1em auto
+.container
+  position: relative
+  min-height: 100%
+
+.with-footer
+  margin-bottom: 35px
+
+#copyright
+  height: 30px
+  position: absolute
+  left: 0
+  right: 0
+  bottom: 0
   text-align: center
+  font-size: 18px
 
-.essay
-  .header
-    text-align: center
+.space
+  a
+    +link-colors($p200, $p100, $c100, $p50, $c100)
+  h1, h2, h3, h4, p, li, span
+    text-shadow: rgba(0,0,0,0.2) 0.05em 0.1em 0.1em
+    color: white
 
-/* Large desktop */
-@media (min-width: 1200px)
-  #page
-    width: 1185px
-
-/* Portrait tablet to landscape and desktop */
-@media (min-width: 768px) and (max-width: 979px)
-  #page
-    width: 739px
-
-/* Landscape phone to portrait tablet */
-@media (max-width: 767px)
-  #page
-    width: auto
+.surface
+  margin: 1em auto
+  padding: 1em
+  h1
+  background: rgba(255,255,255,0.85)
+  background-image: radial-gradient(closest-side, rgba(255,255,255,0.95), rgba(255,255,255,0.8))
+  box-shadow: 1px 3px 6px 1px rgba(0,0,0,0.25)

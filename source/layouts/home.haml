@@ -1,0 +1,12 @@
+!!!5
+%head
+  = partial 'metas'
+  = javascript_include_tag "blog/head"
+  = stylesheet_link_tag "blog"
+%body
+  %canvas#background
+  .container
+    = yield
+    = partial 'footer'
+
+  = javascript_include_tag "blog/body"

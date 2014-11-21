@@ -1,0 +1,11 @@
+%h3= link_to "Explore the Blog", "/essays"
+.row
+  .span6.articles
+    %h4 Essays
+    - blog.articles.first(article_tag_count).each do |article|
+      %p= link_to(article.data.title, article.url)
+  .span6.categories
+    %h4 Categories
+    - blog.tags.map{|k,v| k.to_s}.first(article_tag_count).each do |tag, articles|
+      %p= link_to tag, "/essays/categories/#{tag}"
+%h4= link_to "Browse Slide Decks", "/slides"

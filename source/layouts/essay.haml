@@ -1,20 +1,22 @@
-= wrap_layout :blog do
-  .essay
-    .row.header
-      .span8.offset2
-        %h1= link_to current_article.title, current_article.url
-        %h3
-          By
-          =link_to "Josh", '/', :rel => :author
-        %h4= long_date(current_article.date)
+= wrap_layout :home do
+  #headline.space
+    %img.avatar{ src: '/images/joshwlewis.jpg', alt: 'Josh W Lewis' }
+    %a.name{ href: '/' } Josh W Lewis
+    %span /
+    = link_to 'Essays', '/essays'
+    %span /
+    = link_to current_article.title, current_article.url
+  .surface
+    %h1= link_to current_article.title, current_article.url
+    %h4
+      By
+      %a{ href: '/', rel: 'author' } Josh W Lewis
+    %h5= "On #{long_date current_article.date}"
+    =yield
+    %hr
+    .well
+      This article was categorized as
+      = current_article.tags.map{|t| link_to t, "/essays/categories/#{t}"}.to_sentence
+    #disqus_thread
 
-    .row.content
-      .span10.offset1
-        =yield
-        %hr
-        .well
-          This article was categorized as
-          = current_article.tags.map{|t| link_to t, "/essays/categories/#{t}"}.to_sentence
-        #disqus_thread
-
-    = javascript_include_tag "app/integrations/disqus"
+  = javascript_include_tag "app/integrations/disqus"
