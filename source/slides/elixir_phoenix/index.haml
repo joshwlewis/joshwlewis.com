@@ -1,0 +1,121 @@
+---
+title: Elixir and Phoenix - Web Scale Made Fun
+description: Build blazing fast server side apps with Elixir and Phoenix
+---
+
+= step "title" do
+  %h1 Web Scale Made Fun with Elixir and Phoenix
+  %br
+  %h4 Memphis Ruby
+  %date 7/9/2015
+  %br
+  %h4
+    Josh W Lewis -
+    %a{ href: "//twitter.com/joshwlewis" } @joshwlewis
+  %h4
+    %a{ href: '//heroku.com' } Heroku
+  %br
+    %a{ href: '//joshwlewis.com/slides/elixir_phoenix' } joshwlewis.com/slides/elixir_phoenix
+
+
+= step "what-is-elixir", x: 2000 do
+  %h2 Elixir is:
+
+  %h4
+    %ul
+      %li Inspired by Ruby
+      %li Functional
+      %li Concurrent
+      %li Fault Tolerant
+      %li Extensible
+
+= step "elixir-looks-like-ruby", x: 4000 do
+  %h3 Heavily inspired by Ruby!
+  = partial "alike"
+
+
+= step "elixir-is-functional", x: 6000 do
+  %h3 Elixir is Functional
+  = partial "functional"
+
+= step "elixir-is-concurrent", x: 8000 do
+  %h3 Elixir is Concurrent
+  = partial "concurrent"
+
+
+= step "elixir-is-fault-tolerant", x: 10000 do
+  %h3 Elixir is Fault Tolerant
+  = partial "fault_tolerant"
+
+= step "elixir-is-extensible", x: 12000 do
+  %h3 Elixir is Extensible
+  = partial "extensible"
+
+= step "build-on-erlang", x: 14000 do
+  %h3 Elixir is Backed By Erlang
+  = partial "erlang"
+
+  %ul
+    %li Can use Erlang's standard library
+    %li Can use third party Erlang code
+    %li Can use battle-tested OTP features
+
+
+= step "cool-tools", x: 16000 do
+  %h3 Elixir has Cool Tools
+  %ul
+    %li iex
+    %li Mix
+    %li ExUnit
+    %li
+      %a{href: "//hex.pm/"} Hex.pm
+
+
+= step "phoenix", x: 20000 do
+  %h3
+    %a{href: "//phoenixframework.org"} Phoenix Framework
+  %ul
+    %li MVCish Web Framework Built on Elixir
+    %li Fast
+    %li Scalable
+    %li Lightweight
+    %li Real-time built in
+    %li Rails-ish
+
+= step "phoenix-models", x: 22000 do
+  %h3 Phoenix's Model Comes From Ecto
+  = partial "phoenix_model"
+
+= step "phoenix-router", x: 24000 do
+  %h3 Phoenix's Router Looks Familiar
+  = partial "phoenix_router"
+
+= step "phoenix-controller", x: 26000 do
+  %h3 Phoenix's Controllers Familiar but Functional
+  = partial "phoenix_controller"
+
+= step "phoenix-views", x: 28000 do
+  %h3 Phoenix Has a View Layer
+  %p It sits between the Controller and Template.
+  = partial "phoenix_view"
+
+= step "phoenix-templates", x: 30000 do
+  %h3 .eex Templates are Also Familiar
+  = partial "phoenix_template"
+
+= step "demo", x: 32000 do
+  %h3 Demo Time
+
+= step "resources", x: 34000 do
+  %h2 Resources
+  %dl
+    %dt This Presentation
+    %dd
+      %a{href: "//joshwlewis.com/slides/elixir_phoenix"} joshwlewis.com/slides/elixir_phoenix
+    %dt Elixir Language
+    %dd
+      %a{href: "//elixir-lang.org"} elixir-lang.org
+    %dt Phoenix Framework
+    %dd
+      %a{href: "//phoenixframework.org"} phoenixframework.org
+
