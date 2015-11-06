@@ -1,0 +1,136 @@
+---
+title: Ember.js - An Introduction
+published: false
+description: Use Backbone.js and Marionette.js to create a fully featured single page application.
+---
+
+= step "title" do
+  %h1 An Introduction to EmberJS
+  %br
+  %h4 Tech Camp Memphis
+  %date 11/7/2015
+  %br
+  %h4
+    Josh W Lewis -
+    %a{ href: "//twitter.com/joshwlewis" } @joshwlewis
+  %h4
+    %a{ href: '//heroku.com' } Heroku
+  %br
+    %a{ href: '//joshwlewis.com/slides/emberjs' } joshwlewis.com/slides/emberjs
+
+= step "meowmeowbeenz", x: 10000 do
+  %div.text-center
+    %h2 Tech Camp 2014
+    %img{ src: '/images/meowmeowbeenz.png' }
+    %br
+    %a{href: '//meowmeow.joshwlewis.com'} meowmeow.joshwlewis.com
+
+= step "thatscool", x: 20000 do
+  %div.text-center
+    %h2 Yeah, that's cool...
+    %img{src: '/images/brent-rambo.gif'}
+    %br
+    %br
+    %p ...for 2012
+
+
+= step "ember", x: 30000 do
+  %div.text-center
+    %img{src: '/images/tomster.png'}
+    %h2 The framework for ambitious web applications
+
+= step "opionated", x: 40000 do
+  %h2 Convention over Configuration
+  %h4 Ember.js is opionated....
+  %h4 ...or maybe we could call it curated.
+  %p
+  %p Conventions for
+  %ul
+    %li Project structure
+    %li File names
+    %li API design
+
+= step "happiness", x: 45000 do
+  %h2 Developer Happiness
+  %ul
+    %li Don't sweat the small decisions
+    %li Productive from day 1
+    %li Robust enough for Production
+
+= step "lessons", x: 50000 do
+  %h2 Some other great stuff
+  %ul
+    %li Started as SproutCore in ~2009
+    %li Built by Rails Core Team members
+    %li Learned from mistakes of Angular (versioning)
+    %li Learned from React's rendering algorithms
+
+= step "ember-components", x: 60000 do
+  %h2 Ember comes with a lot of, well... stuff
+  %ul
+    %li Router
+    %li Routes
+    %li Models (via Ember Data)
+    %li Controllers
+    %li Components
+    %li Views
+    %li Mixins
+    %li Events
+    %li Service Injections
+    %li Multiple-Inheritance
+    %li Data caching (via Ember Data)
+    %li Generators (via EmberCLI)
+    %li Asset compilation (via EmberCLI)
+    %li Plugins (via EmberCLI)
+    %li And much more
+
+= step "embeenz", x: 70000 do
+  %div.text-center
+    %h2 Tech Camp 2015
+    %img{ src: '/images/meowmeowbeenz.png' }
+    %br
+    %a{href: '//embeenz.joshwlewis.com'} embeenz.joshwlewis.com
+
+= step "router", x: 80000 do
+  %h2 Router
+  %p Responsible for mapping paths to your code.
+  = partial 'router'
+
+= step "model", x: 90000 do
+  %h2 Model (via Ember Data)
+  %p The model knows how to fetch and update your server data.
+  = partial 'model'
+
+= step "route", x: 100000 do
+  %h2 Route
+  %p Routes are responsible for loading or syncing data with the server.
+  = partial 'route'
+
+= step "template", x: 110000 do
+  %h2 Templates
+
+= step "component-kitty", x: 120000 do
+  %h2 Components
+
+= step "component-kitties", x: 130000 do
+  %h2 Composing components
+
+= step "thanks", x: 140000 do
+  %h1 Thanks!
+
+  %p Resources for this talk:
+  %dl
+    %dt Slides
+    %dd
+      %a{href: '//joshwlewis.com/slides/emberjs'} joshwlewis.com/slides/emberjs
+    %dt Embeenz
+    %dd
+      %a{href: '//github.com/joshwlewis/embeenz'} github.com/joshwlewis/embeenz
+    %dt Ember.js
+    %dd
+      %a{href: '//emberjs.org'} emberjs.org
+  %br
+  %h4 I have free Heroku stickers
+  %h4
+    Come visit us at Memphis Ruby: 
+    %a{href: 'http://memphisruby.org'} memphisruby.org
