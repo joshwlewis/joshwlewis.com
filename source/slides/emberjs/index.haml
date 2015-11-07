@@ -11,21 +11,25 @@ description: Use Backbone.js and Marionette.js to create a fully featured single
   %date 11/7/2015
   %br
   %h4
-    Josh W Lewis -
     %a{ href: "//twitter.com/joshwlewis" } @joshwlewis
-  %h4
-    %a{ href: '//heroku.com' } Heroku
+    = " - "
+    %a{ href: '//twitter.com/heroku.com' } @heroku
   %br
     %a{ href: '//joshwlewis.com/slides/emberjs' } joshwlewis.com/slides/emberjs
 
-= step "meowmeowbeenz", x: 10000 do
+= step "meowmeowbeenz", x: 2000 do
+  %div.text-center
+    %iframe{src:"https://www.youtube.com/embed/macpeQxtTxw?start=50",
+      width: 560, height: 315, frameborder: 0, allowfullscreeen: true}
+
+= step "backbone-beenz", x: 4000 do
   %div.text-center
     %h2 Tech Camp 2014
     %img{ src: '/images/meowmeowbeenz.png' }
     %br
     %a{href: '//meowmeow.joshwlewis.com'} meowmeow.joshwlewis.com
 
-= step "thatscool", x: 20000 do
+= step "thatscool", x: 6000 do
   %div.text-center
     %h2 Yeah, that's cool...
     %img{src: '/images/brent-rambo.gif'}
@@ -33,13 +37,12 @@ description: Use Backbone.js and Marionette.js to create a fully featured single
     %br
     %p ...for 2012
 
-
-= step "ember", x: 30000 do
+= step "ember", x: 8000 do
   %div.text-center
     %img{src: '/images/tomster.png'}
     %h2 The framework for ambitious web applications
 
-= step "opionated", x: 40000 do
+= step "opionated", x: 10000 do
   %h2 Convention over Configuration
   %h4 Ember.js is opionated....
   %h4 ...or maybe we could call it curated.
@@ -50,14 +53,14 @@ description: Use Backbone.js and Marionette.js to create a fully featured single
     %li File names
     %li API design
 
-= step "happiness", x: 45000 do
+= step "happiness", x: 12000 do
   %h2 Developer Happiness
   %ul
     %li Don't sweat the small decisions
     %li Productive from day 1
     %li Robust enough for Production
 
-= step "lessons", x: 50000 do
+= step "lessons", x: 14000 do
   %h2 Some other great stuff
   %ul
     %li Started as SproutCore in ~2009
@@ -65,8 +68,8 @@ description: Use Backbone.js and Marionette.js to create a fully featured single
     %li Learned from mistakes of Angular (versioning)
     %li Learned from React's rendering algorithms
 
-= step "ember-components", x: 60000 do
-  %h2 Ember comes with a lot of, well... stuff
+= step "ember-components", x: 16000 do
+  %h2 Ember is a giant toolbox
   %ul
     %li Router
     %li Routes
@@ -84,53 +87,70 @@ description: Use Backbone.js and Marionette.js to create a fully featured single
     %li Plugins (via EmberCLI)
     %li And much more
 
-= step "embeenz", x: 70000 do
+= step "embeenz", x: 18000 do
   %div.text-center
     %h2 Tech Camp 2015
     %img{ src: '/images/meowmeowbeenz.png' }
     %br
     %a{href: '//embeenz.joshwlewis.com'} embeenz.joshwlewis.com
 
-= step "router", x: 80000 do
+= step "router", x: 20000 do
   %h2 Router
   %p Responsible for mapping paths to your code.
   = partial 'router'
 
-= step "model", x: 90000 do
+= step "model", x: 22000 do
   %h2 Model (via Ember Data)
   %p The model knows how to fetch and update your server data.
   = partial 'model'
 
-= step "route", x: 100000 do
+= step "route", x: 24000 do
   %h2 Route
   %p Routes are responsible for loading or syncing data with the server.
   = partial 'route'
 
-= step "template", x: 110000 do
+= step "template", x: 26000 do
   %h2 Templates
+  %p Templates automagically bind to your data
+  = partial "templates"
 
-= step "component-kitty", x: 120000 do
+= step "component-kitty", x: 28000 do
   %h2 Components
+  %img{src: "/images/beenz-kitty-3.png", height: 40, width: 48}
+  %br
+  %br
+  = partial "components"
 
-= step "component-kitties", x: 130000 do
+= step "component-kitties", x: 30000 do
   %h2 Composing components
+  %img{src: "/images/3beenz.png", height: 40, width: 132}
+  %br
+  %br
+  = partial "composing_components"
 
-= step "thanks", x: 140000 do
+= step "data-down-actions-up", x: 32000 do
+  %h2 Component Actions
+  = partial "component_actions"
+
+= step "persisting-data", x: 34000 do
+  %h2 Persisting Data
+  = partial "persisting_data"
+
+= step "thanks", x: 360000 do
   %h1 Thanks!
 
   %p Resources for this talk:
   %dl
     %dt Slides
     %dd
-      %a{href: '//joshwlewis.com/slides/emberjs'} joshwlewis.com/slides/emberjs
+      %a{href: '//joshwlewis.com/slides/emberjs'}joshwlewis.com/slides/emberjs
     %dt Embeenz
     %dd
-      %a{href: '//github.com/joshwlewis/embeenz'} github.com/joshwlewis/embeenz
+      %a{href: '//github.com/joshwlewis/embeenz'}github.com/joshwlewis/embeenz
     %dt Ember.js
     %dd
-      %a{href: '//emberjs.org'} emberjs.org
+      %a{href: '//emberjs.org'}emberjs.org
   %br
-  %h4 I have free Heroku stickers
   %h4
     Come visit us at Memphis Ruby: 
-    %a{href: 'http://memphisruby.org'} memphisruby.org
+    %a{href: 'http://memphisruby.org'}memphisruby.org
