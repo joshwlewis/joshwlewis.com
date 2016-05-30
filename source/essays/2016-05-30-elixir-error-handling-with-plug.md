@@ -132,7 +132,7 @@ defmodule MyApp.WidgetController do
 
   defp authorize!(user, team) do
     if user.role !="admin" || team.id != user.team_id do
-      raise MyApp.Forbidden, "You need to be a team admin"
+      raise MyApp.Forbidden, message: "You need to be a team admin"
     end
   end
 end
