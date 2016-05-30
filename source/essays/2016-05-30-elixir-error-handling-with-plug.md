@@ -53,7 +53,7 @@ Now this works, and is clear and explicit. But it feels a bit verbose
 to me. We're mixing authorization and retrieving data into the same function,
 and half the code is devoted to detecting and rendering the error. I was doing
 something like this, and after adding this to several controllers, the logic
-started to feel like a fillabuster.
+started to feel like a filibuster.
 
 One important thing about Elixir that we should note here, is that there is
 no `return` keyword. There is no way to exit a function early. So we can't
@@ -82,7 +82,7 @@ defmodule MyApp.WidgetController do
 end
 ```
 
-Here, the `index` function is a little easier to read, and the authorize
+Here, the `index` function is a little easier to read, and the `authorize`
 function encapsulates most of that logic. But this still feels long-winded for
 my taste.
 
@@ -102,7 +102,9 @@ end
 ```
 
 To use it ourselves, we'll start by defining your own Exceptions. For the
-above example, a new "Forbidden" exception makes sense.
+above example, a new `Forbidden` exception makes sense. But you may want to
+add more. I have `Unauthorized` (401) and `UnprocessibleEntity` (422) in my
+app.
 
 ```elixir
 defmodule MyApp.Forbidden do
@@ -113,7 +115,7 @@ end
 
 Now we have an exception that Plug knows how to handle. Whenever we raise
 this error, Plug knows to return an HTTP status of 403. We also defined a
-default message, which Phoenix will automatically pass to our `ErrorView` 
+default message, which Phoenix will automatically pass to our `ErrorView`
 above.
 
 Now, we can clean up our controller a bit.
@@ -139,7 +141,7 @@ end
 This is certainly more concise, and both functions are directly to the point.
 
 There's another advantage here that's worth highlighting. This error can
-be raised anywhere within the lifecycle of a Plug request, and Plug will
+be raised anywhere within the life-cycle of a Plug request, and Plug will
 handle it. In the first examples, a function needed access to the `conn` struct
 to operate on it. Now it's easy to raise an appropriate exception in any
 of your functions deeper in the stack (hopefully not in your models, though!).
