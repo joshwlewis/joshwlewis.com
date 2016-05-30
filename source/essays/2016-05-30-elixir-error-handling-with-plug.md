@@ -1,7 +1,6 @@
 ---
 title: Error Handling in Elixir with Plug.Exception
-description: Plug's exception protocol is a hidden gem that can clean up
-error rendering in your Elixir webapps.
+description: Plug's exception protocol is a hidden gem that can clean up error rendering in your Elixir webapps.
 tags: elixir, phoenix, plug
 ---
 
