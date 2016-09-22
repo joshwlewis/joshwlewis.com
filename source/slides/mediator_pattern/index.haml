@@ -1,0 +1,387 @@
+---
+title: The Mediator Pattern
+published: true
+description: Encapsulate your business logic in mediators for cleaner services.
+---
+
+
+= step :title do
+  %h1 The Mediator Pattern
+  %br
+  %h4 Memphis Ruby
+  %date 9/22/2016
+  %br
+  %h4
+    %a{ href: "//twitter.com/joshwlewis" } @joshwlewis
+    = " - "
+    %a{ href: '//twitter.com/heroku.com' } @heroku
+  %br
+    %a{ href: '//joshwlewis.com/slides/emberjs' } joshwlewis.com/slides/mediator-pattern
+
+
+= step :mvc, x: 2000 do
+  %h2 MVC
+  %ul
+    %li Model
+    %li View
+    %li Controller
+
+  %h4 Where does the Business Logic go?
+
+= step :bad_model, x: 4000 do
+  %h2 Have you seen me?
+  = code "ruby" do
+    :plain
+      class Dojo < ActiveRecord::Base
+        validates_presence_of :sensei
+        validates_presence_of :name
+
+        after_create                :requisition_katanas
+        before_validation_on_create :recommend
+
+        def requisition_katanas
+          if Katana.in_warehouse.count > 10
+            Katana.limit(10).each { |k| k.update(dojo: self) }
+          else
+            DojoMailer.send_katanas_needed_email(self)
+          end
+        end
+
+        def recommend
+          if has_sensei?
+            Ninjas.without_dojo.recommend(self)
+          else
+            Sensei.without_dojo.recommend(self)
+          end
+        end
+      end
+
+= step :biz_logic_in_model, x: 6000 do
+  %h2 Business logic in Models?
+  %ul
+    %li Mixed concerns 
+    %ul
+      %li Data validation
+      %li Data persistence
+      %li Business logic
+    %li Order of operations is unclear
+    %li Difficult to reason about
+    %li Models tightly coupled
+    %li No logging trail
+
+= step :bad_controller, x: 8000 do
+  %h2 Have you seen me?
+  = code "ruby" do
+    :plain
+      class DojoController < ApplicationController
+        def create
+          params = params.require(:dojo).allow(:name, :sensei_id)
+
+          @dojo = Dojo.new(params)
+
+          if @dojo.save
+            if @dojo.has_sensei?
+              Ninjas.without_dojo.recommend(@dojo)
+            else
+              Sensei.without_dojo.recommend(@dojo)
+            end
+
+            if Katana.in_warehouse.count > 10
+              Katana.limit(10).each { |k| k.update(dojo: @dojo) }
+            else
+              DojoMailer.send_katanas_needed_email(@dojo)
+            end
+          else
+            flash.now[:error] = "Could not create dojo"
+            render :new
+          end
+        end
+      end
+
+= step :whats_wrong_controller, x: 10000 do
+  %h2 Business logic in Controllers?
+  %ul
+    %li Mixed concerns (request handling and biz logic)
+    %li Long synchronous request
+    %li High probability of failure
+    %li Data inconsitency when partial failure
+    %li No logging trail
+
+= step :where_now, x: 12000 do
+  %h2 Where does the business logic go?
+
+  %ul
+    %li Model - Nope
+    %li View - Nope
+    %li Controller - Nope
+    %li Mediator?
+
+= step :mediator, x: 14000 do
+  %h2 The Mediator Pattern
+  %blockquote
+    :plain
+      With the mediator pattern, communication between objects is encapsulated
+      with a mediator object. Objects no longer communicate directly with each
+      other, but instead communicate through the mediator. This reduces the
+      dependencies between communicating objects, thereby lowering the coupling.
+
+= step :example, x: 16000 do
+  %h2 A Mediator
+  = code "ruby" do
+    :plain
+      class Mediators::Dojo::Creator < Base
+        attr_reader :name, :sensei_id
+        def initialize(name:, sensei_id:)
+          @name, @sensei_id = name, sensei_id
+        end
+
+        def call
+          Dojo.transaction do
+            create_dojo
+            recommend_dojo
+            requisition_katanas
+          end
+          return @dojo
+        end
+
+        def create_dojo
+          @dojo = Dojo.create(name: name, sensei: sensei)
+        end
+
+        def recommend_dojo
+          # ...
+        end
+
+        def requisition_katanas
+          # ...
+        end
+      end
+
+= step :controller_fixes, x: 18000 do
+  %h2 Improved Controller
+  = code "ruby" do
+    :plain
+      class DojoController < ApplicationController
+        def create
+          params = params.require(:dojo).allow(:name, :sensei_id)
+
+          @dojo = Mediators::Dojo::Creator.run(params)
+        rescue
+          flash.now[:error] = "Could not create dojo"
+          render :new
+        end
+      end
+
+= step :model_fixes, x: 20000 do
+  %h2 Improved Model
+  = code "ruby" do
+    :plain
+      class Dojo < ActiveRecord::Base
+        validates_presence_of :sensei
+        validates_presence_of :name
+      end
+
+= step :summary, x: 22000 do
+  %h2 MVCM?
+  %ul
+    %li Model - Now concerned only with validation and persistence
+    %li View - Still only concerned with rendering
+    %li Controller - Now concerned only with handling and responding to requests
+    %li Mediator - Handles business logic
+
+= step :still_missing, x: 24000 do
+  %h2 What's wrong now?
+  %ul
+    %li We're still missing solid logging
+    %li We still have one long synchronous request
+
+= step :logging, x: 26000 do
+  %h2 Simple logging
+  = code "ruby" do
+    :plain
+      class Mediators::Dojo::Creator < Mediators::Base
+        # ...
+
+        def create_dojo
+          log(creating_dojo: true) do
+            @dojo = Dojo.create(name: name, sensei_id: sensei_id)
+            log(dojo_id: dojo.id)
+          end
+        end
+
+        # ...
+
+        private
+
+        def log(data, &blk)
+          Pliny.log({
+            dojo_creator: true,
+            name:         name,
+            sensei_id:    sensei_id
+          }.merge(data), &blk)
+        end
+      end
+
+= step :log_results, x: 28000 do
+  %h2 Structured searchable logs:
+  .well 2016-09-22T20:43:08.337698+00:00 54.226.135.103 local7.info app[web.1]: - d.123-450-33241 app=shuriken deployment=production name=foo sensei_id=123 creating_dojo at=start
+
+  .well 2016-09-22T20:43:08.654278+00:00 54.226.135.103 local7.info app[web.1]: - d.123-450-33241 app=shuriken deployment=production name=foo sensei_id=123 dojo_id: 12345
+
+  .well 2016-09-22T20:43:08.897738+00:00 54.226.135.103 local7.info app[web.1]: - d.123-450-33241 app=shuriken deployment=production name=foo sensei_id=123 creating_dojo at=finish
+
+  %h3 Do this in every mediator!
+
+= step :async, x: 30000 do
+  %h2 Introduce a Sidekiq Job
+  = code "ruby" do
+    :plain
+      class Jobs::Dojo::Prepare
+        include Sidekiq::Worker
+
+        attr_reader :dojo_id
+        def perform(dojo_id)
+          @dojo_id = dojo_id
+
+          recommend_dojo
+          requisition_katanas
+        end
+
+        private
+
+        def dojo
+          @dojo ||= Dojo.find(dojo_id)
+        end
+
+        def recommend_dojo
+          # ...
+        end
+
+        def requisition_katanas
+          # ...
+        end
+      end
+
+= step :improved_mediator, x: 32000 do
+  %h2 Improved Mediator
+  = code "ruby" do
+    :plain
+      class Mediators::Dojo::Creator < Base
+        attr_reader :name, :sensei_id
+        def initialize(name:, sensei_id:)
+          @name, @sensei_id = name, sensei_id
+        end
+
+        def call
+          create_dojo
+          prepare_dojo
+          return @dojo
+        end
+
+        def create_dojo
+          # ...
+        end
+
+        def prepare_dojo
+          Jobs::Dojo::Prepare.perform_async(dojo_id)
+        end
+
+        # ...
+      end
+
+= step :whats_wrong_job, x: 34000 do
+  %h2 What's wrong with that?
+  %ul
+    %li Job has mixed concerns
+    %ul
+      %li Deserializing arguments into models
+      %li Business logic
+    %li There is no logging for asynchornous work
+
+= step :another_mediator, x: 36000 do
+  %h2 A New Mediator
+  = code "ruby" do
+    :plain
+      class Mediators::Dojo::Preparer < Mediators::Base
+        attr_reader :dojo
+        def initialize(dojo)
+          @dojo = dojo
+        end
+
+        def call
+          log(prepare_dojo: true) do
+            recommend_dojo
+            requisition_katanas
+          end
+        end
+
+        def recommend_dojo
+          # ...
+        end
+
+        def requisition_katanas
+          # ...
+        end
+
+        # ...
+      end
+
+
+= step :improved_job, x: 38000 do
+  %h2 Improved Job
+  = code "ruby" do
+    :plain
+      class Jobs::Dojo::Prepare
+        include Sidekiq::Worker
+
+        attr_reader :dojo_id
+        def perform(dojo_id)
+          @dojo_id = dojo_id
+
+          prepare_dojo
+        end
+
+        private
+
+        def dojo
+          @dojo ||= Dojo.find(dojo_id)
+        end
+
+        def prepare_dojo
+          Mediators::Dojo::Preparer.run(dojo) if dojo
+        end
+      end
+
+= step :mvcmj, x: 40000 do
+  %h2 MVCMJ?
+  %ul
+    %li Model - Data validation and persistence
+    %li View - Rendering
+    %li Controller - Handling and responding to requests
+    %li Mediator - Business logic
+    %li Jobs - Deserializing queued work
+
+= step :pros_cons, x: 42000 do
+  %h2 Pros
+  %ul
+    %li Separation of concerns
+    %li Decoupled models
+    %li Requests are served faster
+    %li Extensible
+    %li Ops friendly
+
+  %h2 Cons
+  %ul
+    %li Additional files
+    %li Additional lines of code
+
+= step :additional_reading, x: 44000 do
+  %h2 Additional Reading
+  %ul
+    %li
+      %b
+        %a{:href =>' https://brandur.org/mediator'} Brandur Leach on Mediators
+    %li
+      %strong
+        %a{:href => 'https://github.com/interagent/pliny'} Pliny (a microframework with Mediator support)
+
