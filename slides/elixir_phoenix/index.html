@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+<meta content='IE=edge,chrome=1' http-equiv='X-UA-Compatible'>
+<title>Elixir and Phoenix - Web Scale Made Fun | Josh W Lewis: Ruby Developer</title>
+<meta content='Build blazing fast server side apps with Elixir and Phoenix | Josh W Lewis: Ruby Developer, JavaScript Engineer, Consultant, Entrepreneur, Husband, and Dad' name='description'>
+<meta content='width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+<meta content='Josh W Lewis' name='author'>
+<link href="../../stylesheets/slides-156e4619.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class='impress-not-supported'>
+<div class='fallback-message'><h3>Your browser doesn&rsquo;t support the features needed to display this presentation.</h3>
+
+<p>A simplified version of this presentation follows.</p>
+
+<p>For the best experience, please use one of the following browsers:</p>
+
+<ul>
+<li><a href="//www.google.com/chrome">Chrome</a></li>
+<li><a href="//www.apple.com/safari">Safari</a></li>
+<li><a href="//www.mozilla.org/firefox">Firefox</a></li>
+</ul>
+</div>
+<div id='impress'>
+<div id="title" class="step" ><h1>Web Scale Made Fun with Elixir and Phoenix</h1>
+<br>
+<h4>Memphis Ruby</h4>
+<date>7/9/2015</date>
+<br>
+<h4>
+Josh W Lewis -
+<a href='//twitter.com/joshwlewis'>@joshwlewis</a>
+</h4>
+<h4>
+<a href='//heroku.com'>Heroku</a>
+</h4>
+<br>
+<a href='//joshwlewis.com/slides/elixir_phoenix'>joshwlewis.com/slides/elixir_phoenix</a>
+</br>
+</div><div id="what-is-elixir" class="step" data-x="2000"><h2>Elixir is:</h2>
+<h4>
+<ul>
+<li>Inspired by Ruby</li>
+<li>Functional</li>
+<li>Concurrent</li>
+<li>Fault Tolerant</li>
+<li>Extensible</li>
+</ul>
+</h4>
+</div><div id="elixir-looks-like-ruby" class="step" data-x="4000"><h3>Heavily inspired by Ruby!</h3>
+<p>Ruby</p>
+<pre class="highlight ruby"><span class="k">module</span> <span class="nn">Food</span>
+  <span class="k">def </span><span class="nf">eat</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">name</span> <span class="o">==</span> <span class="s2">&quot;donut&quot;</span>
+      <span class="nb">puts</span> <span class="s2">&quot;too fattening.&quot;</span>
+    <span class="k">else</span>
+      <span class="nb">puts</span> <span class="s2">&quot;nom nom.&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+<p>Elixir</p>
+<pre class="highlight elixir"><span class="k">defmodule</span> <span class="no">Food</span> <span class="k">do
+  def</span> <span class="n">eat</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">do
+    if</span> <span class="n">name</span> <span class="o">==</span> <span class="sd">&quot;</span><span class="s2">donut&quot;</span> <span class="k">do
+      </span><span class="no">IO</span><span class="o">.</span><span class="n">puts</span> <span class="sd">&quot;</span><span class="s2">too fattening.&quot;</span>
+    <span class="k">else</span>
+      <span class="no">IO</span><span class="o">.</span><span class="n">puts</span> <span class="sd">&quot;</span><span class="s2">nom nom.&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+</div><div id="elixir-is-functional" class="step" data-x="6000"><h3>Elixir is Functional</h3>
+<h3>Ruby</h3>
+
+<ul>
+<li>Messages are sent to objects.</li>
+<li>Object data is mutated directly (mutable).</li>
+<li>Classes add methods to objects to implement functionality.</li>
+</ul>
+<pre class="highlight ruby"><span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="nf">.find</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">user</span><span class="nf">.name</span> <span class="o">=</span> <span class="s2">&quot;Bob&quot;</span>
+<span class="n">user</span><span class="nf">.save</span>
+</pre>
+<h3>Elixir</h3>
+
+<ul>
+<li>Functions are passed data.</li>
+<li>Functions return new copies of the modified data (immutable).</li>
+<li>Functions are chained to compose functionality.</li>
+</ul>
+<pre class="highlight elixir"><span class="n">user</span> <span class="o">=</span> <span class="no">Repo</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="no">User</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span>
+<span class="n">changes</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">changeset</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="err">%</span><span class="p">{</span><span class="ss">name:</span> <span class="sd">&quot;</span><span class="s2">Bob&quot;</span><span class="p">})</span>
+<span class="no">Repo</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">changes</span><span class="p">)</span>
+</pre>
+</div><div id="elixir-is-concurrent" class="step" data-x="8000"><h3>Elixir is Concurrent</h3>
+<pre class="highlight elixir"><span class="k">defmodule</span> <span class="no">Fib</span> <span class="k">do
+  def</span> <span class="n">num</span><span class="p">(</span><span class="m">1</span><span class="p">),</span> <span class="k">do</span><span class="p">:</span> <span class="m">0</span>
+  <span class="k">def</span> <span class="n">num</span><span class="p">(</span><span class="m">2</span><span class="p">),</span> <span class="k">do</span><span class="p">:</span> <span class="m">1</span>
+  <span class="k">def</span> <span class="n">num</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">do
+    </span><span class="n">two_back</span> <span class="o">=</span> <span class="no">Task</span><span class="o">.</span><span class="n">async</span><span class="p">(</span><span class="k">fn</span> <span class="o">-&gt;</span> <span class="no">Fib</span><span class="o">.</span><span class="n">num</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="m">2</span><span class="p">)</span> <span class="k">end</span><span class="p">)</span>
+    <span class="n">one_back</span> <span class="o">=</span> <span class="no">Task</span><span class="o">.</span><span class="n">async</span><span class="p">(</span><span class="k">fn</span> <span class="o">-&gt;</span> <span class="no">Fib</span><span class="o">.</span><span class="n">num</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="m">1</span><span class="p">)</span> <span class="k">end</span><span class="p">)</span>
+    <span class="no">Task</span><span class="o">.</span><span class="n">await</span><span class="p">(</span><span class="n">two_back</span><span class="p">)</span> <span class="o">+</span> <span class="no">Task</span><span class="o">.</span><span class="n">await</span><span class="p">(</span><span class="n">one_back</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">Fib</span><span class="o">.</span><span class="n">number</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>  <span class="c1"># =&gt; 0</span>
+<span class="no">Fib</span><span class="o">.</span><span class="n">number</span><span class="p">(</span><span class="m">5</span><span class="p">)</span>  <span class="c1"># =&gt; 3</span>
+<span class="no">Fib</span><span class="o">.</span><span class="n">number</span><span class="p">(</span><span class="m">20</span><span class="p">)</span> <span class="c1"># =&gt; 4181</span>
+</pre>
+</div><div id="elixir-is-fault-tolerant" class="step" data-x="10000"><h3>Elixir is Fault Tolerant</h3>
+<pre class="highlight elixir"><span class="c1"># mix.exs</span>
+<span class="k">defmodule</span> <span class="no">HexWeb</span><span class="o">.</span><span class="no">Mixfile</span> <span class="k">do
+  </span><span class="kn">use</span> <span class="no">Mix</span><span class="o">.</span><span class="no">Project</span>
+
+  <span class="k">def</span> <span class="n">project</span> <span class="k">do
+    </span><span class="p">[</span><span class="ss">app:</span> <span class="ss">:hex_web</span><span class="p">,</span>
+     <span class="ss">version:</span> <span class="sd">&quot;</span><span class="s2">0.0.1&quot;</span><span class="p">,</span>
+     <span class="ss">elixir:</span> <span class="sd">&quot;</span><span class="s2">~&gt; 1.0&quot;</span><span class="p">,</span>
+     <span class="o">...</span>
+     <span class="ss">deps:</span> <span class="n">deps</span><span class="p">]</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="n">application</span> <span class="k">do
+    </span><span class="p">[</span><span class="ss">applications:</span> <span class="p">[</span><span class="ss">:logger</span><span class="p">,</span> <span class="ss">:plug</span><span class="p">,</span> <span class="ss">:cowboy</span><span class="p">,</span> <span class="ss">:ecto</span><span class="p">,</span> <span class="ss">:postgrex</span><span class="p">],</span>
+     <span class="ss">mod:</span> <span class="p">{</span><span class="no">HexWeb</span><span class="p">,</span> <span class="p">[]},</span>
+     <span class="ss">env:</span> <span class="p">[]]</span>
+  <span class="k">end</span>
+
+  <span class="k">defp</span> <span class="n">deps</span> <span class="k">do
+    </span><span class="p">[{</span><span class="ss">:plug</span><span class="p">,</span>      <span class="sd">&quot;</span><span class="s2">~&gt; 0.11&quot;</span><span class="p">},</span>
+     <span class="p">{</span><span class="ss">:cowboy</span><span class="p">,</span>    <span class="sd">&quot;</span><span class="s2">~&gt; 1.0&quot;</span><span class="p">},</span>
+     <span class="p">{</span><span class="ss">:ecto</span><span class="p">,</span>      <span class="ss">github:</span> <span class="sd">&quot;</span><span class="s2">elixir-lang/ecto&quot;</span><span class="p">},</span>
+     <span class="p">{</span><span class="ss">:postgrex</span><span class="p">,</span>  <span class="sd">&quot;</span><span class="s2">&gt;= 0.0.0&quot;</span><span class="p">},</span>
+     <span class="o">...</span>
+   <span class="p">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+</div><div id="elixir-is-extensible" class="step" data-x="12000"><h3>Elixir is Extensible</h3>
+<pre class="highlight elixir"><span class="k">defmodule</span> <span class="no">Fib</span> <span class="k">do
+  </span><span class="no">Enum</span><span class="o">.</span><span class="n">with_index</span><span class="p">([</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">3</span><span class="p">,</span><span class="m">5</span><span class="p">,</span><span class="m">8</span><span class="p">,</span><span class="m">11</span><span class="p">])</span>
+  <span class="o">|&gt;</span> <span class="no">Enum</span><span class="o">.</span><span class="n">each</span> <span class="k">fn</span> <span class="p">{</span><span class="n">num</span><span class="p">,</span> <span class="n">index</span><span class="p">}</span> <span class="o">-&gt;</span>
+    <span class="k">def</span> <span class="n">num</span><span class="p">(</span><span class="kn">unquote</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="m">1</span><span class="p">)),</span> <span class="k">do</span><span class="p">:</span> <span class="kn">unquote</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="n">num</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="k">do</span><span class="p">:</span> <span class="n">num</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="m">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">num</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="m">2</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="no">Fib</span><span class="o">.</span><span class="n">num</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>  <span class="c1"># =&gt; 1</span>
+<span class="no">Fib</span><span class="o">.</span><span class="n">num</span><span class="p">(</span><span class="m">5</span><span class="p">)</span>  <span class="c1"># =&gt; 3</span>
+<span class="no">Fib</span><span class="o">.</span><span class="n">num</span><span class="p">(</span><span class="m">20</span><span class="p">)</span> <span class="c1"># =&gt; 4181</span>
+</pre>
+</div><div id="build-on-erlang" class="step" data-x="14000"><h3>Elixir is Backed By Erlang</h3>
+<pre class="highlight elixir"><span class="ss">:crypto</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="sd">&quot;</span><span class="s2">Using crypto from Erlang OTP&quot;</span><span class="p">)</span>
+</pre>
+<ul>
+<li>Can use Erlang's standard library</li>
+<li>Can use third party Erlang code</li>
+<li>Can use battle-tested OTP features</li>
+</ul>
+</div><div id="cool-tools" class="step" data-x="16000"><h3>Elixir has Cool Tools</h3>
+<ul>
+<li>iex</li>
+<li>Mix</li>
+<li>ExUnit</li>
+<li>
+<a href='//hex.pm/'>Hex.pm</a>
+</li>
+</ul>
+</div><div id="phoenix" class="step" data-x="20000"><h3>
+<a href='//phoenixframework.org'>Phoenix Framework</a>
+</h3>
+<ul>
+<li>MVCish Web Framework Built on Elixir</li>
+<li>Fast</li>
+<li>Scalable</li>
+<li>Lightweight</li>
+<li>Real-time built in</li>
+<li>Rails-ish</li>
+</ul>
+</div><div id="phoenix-models" class="step" data-x="22000"><h3>Phoenix's Model Comes From Ecto</h3>
+<pre class="highlight elixir"><span class="k">defmodule</span> <span class="no">MyCoolApp</span><span class="o">.</span><span class="no">User</span> <span class="k">do
+  </span><span class="kn">use</span> <span class="no">MyCoolApp</span><span class="o">.</span><span class="no">Web</span><span class="p">,</span> <span class="ss">:model</span>
+
+  <span class="n">schema</span> <span class="sd">&quot;</span><span class="s2">users&quot;</span> <span class="k">do
+    </span><span class="n">field</span> <span class="ss">:email</span><span class="p">,</span>              <span class="ss">:string</span>
+    <span class="n">field</span> <span class="ss">:password</span><span class="p">,</span>           <span class="ss">:string</span>
+
+    <span class="n">timestamps</span>
+  <span class="k">end</span>
+
+  <span class="nv">@required_fields</span> <span class="err">~</span><span class="n">w</span><span class="p">(</span><span class="n">email</span> <span class="n">password</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="n">changeset</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span> <span class="k">do
+    </span><span class="n">cast</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="err">~</span><span class="n">w</span><span class="p">(</span><span class="n">email</span> <span class="n">password</span><span class="p">),</span> <span class="p">[])</span>
+    <span class="o">|&gt;</span> <span class="n">update_change</span><span class="p">(</span><span class="ss">:email</span><span class="p">,</span> <span class="err">&amp;</span><span class="no">String</span><span class="o">.</span><span class="n">downcase</span><span class="o">/</span><span class="m">1</span><span class="p">)</span>
+    <span class="o">|&gt;</span> <span class="n">validate_format</span><span class="p">(</span><span class="ss">:email</span><span class="p">,</span> <span class="err">~</span><span class="n">r</span><span class="sd">&quot;</span><span class="s2">^.+@.+\..+$&quot;</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+</div><div id="phoenix-router" class="step" data-x="24000"><h3>Phoenix's Router Looks Familiar</h3>
+<pre class="highlight elixir"><span class="k">defmodule</span> <span class="no">MyCoolApp</span><span class="o">.</span><span class="no">Router</span> <span class="k">do
+  </span><span class="kn">use</span> <span class="no">MyCoolApp</span><span class="o">.</span><span class="no">Web</span><span class="p">,</span> <span class="ss">:router</span>
+
+  <span class="n">pipeline</span> <span class="ss">:browser</span> <span class="k">do
+    </span><span class="n">plug</span> <span class="ss">:accepts</span><span class="p">,</span> <span class="p">[</span><span class="sd">&quot;</span><span class="s2">html&quot;</span><span class="p">]</span>
+    <span class="n">plug</span> <span class="ss">:fetch_session</span>
+  <span class="k">end</span>
+
+  <span class="n">pipeline</span> <span class="ss">:api</span> <span class="k">do
+    </span><span class="n">plug</span> <span class="ss">:accepts</span><span class="p">,</span> <span class="p">[</span><span class="sd">&quot;</span><span class="s2">json&quot;</span><span class="p">]</span>
+  <span class="k">end</span>
+
+  <span class="n">scope</span> <span class="sd">&quot;</span><span class="s2">/&quot;</span><span class="p">,</span> <span class="no">MyCoolApp</span> <span class="k">do
+    </span><span class="n">pipe_through</span> <span class="ss">:browser</span>
+
+    <span class="n">get</span> <span class="sd">&quot;</span><span class="s2">/&quot;</span><span class="p">,</span> <span class="no">PageController</span><span class="p">,</span> <span class="ss">:index</span>
+
+    <span class="n">get</span> <span class="sd">&quot;</span><span class="s2">/login&quot;</span><span class="p">,</span> <span class="no">LoginController</span><span class="p">,</span> <span class="ss">:new</span>
+    <span class="n">post</span> <span class="sd">&quot;</span><span class="s2">/login&quot;</span><span class="p">,</span> <span class="no">LoginController</span><span class="p">,</span> <span class="ss">:create</span>
+
+    <span class="n">resources</span> <span class="sd">&quot;</span><span class="s2">/users&quot;</span><span class="p">,</span> <span class="no">UserController</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+</div><div id="phoenix-controller" class="step" data-x="26000"><h3>Phoenix's Controllers Familiar but Functional</h3>
+<pre class="highlight elixir"><span class="k">defmodule</span> <span class="no">MyCoolApp</span><span class="o">.</span><span class="no">LoginController</span> <span class="k">do
+  </span><span class="kn">use</span> <span class="no">MyCoolApp</span><span class="o">.</span><span class="no">Web</span><span class="p">,</span> <span class="ss">:controller</span>
+  <span class="n">alias</span> <span class="no">MyCoolApp</span><span class="o">.</span><span class="no">Login</span>
+
+  <span class="k">def</span> <span class="n">new</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">_params</span><span class="p">)</span> <span class="k">do
+    </span><span class="n">render</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="ss">:new</span><span class="p">,</span> <span class="ss">login:</span> <span class="err">%</span><span class="no">Login</span><span class="p">{})</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="n">create</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="err">%</span><span class="p">{</span><span class="sd">&quot;</span><span class="s2">login&quot;</span> <span class="o">=&gt;</span> <span class="err">%</span><span class="p">{</span><span class="sd">&quot;</span><span class="s2">email&quot;</span> <span class="o">=&gt;</span> <span class="n">email</span><span class="p">,</span> <span class="sd">&quot;</span><span class="s2">password&quot;</span> <span class="o">=&gt;</span> <span class="n">password</span><span class="p">}})</span> <span class="k">do
+    </span><span class="n">login</span> <span class="o">=</span> <span class="err">%</span><span class="no">Login</span><span class="p">{</span><span class="ss">email:</span> <span class="n">email</span><span class="p">,</span> <span class="ss">password:</span> <span class="n">password</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">user</span> <span class="o">=</span> <span class="no">Login</span><span class="o">.</span><span class="n">authorized_user</span><span class="p">(</span><span class="n">login</span><span class="p">)</span> <span class="k">do
+      </span><span class="n">put_session</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="ss">:user_id</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+      <span class="o">|&gt;</span> <span class="n">redirect</span><span class="p">(</span><span class="ss">to:</span> <span class="n">users_path</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="ss">:index</span><span class="p">))</span>
+    <span class="k">else</span>
+      <span class="n">put_flash</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="ss">:error</span><span class="p">,</span> <span class="sd">&quot;</span><span class="s2">Invalid credentials provided.&quot;</span><span class="p">)</span>
+      <span class="o">|&gt;</span> <span class="n">render</span><span class="p">(</span><span class="ss">:new</span><span class="p">,</span> <span class="ss">login:</span> <span class="n">login</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+</pre>
+</div><div id="phoenix-views" class="step" data-x="28000"><h3>Phoenix Has a View Layer</h3>
+<p>It sits between the Controller and Template.</p>
+<pre class="highlight elixir"><span class="k">defmodule</span> <span class="no">MyCoolApp</span><span class="o">.</span><span class="no">UserView</span> <span class="k">do
+  </span><span class="kn">use</span> <span class="no">MyCoolApp</span><span class="o">.</span><span class="no">Web</span><span class="p">,</span> <span class="ss">:view</span>
+
+  <span class="k">def</span> <span class="n">render</span><span class="p">(</span><span class="sd">&quot;</span><span class="s2">show.json&quot;</span><span class="p">,</span> <span class="err">%</span><span class="p">{</span><span class="ss">user:</span> <span class="n">user</span><span class="p">})</span> <span class="k">do
+    </span><span class="err">%</span><span class="p">{</span><span class="ss">data:</span> <span class="n">render_one</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="sd">&quot;</span><span class="s2">user.json&quot;</span><span class="p">)}</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="n">render</span><span class="p">(</span><span class="sd">&quot;</span><span class="s2">user.json&quot;</span><span class="p">,</span> <span class="err">%</span><span class="p">{</span><span class="ss">user:</span> <span class="n">user</span><span class="p">})</span> <span class="k">do
+    </span><span class="err">%</span><span class="p">{</span>
+      <span class="ss">type:</span> <span class="sd">&quot;</span><span class="s2">user&quot;</span><span class="p">,</span>
+      <span class="ss">id:</span>   <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+      <span class="ss">attributes:</span> <span class="err">%</span><span class="p">{</span>
+        <span class="ss">email:</span>       <span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span>
+        <span class="ss">inserted_at:</span> <span class="n">user</span><span class="o">.</span><span class="n">inserted_at</span><span class="p">,</span>
+        <span class="ss">updated_at:</span>  <span class="n">user</span><span class="o">.</span><span class="n">updated_at</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+</div><div id="phoenix-templates" class="step" data-x="30000"><h3>.eex Templates are Also Familiar</h3>
+<pre class="highlight text">&lt;%= form_for @conn, login_path(@conn, :create), [name: :login], fn f -&gt; %&gt;
+  &lt;div class=&quot;form-group&quot;&gt;
+    &lt;label&gt;Email&lt;/label&gt;
+    &lt;%= email_input f, :email, class: &quot;form-control&quot; %&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;form-group&quot;&gt;
+    &lt;label&gt;Password&lt;/label&gt;
+    &lt;%= password_input f, :password, class: &quot;form-control&quot; %&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;form-group&quot;&gt;
+    &lt;%= submit &quot;Submit&quot;, class: &quot;btn btn-primary&quot; %&gt;
+  &lt;/div&gt;
+&lt;% end %&gt;
+</pre>
+</div><div id="demo" class="step" data-x="32000"><h3>Demo Time</h3>
+</div><div id="resources" class="step" data-x="34000"><h2>Resources</h2>
+<dl>
+<dt>This Presentation</dt>
+<dd>
+<a href='//joshwlewis.com/slides/elixir_phoenix'>joshwlewis.com/slides/elixir_phoenix</a>
+</dd>
+<dt>Elixir Language</dt>
+<dd>
+<a href='//elixir-lang.org'>elixir-lang.org</a>
+</dd>
+<dt>Phoenix Framework</dt>
+<dd>
+<a href='//phoenixframework.org'>phoenixframework.org</a>
+</dd>
+</dl>
+</div>
+</div>
+<script src="../../javascripts/slides/body-dd9f322b.js" type="text/javascript"></script>
+</body>
+</html>

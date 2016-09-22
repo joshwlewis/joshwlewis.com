@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<head>
+<meta charset='utf-8'>
+<meta content='IE=edge,chrome=1' http-equiv='X-UA-Compatible'>
+<meta content='Unitwise is a RubyGem for unit measurement math and conversion, based on The Unified Code for Units of Measure. | Josh W Lewis: Ruby Developer' name='description'>
+<title>Unitwise: Ruby Unit Measurement Math and Conversion | Josh W Lewis</title>
+<meta content='width=device-width, initial-scale=1.0' name='viewport'>
+
+<script src="../../javascripts/blog/head-8a505cfa.js" type="text/javascript"></script>
+<link href="../../stylesheets/blog-33e38085.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id='background'></div>
+<div class='container'>
+<div class='space' id='headline'>
+<img alt='Josh W Lewis' class='avatar' src='/images/joshwlewis-36466eda.jpg'>
+<a class='name' href='/'>Josh W Lewis</a>
+<span>/</span>
+<a href="/essays">Essays</a>
+<span>/</span>
+<a href="/essays/unitwise-ruby-unit-measurement">Unitwise: Ruby Unit Measurement Math and Conversion</a>
+</div>
+<div class='surface'>
+<h1><a href="/essays/unitwise-ruby-unit-measurement">Unitwise: Ruby Unit Measurement Math and Conversion</a></h1>
+<h4>
+By
+<a href='/' rel='author'>Josh W Lewis</a>
+</h4>
+<h5>On August 13, 2013</h5>
+<p>So, way back in Mechanical Engineering school, I learned that a very effective way to check my answers was to make sure the units worked out. For an example, consider a basic physics problem:</p>
+
+<blockquote>
+<p>The average mass of an adult American male is 86 kilograms. Determine weight of an average man on the moon where the gravitational field is one-sixth that of the Earth (9.8 m/s<sup>2</sup>).</p>
+</blockquote>
+
+<p>If you paid attention in physics, you would work it out like this:</p>
+<pre class="highlight ruby">  <span class="n">mass</span> <span class="o">=</span> <span class="mi">86</span> <span class="c1"># 86 kg</span>
+  <span class="n">acceleration</span> <span class="o">=</span> <span class="mi">9</span><span class="o">.</span><span class="mi">8</span> <span class="o">/</span> <span class="mi">6</span> <span class="c1"># 1.633334 m/s2</span>
+  <span class="n">force</span> <span class="o">=</span> <span class="n">mass</span> <span class="o">*</span> <span class="n">acceleration</span> 
+  <span class="c1"># =&gt; 140.4666666666667</span>
+</pre>
+<p>Ok, so 140 &ndash; but 140 what? Since we effectively performed &lsquo;kg * m/s<sup>2</sup>&rsquo; it&rsquo;s plain to see that our unit is &#39;kg&sdot;m/s<sup>2</sup>&rsquo;. Ok, great, so our unit result is in the form of a mass times an acceleration, just as we would expect to see when calculating a force. When you are using a pen and paper, this is a great way to make sure your result is what you expect (your force is a measurement force, your energy is a unit of energy).</p>
+
+<p>But using straight up Numerics for calculation through Ruby means that we lose track of units. As the calculation gets more complicated, manual unit checking becomes monotonous and error-prone. On <a href="https://www.emergentcoils.com/">emergentcoils.com</a> I&rsquo;ve had to do a fair amount of these types of calculations (namely heat transfer capacities), and I was getting tired of trying to remember what unit a Numeric value was in.</p>
+
+<p>So, like any good Rubyist, I searched for a RubyGem that could track units as I performed math on them. There are a couple already out there (most notably <a href="https://github.com/olbrich/ruby-units">ruby-units</a>), and they certainly work for many (or probably most) situations. However, they either didn&rsquo;t have a few of the units I needed or they only did conversion (not Math). </p>
+
+<p>During my search, I ended up stumbling across <a href="http://www.unitsofmeasure.org/">The Unified Code for Units of Measurement (UCUM)</a> &ndash; which had all the units I needed ready to go in XML format. From that <a href="https://github.com/joshwlewis/unitwise">Unitwise</a> was born.</p>
+
+<p>Now, it&rsquo;s really easy to track units for our example problem:</p>
+<pre class="highlight ruby"><span class="n">mass</span> <span class="o">=</span> <span class="mi">86</span><span class="nf">.kg</span>
+<span class="c1"># =&gt; &lt;Unitwise::Measurement 86 kg&gt;</span>
+<span class="n">acceleration</span> <span class="o">=</span> <span class="mi">9</span><span class="o">.</span><span class="mi">8</span><span class="nf">.convert_to</span><span class="p">(</span><span class="s1">&#39;m/s2&#39;</span><span class="p">)</span> <span class="o">/</span> <span class="mi">6</span>
+<span class="c1"># =&gt; &lt;Unitwise::Measurement 1.6333333333333335 m/s2&gt;</span>
+<span class="n">force</span> <span class="o">=</span> <span class="n">mass</span> <span class="o">*</span> <span class="n">acceleration</span>
+<span class="c1"># =&gt; &lt;Unitwise::Measurement 140.4666666666667 kg.m/s2&gt;</span>
+</pre>
+<p>And of course it does conversion:</p>
+<pre class="highlight text">mass.to_pound
+=&gt; &lt;Unitwise::Measurement 189.5975454789947 pound&gt;
+
+force.to_newton
+=&gt; &lt;Unitwise::Measurement 140.4666666666667 newton&gt;
+</pre>
+<p>Obviously, this is a very simple example, but the possibilities are certainly endless. UCUM (and by extension Unitwise) features 95 metric units, 199 non-metric units, and 24 unit prefixes. That&rsquo;s approximately 2,500 basic units to start you with, but these can be combined with multiplication and division for infinite combinations.</p>
+
+<p>You can find Unitwise at <a href="https://github.com/joshwlewis/unitwise">github.com/joshwlewis/unitwise</a>. Check out the README there for installation and additional usage instructions.</p>
+
+<hr>
+<div class='well'>
+This article was categorized as
+<a href="/essays/categories/ruby">ruby</a>, <a href="/essays/categories/gem">gem</a>, <a href="/essays/categories/math">math</a>, and <a href="/essays/categories/science">science</a>
+</div>
+<div id='disqus_thread'></div>
+</div>
+<script src="../../javascripts/app/integrations/disqus-579674f1.js" type="text/javascript"></script>
+
+<div class='with-footer'></div>
+<footer class='space' id='copyright'>
+<span>
+Copyright &copy
+2016
+</span>
+<span>
+Josh W Lewis
+</span>
+<span>
+<a href='//feeds.feedburner.com/JoshWLewis'>
+<i class='icon-rss'></i>
+</a>
+</span>
+</footer>
+
+</div>
+<script src="../../javascripts/blog/body-53988f5f.js" type="text/javascript"></script>
+</body>
+

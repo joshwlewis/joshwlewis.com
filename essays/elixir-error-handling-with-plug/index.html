@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<head>
+<meta charset='utf-8'>
+<meta content='IE=edge,chrome=1' http-equiv='X-UA-Compatible'>
+<meta content="Plug's exception protocol is a hidden gem that can clean up error rendering in your Elixir webapps. | Josh W Lewis: Ruby Developer and JavaScript Engineer" name='description'>
+<title>Error Handling in Elixir with Plug.Exception | Josh W Lewis</title>
+<meta content='width=device-width, initial-scale=1.0' name='viewport'>
+
+<script src="../../javascripts/blog/head-8a505cfa.js" type="text/javascript"></script>
+<link href="../../stylesheets/blog-33e38085.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id='background'></div>
+<div class='container'>
+<div class='space' id='headline'>
+<img alt='Josh W Lewis' class='avatar' src='/images/joshwlewis-36466eda.jpg'>
+<a class='name' href='/'>Josh W Lewis</a>
+<span>/</span>
+<a href="/essays">Essays</a>
+<span>/</span>
+<a href="/essays/elixir-error-handling-with-plug">Error Handling in Elixir with Plug.Exception</a>
+</div>
+<div class='surface'>
+<h1><a href="/essays/elixir-error-handling-with-plug">Error Handling in Elixir with Plug.Exception</a></h1>
+<h4>
+By
+<a href='/' rel='author'>Josh W Lewis</a>
+</h4>
+<h5>On May 30, 2016</h5>
+<p>I found a hidden gem last week: Plug&rsquo;s exception protocol. It gives you a
+concise pattern for rendering errors to users in an informative way.</p>
+
+<p>For example, consider some team dashboard that you want to limit access to
+in your Phoenix application. You want to block non-admins and non-team-members
+from seeing it, but you also want to provide context that they were blocked
+and also why.</p>
+
+<p>The most straightforward way to do this would just be a simple conditional in
+your controller. Like this:</p>
+<pre class="highlight elixir"><span class="k">defmodule</span> <span class="no">MyApp</span><span class="o">.</span><span class="no">WidgetController</span> <span class="k">do
+  </span><span class="n">alias</span> <span class="no">MyApp</span><span class="o">.</span><span class="p">{</span><span class="no">Repo</span><span class="p">,</span> <span class="no">Team</span><span class="p">,</span> <span class="no">Widget</span><span class="p">}</span>
+
+  <span class="k">def</span> <span class="n">index</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="err">%</span><span class="p">{</span><span class="sd">&quot;</span><span class="s2">id&quot;</span> <span class="o">=&gt;</span> <span class="n">team_id</span><span class="p">})</span> <span class="k">do
+    </span><span class="n">user</span> <span class="o">=</span> <span class="n">get_current_user</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+    <span class="n">team</span> <span class="o">=</span> <span class="no">Repo</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="no">Team</span><span class="p">,</span> <span class="n">team_id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">role</span> <span class="o">==</span> <span class="sd">&quot;</span><span class="s2">admin&quot;</span> <span class="o">&amp;&amp;</span> <span class="n">team</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">user</span><span class="o">.</span><span class="n">team_id</span> <span class="k">do
+      </span><span class="c1"># user is authorized; now we can load up the data</span>
+      <span class="n">widgets</span> <span class="o">=</span> <span class="no">Repo</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="no">Widget</span><span class="p">)</span>
+      <span class="n">render</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="sd">&quot;</span><span class="s2">show.json&quot;</span><span class="p">,</span> <span class="err">%</span><span class="p">{</span><span class="ss">widgets:</span> <span class="n">widgets</span><span class="p">})</span>
+    <span class="k">else</span>
+      <span class="c1"># user is not allowed access; tell them with a message and http status</span>
+      <span class="n">put_status</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="m">403</span><span class="p">)</span>
+      <span class="o">|&gt;</span> <span class="n">render</span><span class="p">(</span><span class="no">ErrorView</span><span class="p">,</span> <span class="sd">&quot;</span><span class="s2">403.json&quot;</span><span class="p">,</span> <span class="err">%</span><span class="p">{</span><span class="ss">message:</span> <span class="sd">&quot;</span><span class="s2">You need to be a team admin&quot;</span><span class="p">})</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+<p>For this to work, you&rsquo;ll need to define a function to handle rendering
+the 403:</p>
+<pre class="highlight elixir"><span class="k">defmodule</span> <span class="no">MyApp</span><span class="o">.</span><span class="no">ErrorView</span>
+  <span class="k">def</span> <span class="n">render</span><span class="p">(</span><span class="sd">&quot;</span><span class="s2">403.json&quot;</span><span class="p">,</span> <span class="err">%</span><span class="p">{</span><span class="ss">message:</span> <span class="n">message</span><span class="p">})</span> <span class="k">do
+    </span><span class="err">%</span><span class="p">{</span>
+      <span class="ss">status:</span> <span class="m">403</span><span class="p">,</span>
+      <span class="ss">message:</span> <span class="n">message</span>
+    <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+<p>Now this works, and is clear and explicit. But it feels a bit verbose
+to me. We&rsquo;re mixing authorization and retrieving data into the same function,
+and half the code is devoted to detecting and rendering the error. I was doing
+something like this, and after adding this to several controllers, the logic
+started to feel like a filibuster.</p>
+
+<p>One important thing about Elixir that we should note here, is that there is
+no <code>return</code> keyword. There is no way to exit a function early. So we can&rsquo;t
+just render and abort &ndash; the only way to end the function is to finish
+execution. With that in mind, here&rsquo;s a way you could extract this logic.</p>
+<pre class="highlight elixir"><span class="k">defmodule</span> <span class="no">MyApp</span><span class="o">.</span><span class="no">WidgetController</span> <span class="k">do
+  def</span> <span class="n">index</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="err">%</span><span class="p">{</span><span class="sd">&quot;</span><span class="s2">id&quot;</span> <span class="o">=&gt;</span> <span class="n">team_id</span><span class="p">})</span> <span class="k">do
+    </span><span class="n">user</span> <span class="o">=</span> <span class="n">get_current_user</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+    <span class="n">team</span> <span class="o">=</span> <span class="no">Repo</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="no">Team</span><span class="p">,</span> <span class="n">team_id</span><span class="p">)</span>
+    <span class="n">authorize</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">team</span><span class="p">,</span> <span class="k">fn</span> <span class="o">-&gt;</span>
+      <span class="n">widgets</span> <span class="o">=</span> <span class="no">Repo</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="no">Widget</span><span class="p">)</span>
+      <span class="n">render</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="sd">&quot;</span><span class="s2">show.json&quot;</span><span class="p">,</span> <span class="err">%</span><span class="p">{</span><span class="ss">widgets:</span> <span class="n">widgets</span><span class="p">})</span>
+    <span class="k">end</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">defp</span> <span class="n">authorize</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">team</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span> <span class="k">do
+    if</span> <span class="n">user</span><span class="o">.</span><span class="n">role</span> <span class="o">==</span><span class="sd">&quot;</span><span class="s2">admin&quot;</span> <span class="o">&amp;&amp;</span> <span class="n">team</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">user</span><span class="o">.</span><span class="n">team_id</span> <span class="k">do
+      </span><span class="n">callback</span><span class="o">.</span><span class="p">()</span>
+    <span class="k">else</span>
+      <span class="n">put_status</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="m">403</span><span class="p">)</span>
+      <span class="o">|&gt;</span> <span class="n">render</span><span class="p">(</span><span class="no">ErrorView</span><span class="p">,</span> <span class="sd">&quot;</span><span class="s2">403.json&quot;</span><span class="p">,</span> <span class="err">%</span><span class="p">{</span><span class="ss">message:</span> <span class="sd">&quot;</span><span class="s2">You need to be a team admin&quot;</span><span class="p">})</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+<p>Here, the <code>index</code> function is a little easier to read, and the <code>authorize</code>
+function encapsulates most of that logic. But this still feels long-winded for
+my taste.</p>
+
+<p>Luckily <a href="https://github.com/elixir-lang/plug">plug</a> provides a
+<a href="https://hexdocs.pm/plug/Plug.Exception.html">handy protocol for rendering
+exceptions</a>, which Phoenix
+supports.</p>
+
+<p>This is actually what Phoenix uses to render a <code>404</code> when <code>Ecto.Repo.get!/2</code>
+fails. Phoenix has implemented the <code>Plug.Exception</code> protocol for some of the
+common Ecto errors.</p>
+<pre class="highlight elixir"><span class="k">defimpl</span> <span class="no">Plug</span><span class="o">.</span><span class="no">Exception</span><span class="p">,</span> <span class="ss">for:</span> <span class="no">Ecto</span><span class="o">.</span><span class="no">NoResultsError</span> <span class="k">do
+  def</span> <span class="n">status</span><span class="p">(</span><span class="n">_</span><span class="p">),</span> <span class="k">do</span><span class="p">:</span> <span class="m">404</span>
+<span class="k">end</span>
+</pre>
+<p>To use it ourselves, we&rsquo;ll start by defining your own Exceptions. For the
+above example, a new <code>Forbidden</code> exception makes sense. But you may want to
+add more. I have <code>Unauthorized</code> (401) and <code>UnprocessibleEntity</code> (422) in my
+app.</p>
+<pre class="highlight elixir"><span class="k">defmodule</span> <span class="no">MyApp</span><span class="o">.</span><span class="no">Forbidden</span> <span class="k">do
+  defexception</span> <span class="p">[</span><span class="ss">message:</span> <span class="sd">&quot;</span><span class="s2">You do not have access to this resource.&quot;</span><span class="p">,</span>
+                <span class="ss">plug_status:</span> <span class="m">403</span><span class="p">]</span>
+<span class="k">end</span>
+</pre>
+<p>Now we have an exception that Plug knows how to handle. Whenever we raise
+this error, Plug knows to return an HTTP status of 403. We also defined a
+default message, which Phoenix will automatically pass to our <code>ErrorView</code>
+above.</p>
+
+<p>Now, we can clean up our controller a bit.</p>
+<pre class="highlight elixir"><span class="k">defmodule</span> <span class="no">MyApp</span><span class="o">.</span><span class="no">WidgetController</span> <span class="k">do
+  def</span> <span class="n">index</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="err">%</span><span class="p">{</span><span class="sd">&quot;</span><span class="s2">id&quot;</span> <span class="o">=&gt;</span> <span class="n">team_id</span><span class="p">})</span> <span class="k">do
+    </span><span class="n">user</span> <span class="o">=</span> <span class="n">get_current_user</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+    <span class="n">team</span> <span class="o">=</span> <span class="no">Repo</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="no">Team</span><span class="p">,</span> <span class="n">team_id</span><span class="p">)</span>
+    <span class="n">authorize!</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">team</span><span class="p">)</span>
+    <span class="n">widgets</span> <span class="o">=</span> <span class="no">Repo</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="no">Widget</span><span class="p">)</span>
+    <span class="n">render</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="sd">&quot;</span><span class="s2">show.json&quot;</span><span class="p">,</span> <span class="err">%</span><span class="p">{</span><span class="ss">widgets:</span> <span class="n">widgets</span><span class="p">})</span>
+  <span class="k">end</span>
+
+  <span class="k">defp</span> <span class="n">authorize!</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">team</span><span class="p">)</span> <span class="k">do
+    if</span> <span class="n">user</span><span class="o">.</span><span class="n">role</span> <span class="o">!=</span><span class="sd">&quot;</span><span class="s2">admin&quot;</span> <span class="o">||</span> <span class="n">team</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="n">user</span><span class="o">.</span><span class="n">team_id</span> <span class="k">do
+      raise</span> <span class="no">MyApp</span><span class="o">.</span><span class="no">Forbidden</span><span class="p">,</span> <span class="ss">message:</span> <span class="sd">&quot;</span><span class="s2">You need to be a team admin&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+<p>This is certainly more concise, and both functions are directly to the point.</p>
+
+<p>There&rsquo;s another advantage here that&rsquo;s worth highlighting. This error can
+be raised anywhere within the life-cycle of a Plug request, and Plug will
+handle it. In the first examples, a function needed access to the <code>conn</code> struct
+to operate on it. Now it&rsquo;s easy to raise an appropriate exception in any
+of your functions deeper in the stack (hopefully not in your models, though!).</p>
+
+<p>Documentation on this feature is a bit sparse, but one thing I like about the
+Elixir ecosystem is that the code is accessible and easy to grok. I pieced this
+functionality together by from data scattered in these resources:</p>
+
+<ol>
+<li><a href="https://hexdocs.pm/plug/Plug.Exception.html">Plug Documentation</a></li>
+<li><a href="https://github.com/phoenixframework/phoenix_ecto/blob/master/lib/phoenix_ecto/plug.ex">phoenix_ecto source</a></li>
+<li><a href="https://github.com/phoenixframework/phoenix/blob/master/lib/phoenix/exceptions.ex">Phoenix source</a></li>
+<li><a href="http://www.phoenixframework.org/docs/custom-errors">Phoenix Guides</a></li>
+</ol>
+
+<p>I feel like this was a pretty good improvement, and hopefully it helped you.
+I&rsquo;d be eager to hear if you have any improvements.</p>
+
+<hr>
+<div class='well'>
+This article was categorized as
+<a href="/essays/categories/elixir">elixir</a>, <a href="/essays/categories/phoenix">phoenix</a>, and <a href="/essays/categories/plug">plug</a>
+</div>
+<div id='disqus_thread'></div>
+</div>
+<script src="../../javascripts/app/integrations/disqus-579674f1.js" type="text/javascript"></script>
+
+<div class='with-footer'></div>
+<footer class='space' id='copyright'>
+<span>
+Copyright &copy
+2016
+</span>
+<span>
+Josh W Lewis
+</span>
+<span>
+<a href='//feeds.feedburner.com/JoshWLewis'>
+<i class='icon-rss'></i>
+</a>
+</span>
+</footer>
+
+</div>
+<script src="../../javascripts/blog/body-53988f5f.js" type="text/javascript"></script>
+</body>
+

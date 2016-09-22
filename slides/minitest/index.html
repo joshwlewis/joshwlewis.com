@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+<meta content='IE=edge,chrome=1' http-equiv='X-UA-Compatible'>
+<title>Unit Testing with Minitest | Josh W Lewis: Ruby Developer</title>
+<meta content='Introduction to Unit Testing using Minitest | Josh W Lewis: Ruby Developer, JavaScript Engineer, Consultant, Entrepreneur, Husband, Dad, and Memphian' name='description'>
+<meta content='width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+<meta content='Josh W Lewis' name='author'>
+<link href="../../stylesheets/slides-156e4619.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class='impress-not-supported'>
+<div class='fallback-message'><h3>Your browser doesn&rsquo;t support the features needed to display this presentation.</h3>
+
+<p>A simplified version of this presentation follows.</p>
+
+<p>For the best experience, please use one of the following browsers:</p>
+
+<ul>
+<li><a href="//www.google.com/chrome">Chrome</a></li>
+<li><a href="//www.apple.com/safari">Safari</a></li>
+<li><a href="//www.mozilla.org/firefox">Firefox</a></li>
+</ul>
+</div>
+<div id='impress'>
+<div id="title" class="step" data-rotate-x="90" data-rotate-z="-90"><h1>Unit Testing with Minitest</h1>
+<br>
+<h4>Memphis Ruby Users Group</h4>
+<date>1/21/2013</date>
+<br>
+<h4>
+Josh W Lewis -
+<a href='//twitter.com/joshwlewis'>@joshwlewis</a>
+</h4>
+<h4>
+<a href='//plia.com'>Plia Systems</a>
+</h4>
+</div><div id="definition" class="step" data-rotate-y="90"><blockquote>In computer programming, unit testing is a method by which individual units of source code, sets of one or more computer program modules together with associated control data, usage procedures, and operating procedures are tested to determine if they are fit for use.</blockquote>
+<a class='pull-right' href='//en.wikipedia.org/wiki/Unit_test'>- Wikipedia</a>
+</div><div id="tldr" class="step" ><h4>TL;DR</h4>
+<blockquote>Unit testing is code that makes sure your code works.</blockquote>
+</div><div id="why" class="step" data-y="1000" data-z="1500"><h3>Why Unit Test?</h3>
+<ul>
+<li>Confidence</li>
+<li>Speed</li>
+<li>Refactorability</li>
+<li>Quality</li>
+<li>Reliability</li>
+<li>Documentation</li>
+</ul>
+</div><div id="minitest" class="step" data-y="1500" data-x="1060" data-z="1060" data-rotate-y="45"><h2>Minitest is Awesome!</h2>
+<h4>
+<a href='//github.com/seattlerb/minitest'>github.com/seattlerb/minitest</a>
+</h4>
+<ul>
+<li>Lightweight</li>
+<li>Ships with Ruby</li>
+<li>Unit or Spec style tests</li>
+<li>Mocking and Stubbing</li>
+<li>Benchmarking</li>
+</ul>
+</div><div id="unit-example" class="step" data-y="2000" data-x="1500" data-rotate-y="90"><h3>Test/Unit style tests are standard with Minitest</h3>
+<pre class="highlight ruby"><span class="k">class </span><span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+  <span class="k">def </span><span class="nf">initials</span>
+    <span class="p">(</span><span class="n">first_name</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">+</span> <span class="n">middle_name</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">+</span> <span class="n">last_name</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">)</span><span class="nf">.upcase</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+<pre class="highlight ruby"><span class="k">class </span><span class="nc">TestUser</span> <span class="o">&lt;</span> <span class="no">Minitest</span><span class="o">::</span><span class="no">Test</span>
+  <span class="k">def </span><span class="nf">setup</span>
+    <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="nf">.new</span> <span class="ss">first_name: </span><span class="s1">&#39;Josh&#39;</span><span class="p">,</span> <span class="ss">middle_name: </span><span class="s1">&#39;Wayne&#39;</span><span class="p">,</span> 
+                     <span class="ss">last_name: </span><span class="s1">&#39;Lewis&#39;</span>
+  <span class="k">end</span>
+
+  <span class="k">def </span><span class="nf">test_initials</span>
+    <span class="n">assert_equal</span> <span class="vi">@user</span><span class="nf">.initials</span><span class="p">,</span> <span class="s1">&#39;JWL&#39;</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+</div><div id="spec-example" class="step" data-y="2500" data-x="1060" data-z="-1060" data-rotate-y="135"><h3>Spec style tests are also available with Minitest</h3>
+<pre class="highlight ruby"><span class="k">class </span><span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+  <span class="k">def </span><span class="nf">initials</span>
+    <span class="p">(</span><span class="n">first_name</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">+</span> <span class="n">middle_name</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">+</span> <span class="n">last_name</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">)</span><span class="nf">.upcase</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+<pre class="highlight ruby"><span class="n">describe</span> <span class="no">User</span> <span class="k">do</span>
+  <span class="n">subject</span> <span class="p">{</span> <span class="no">User</span><span class="nf">.new</span> <span class="ss">first_name: </span><span class="s1">&#39;Josh&#39;</span><span class="p">,</span> <span class="ss">middle_name: </span><span class="s1">&#39;Wayne&#39;</span><span class="p">,</span>
+                     <span class="ss">last_name: </span><span class="s1">&#39;Lewis&#39;</span> <span class="p">}</span>
+
+  <span class="n">describe</span> <span class="ss">:initials</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s1">&#39;should return first letter of all names&#39;</span> <span class="k">do</span>
+      <span class="n">subject</span><span class="nf">.initials.must_equal</span> <span class="s1">&#39;JWL&#39;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+</div><div id="project" class="step" data-y="3000" data-x="0" data-z="-1500" data-rotate-y="180"><h3>Let's make an app for that...</h3>
+<p>My boss wants something to translate English to Pig Latin and Pig Latin to English. And he wants it to remember previous translations.</p>
+<pre class="highlight shell">rails new pig_latin --database<span class="o">=</span>postgresql --skip-test-unit
+</pre>
+<p>
+Source available at:
+<a href='//github.com/joshwlewis/pig_latin'>github.com/joshwlewis/pig_latin</a>
+</p>
+</div><div id="minitest-rails" class="step" data-y="3500" data-x="-1060" data-z="-1060" data-rotate-y="225"><h3>Use minitest-rails to bootstrap your test suite</h3>
+<p>Gemfile</p>
+<pre class="highlight ruby"><span class="n">gem</span> <span class="s1">&#39;minitest-rails&#39;</span><span class="p">,</span> <span class="s1">&#39;~&gt; 0.9.0&#39;</span><span class="p">,</span> <span class="ss">group: </span><span class="o">[</span><span class="ss">:development</span><span class="p">,</span> <span class="ss">:test</span><span class="o">]</span>
+</pre><pre class="highlight shell">bundle install
+rails generate mini_test:install
+</pre>
+<p>test/test_helper.rb</p>
+<pre class="highlight ruby"><span class="no">ENV</span><span class="o">[</span><span class="s2">&quot;RAILS_ENV&quot;</span><span class="o">]</span> <span class="o">=</span> <span class="s2">&quot;test&quot;</span>
+<span class="nb">require</span> <span class="no">File</span><span class="nf">.expand_path</span><span class="p">(</span><span class="s1">&#39;../../config/environment&#39;</span><span class="p">,</span> <span class="kp">__FILE__</span><span class="p">)</span>
+<span class="nb">require</span> <span class="s2">&quot;rails/test_help&quot;</span>
+<span class="nb">require</span> <span class="s2">&quot;minitest/rails&quot;</span>
+<span class="c1"># ...</span>
+</pre><pre class="highlight shell">bundle <span class="nb">exec </span>rake <span class="nb">test</span>
+</pre>
+</div><div id="guard" class="step" data-y="4000" data-x="-1500" data-rotate-y="270"><h3>Automated testing enables TDD workflow</h3>
+<p>Gemfile</p>
+<pre class="highlight ruby"><span class="n">gem</span> <span class="s1">&#39;guard-minitest&#39;</span>
+</pre>
+<p>Guardfile</p>
+<pre class="highlight ruby"><span class="n">guard</span> <span class="ss">:minitest</span> <span class="k">do</span>
+  <span class="n">watch</span><span class="p">(</span><span class="sr">%r{^test/(.*)_test</span><span class="se">\.</span><span class="sr">rb}</span><span class="p">)</span>
+  <span class="n">watch</span><span class="p">(</span><span class="sr">%r{^lib/(.+)</span><span class="se">\.</span><span class="sr">rb}</span><span class="p">)</span>         <span class="p">{</span><span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="s2">&quot;test/</span><span class="si">#{</span><span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="si">}</span><span class="s2">_test.rb&quot;</span><span class="p">}</span>
+  <span class="n">watch</span><span class="p">(</span><span class="sr">%r{^test/test_helper</span><span class="se">\.</span><span class="sr">rb}</span><span class="p">)</span> <span class="p">{</span><span class="s1">&#39;test&#39;</span><span class="p">}</span>
+  <span class="n">watch</span><span class="p">(</span><span class="sr">%r{^app/(.+)</span><span class="se">\.</span><span class="sr">rb}</span><span class="p">)</span>         <span class="p">{</span><span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="s2">&quot;test/</span><span class="si">#{</span><span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="si">}</span><span class="s2">_test.rb&quot;</span><span class="p">}</span>
+  <span class="c1"># ...</span>
+<span class="k">end</span>
+</pre>
+</div><div id="payoff" class="step" data-y="4500" data-x="-1060" data-z="1060" data-rotate-y="315"><h3>The Payoff...</h3>
+<ul>
+<li>
+Code Test Coverage:
+<a href='//coveralls.io/r/joshwlewis/pig_latin'>
+<img src='//coveralls.io/repos/joshwlewis/pig_latin/badge.png'>
+</a>
+</li>
+<li>
+Continuous Integration:
+<a href='//travis-ci.org/joshwlewis/pig_latin'>
+<img src='//travis-ci.org/joshwlewis/pig_latin.png?branch=master'>
+</a>
+</li>
+<li>
+Continuous Deployment:
+<a href='//pig-latin.herokuapp.com'>pig-latin.herokuapp.com</a>
+</li>
+</ul>
+</div><div id="resources" class="step" data-x="-2500" data-y="2750" data-z="8000"><h2>Resources</h2>
+<dl>
+<dt>Minitest documentation</dt>
+<dl>
+<a href='//github.com/seattlerb/minitest'>github.com/seattlerb/minitest</a>
+</dl>
+<dt>Minitest Quick Reference</dt>
+<dl>
+<a href='//mattsears.com/articles/2011/12/10/minitest-quick-reference'>mattsears.com/articles/2011/12/10/minitest-quick-reference</a>
+</dl>
+<dt>Rails Assertions</dt>
+<dl>
+<a href='//topfunky.com/clients/rails/ruby_and_rails_assertions.pdf'>topfunky.com/clients/rails/ruby_and_rails_assertions.pdf</a>
+</dl>
+<dt>Pig Latin Translator</dt>
+<dl>
+<a href='//github.com/joshwlewis/pig_latin'>github.com/joshwlewis/pig_latin</a>
+</dl>
+<dt>This Presentation</dt>
+<dl>
+<a href='//joshwlewis.com/slides/minitest/'>joshwlewis.com/slides/minitest</a>
+</dl>
+</dl>
+</div>
+</div>
+<script src="../../javascripts/slides/body-dd9f322b.js" type="text/javascript"></script>
+</body>
+</html>

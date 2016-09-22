@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Josh W Lewis</title>
+  <subtitle>Personal site of Josh W Lewis: Software Engineer, Web Developer, Rubyist</subtitle>
+  <id>http://joshwlewis.com/</id>
+  <link href="http://joshwlewis.com/"/>
+  <link href="http://joshwlewis.com/feed.xml" rel="self"/>
+  <updated>2016-05-30T00:00:00Z</updated>
+  <author>
+    <name>Josh W Lewis</name>
+  </author>
+  <entry>
+    <title>Error Handling in Elixir with Plug.Exception</title>
+    <link rel="alternate" href="/essays/elixir-error-handling-with-plug"/>
+    <id>/essays/elixir-error-handling-with-plug</id>
+    <published>2016-05-30T00:00:00Z</published>
+    <updated>2016-05-30T00:00:00Z</updated>
+    <author>
+      <name>Josh W Lewis</name>
+    </author>
+    <summary type="html">&lt;p&gt;I found a hidden gem last week: Plug’s exception protocol. It gives you a
+concise pattern for rendering errors to users in an informative way.&lt;/p&gt;
+
+&lt;p&gt;For example, consider some team dashboard that you want to limit access to
+in your Phoenix application....&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;I found a hidden gem last week: Plug&amp;rsquo;s exception protocol. It gives you a
+concise pattern for rendering errors to users in an informative way.&lt;/p&gt;
+
+&lt;p&gt;For example, consider some team dashboard that you want to limit access to
+in your Phoenix application. You want to block non-admins and non-team-members
+from seeing it, but you also want to provide context that they were blocked
+and also why.&lt;/p&gt;
+
+&lt;p&gt;The most straightforward way to do this would just be a simple conditional in
+your controller. Like this:&lt;/p&gt;
+&lt;pre class="highlight elixir"&gt;&lt;span class="k"&gt;defmodule&lt;/span&gt; &lt;span class="no"&gt;MyApp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="no"&gt;WidgetController&lt;/span&gt; &lt;span class="k"&gt;do
+  &lt;/span&gt;&lt;span class="n"&gt;alias&lt;/span&gt; &lt;span class="no"&gt;MyApp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="no"&gt;Repo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="no"&gt;Team&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="no"&gt;Widget&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;%&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s2"&gt;id&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;team_id&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt; &lt;span class="k"&gt;do
+    &lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;get_current_user&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;team&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="no"&gt;Repo&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;Team&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;team_id&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;role&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="sd"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s2"&gt;admin&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;team&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;team_id&lt;/span&gt; &lt;span class="k"&gt;do
+      &lt;/span&gt;&lt;span class="c1"&gt;# user is authorized; now we can load up the data&lt;/span&gt;
+      &lt;span class="n"&gt;widgets&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="no"&gt;Repo&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;all&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;Widget&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+      &lt;span class="n"&gt;render&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="sd"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s2"&gt;show.json&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;%&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;widgets:&lt;/span&gt; &lt;span class="n"&gt;widgets&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+    &lt;span class="k"&gt;else&lt;/span&gt;
+      &lt;span class="c1"&gt;# user is not allowed access; tell them with a message and http status&lt;/span&gt;
+      &lt;span class="n"&gt;put_status&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="m"&gt;403&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+      &lt;span class="o"&gt;|&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;render&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;ErrorView&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="sd"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s2"&gt;403.json&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;%&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;message:&lt;/span&gt; &lt;span class="sd"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s2"&gt;You need to be a team admin&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+    &lt;span class="k"&gt;end&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;For this to work, you&amp;rsquo;ll need to define a function to handle rendering
+the 403:&lt;/p&gt;
+&lt;pre class="highlight elixir"&gt;&lt;span class="k"&gt;defmodule&lt;/span&gt; &lt;span class="no"&gt;MyApp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="no"&gt;ErrorView&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;render&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s2"&gt;403.json&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;%&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;message:&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt; &lt;span class="k"&gt;do
+    &lt;/span&gt;&lt;span class="err"&gt;%&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+      &lt;span class="ss"&gt;status:&lt;/span&gt; &lt;span class="m"&gt;403&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+      &lt;span class="ss"&gt;message:&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;Now this works, and is clear and explicit. But it feels a bit verbose
+to me. We&amp;rsquo;re mixing authorization and retrieving data into the same function,
+and half the code is devoted to detecting and rendering the error. I was doing
+something like this, and after adding this to several controllers, the logic
+started to feel like a filibuster.&lt;/p&gt;
+
+&lt;p&gt;One important thing about Elixir that we should note here, is that there is
+no &lt;code&gt;return&lt;/code&gt; keyword. There is no way to exit a function early. So we can&amp;rsquo;t
+just render and abort &amp;ndash; the only way to end the function is to finish
+execution. With that in mind, here&amp;rsquo;s a way you could extract this logic.&lt;/p&gt;
+&lt;pre class="highlight elixir"&gt;&lt;span class="k"&gt;defmodule&lt;/span&gt; &lt;span class="no"&gt;MyApp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="no"&gt;WidgetController&lt;/span&gt; &lt;span class="k"&gt;do
+  def&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;%&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s2"&gt;id&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;team_id&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt; &lt;span class="k"&gt;do
+    &lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;get_current_user&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;team&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="no"&gt;Repo&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;Team&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;team_id&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;authorize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;team&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;fn&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;
+      &lt;span class="n"&gt;widgets&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="no"&gt;Repo&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;all&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;Widget&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+      &lt;span class="n"&gt;render&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="sd"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s2"&gt;show.json&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;%&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;widgets:&lt;/span&gt; &lt;span class="n"&gt;widgets&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+    &lt;span class="k"&gt;end&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+
+  &lt;span class="k"&gt;defp&lt;/span&gt; &lt;span class="n"&gt;authorize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;team&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;callback&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;do
+    if&lt;/span&gt; &lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;role&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s2"&gt;admin&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;team&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;team_id&lt;/span&gt; &lt;span class="k"&gt;do
+      &lt;/span&gt;&lt;span class="n"&gt;callback&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="k"&gt;else&lt;/span&gt;
+      &lt;span class="n"&gt;put_status&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="m"&gt;403&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+      &lt;span class="o"&gt;|&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;render&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;ErrorView&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="sd"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s2"&gt;403.json&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;%&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;message:&lt;/span&gt; &lt;span class="sd"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s2"&gt;You need to be a team admin&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+    &lt;span class="k"&gt;end&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;Here, the &lt;code&gt;index&lt;/code&gt; function is a little easier to read, and the &lt;code&gt;authorize&lt;/code&gt;
+function encapsulates most of that logic. But this still feels long-winded for
+my taste.&lt;/p&gt;
+
+&lt;p&gt;Luckily &lt;a href="https://github.com/elixir-lang/plug"&gt;plug&lt;/a&gt; provides a
+&lt;a href="https://hexdocs.pm/plug/Plug.Exception.html"&gt;handy protocol for rendering
+exceptions&lt;/a&gt;, which Phoenix
+supports.&lt;/p&gt;
+
+&lt;p&gt;This is actually what Phoenix uses to render a &lt;code&gt;404&lt;/code&gt; when &lt;code&gt;Ecto.Repo.get!/2&lt;/code&gt;
+fails. Phoenix has implemented the &lt;code&gt;Plug.Exception&lt;/code&gt; protocol for some of the
+common Ecto errors.&lt;/p&gt;
+&lt;pre class="highlight elixir"&gt;&lt;span class="k"&gt;defimpl&lt;/span&gt; &lt;span class="no"&gt;Plug&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="no"&gt;Exception&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;for:&lt;/span&gt; &lt;span class="no"&gt;Ecto&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="no"&gt;NoResultsError&lt;/span&gt; &lt;span class="k"&gt;do
+  def&lt;/span&gt; &lt;span class="n"&gt;status&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;_&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="m"&gt;404&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;To use it ourselves, we&amp;rsquo;ll start by defining your own Exceptions. For the
+above example, a new &lt;code&gt;Forbidden&lt;/code&gt; exception makes sense. But you may want to
+add more. I have &lt;code&gt;Unauthorized&lt;/code&gt; (401) and &lt;code&gt;UnprocessibleEntity&lt;/code&gt; (422) in my
+app.&lt;/p&gt;
+&lt;pre class="highlight elixir"&gt;&lt;span class="k"&gt;defmodule&lt;/span&gt; &lt;span class="no"&gt;MyApp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="no"&gt;Forbidden&lt;/span&gt; &lt;span class="k"&gt;do
+  defexception&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="ss"&gt;message:&lt;/span&gt; &lt;span class="sd"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s2"&gt;You do not have access to this resource.&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                &lt;span class="ss"&gt;plug_status:&lt;/span&gt; &lt;span class="m"&gt;403&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;Now we have an exception that Plug knows how to handle. Whenever we raise
+this error, Plug knows to return an HTTP status of 403. We also defined a
+default message, which Phoenix will automatically pass to our &lt;code&gt;ErrorView&lt;/code&gt;
+above.&lt;/p&gt;
+
+&lt;p&gt;Now, we can clean up our controller a bit.&lt;/p&gt;
+&lt;pre class="highlight elixir"&gt;&lt;span class="k"&gt;defmodule&lt;/span&gt; &lt;span class="no"&gt;MyApp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="no"&gt;WidgetController&lt;/span&gt; &lt;span class="k"&gt;do
+  def&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;%&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s2"&gt;id&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;team_id&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt; &lt;span class="k"&gt;do
+    &lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;get_current_user&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;team&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="no"&gt;Repo&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;Team&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;team_id&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;authorize!&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;team&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;widgets&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="no"&gt;Repo&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;all&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;Widget&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;render&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="sd"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s2"&gt;show.json&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;%&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;widgets:&lt;/span&gt; &lt;span class="n"&gt;widgets&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+
+  &lt;span class="k"&gt;defp&lt;/span&gt; &lt;span class="n"&gt;authorize!&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;team&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;do
+    if&lt;/span&gt; &lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;role&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s2"&gt;admin&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;||&lt;/span&gt; &lt;span class="n"&gt;team&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;team_id&lt;/span&gt; &lt;span class="k"&gt;do
+      raise&lt;/span&gt; &lt;span class="no"&gt;MyApp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="no"&gt;Forbidden&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;message:&lt;/span&gt; &lt;span class="sd"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s2"&gt;You need to be a team admin&amp;quot;&lt;/span&gt;
+    &lt;span class="k"&gt;end&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;This is certainly more concise, and both functions are directly to the point.&lt;/p&gt;
+
+&lt;p&gt;There&amp;rsquo;s another advantage here that&amp;rsquo;s worth highlighting. This error can
+be raised anywhere within the life-cycle of a Plug request, and Plug will
+handle it. In the first examples, a function needed access to the &lt;code&gt;conn&lt;/code&gt; struct
+to operate on it. Now it&amp;rsquo;s easy to raise an appropriate exception in any
+of your functions deeper in the stack (hopefully not in your models, though!).&lt;/p&gt;
+
+&lt;p&gt;Documentation on this feature is a bit sparse, but one thing I like about the
+Elixir ecosystem is that the code is accessible and easy to grok. I pieced this
+functionality together by from data scattered in these resources:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href="https://hexdocs.pm/plug/Plug.Exception.html"&gt;Plug Documentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/phoenixframework/phoenix_ecto/blob/master/lib/phoenix_ecto/plug.ex"&gt;phoenix_ecto source&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/phoenixframework/phoenix/blob/master/lib/phoenix/exceptions.ex"&gt;Phoenix source&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.phoenixframework.org/docs/custom-errors"&gt;Phoenix Guides&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;I feel like this was a pretty good improvement, and hopefully it helped you.
+I&amp;rsquo;d be eager to hear if you have any improvements.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Rails Unit Measurement Persistence</title>
+    <link rel="alternate" href="/essays/rails-unit-measurement-persistence"/>
+    <id>/essays/rails-unit-measurement-persistence</id>
+    <published>2014-03-09T00:00:00Z</published>
+    <updated>2014-03-09T00:00:00Z</updated>
+    <author>
+      <name>Josh W Lewis</name>
+    </author>
+    <summary type="html">&lt;p&gt;I’ve worked on a few apps in the past that had some cumbersome constraints in
+regards to the units of measurement. Models needed to store heat transfer or
+fluid dynamics properties in either english or SI units. This is can be a bit
+of a pain, so I...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;I&amp;rsquo;ve worked on a few apps in the past that had some cumbersome constraints in
+regards to the units of measurement. Models needed to store heat transfer or
+fluid dynamics properties in either english or SI units. This is can be a bit
+of a pain, so I thought I&amp;rsquo;d share my methods and save someone else the trouble.&lt;/p&gt;
+
+&lt;p&gt;My problem scenario was in an engineering realm, but there are plenty of other
+mainstream domains that exhibit the problem. Consider foot races &amp;ndash; they are
+commonly defined in either mileage (like 26.1 miles for a marathon) or kilometers
+(like a 5K). Or consider a mechanic&amp;rsquo;s wrenches &amp;ndash; they have a metric set with
+sizes like 10 mm, but also have an english set with sizes like 5/8 inch.&lt;/p&gt;
+
+&lt;p&gt;To demonstrate the problem and solution, say you are creating an app for cooks.
+Maybe it would let cooks share recipes, perhaps it might be used to help
+them decide what to offer on tonight&amp;rsquo;s menu, or perhaps it just tracks ingredient
+inventory. In any of those cases, you probably need a model for a recipe and
+its ingredients.&lt;/p&gt;
+&lt;pre class="highlight ruby"&gt;&lt;span class="c1"&gt;# create_table :recipes do |t|&lt;/span&gt;
+&lt;span class="c1"&gt;#   t.string  :name, null: false&lt;/span&gt;
+&lt;span class="c1"&gt;# end&lt;/span&gt;
+&lt;span class="k"&gt;class &lt;/span&gt;&lt;span class="nc"&gt;Recipe&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="no"&gt;ActiveRecord&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Base&lt;/span&gt;
+  &lt;span class="n"&gt;has_many&lt;/span&gt; &lt;span class="ss"&gt;:ingredients&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/pre&gt;&lt;pre class="highlight ruby"&gt;&lt;span class="c1"&gt;# create_table :ingredients do |t|&lt;/span&gt;
+&lt;span class="c1"&gt;#   t.string  :substance,     null: false&lt;/span&gt;
+&lt;span class="c1"&gt;#   t.decimal :quantity,      null: false,  default: 0&lt;/span&gt;
+&lt;span class="c1"&gt;#   t.integer :recipe_id&lt;/span&gt;
+&lt;span class="c1"&gt;# end&lt;/span&gt;
+&lt;span class="k"&gt;class &lt;/span&gt;&lt;span class="nc"&gt;Ingredient&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="no"&gt;ActiveRecord&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Base&lt;/span&gt;
+  &lt;span class="n"&gt;belongs_to&lt;/span&gt; &lt;span class="ss"&gt;:recipe&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;So, these are some pretty typical models. Sure, they are overly simplified. In
+any case, we can setup a new ingredient pretty easily.&lt;/p&gt;
+&lt;pre class="highlight ruby"&gt;&lt;span class="no"&gt;Ingredient&lt;/span&gt;&lt;span class="nf"&gt;.create&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;substance: &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Olive Oil&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;quantity: &lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;Now we can see the problem. The obvious question here is how much olive oil is
+&amp;lsquo;1&amp;rsquo;? Is that one teaspoon, tablespoon, ounce, or maybe even pint or gallon?&lt;/p&gt;
+
+&lt;p&gt;In a lot of apps, you might just have some tribal knowledge where everyone
+understands that we store quantities in tablespoons. That might be fine in a
+lot of cases. But, say we need to know how much olive oil to buy for next week.
+Can we buy olive oil by the tablespoon? My olive oil usually comes in 750 ml
+bottles. How many tablespoons is that?&lt;/p&gt;
+
+&lt;p&gt;It just so happens that I&amp;rsquo;ve built a tool for that. &lt;a href="//github.com/joshwlewis/unitwise"&gt;Unitwise&lt;/a&gt;
+is a Ruby library for converting and performing math on all kinds of units,
+volumes included.&lt;/p&gt;
+
+&lt;p&gt;Say our grand total of estimated olive oil usage for the week was 1000 tablespoons.
+With Unitwise, we could calculate how many bottles of olive oil is required.&lt;/p&gt;
+&lt;pre class="highlight ruby"&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1000&lt;/span&gt;&lt;span class="nf"&gt;.tablespoon&lt;/span&gt; &lt;span class="sr"&gt;/ 750.ml).to_f # =&amp;gt; 19.715686375000004
+&lt;/span&gt;&lt;/pre&gt;
+&lt;p&gt;Helpful, but there is a little more we can do here. Instead of relying on
+tribal knowledge about storing the quantity in tablespoons, we could make it
+explicit.&lt;/p&gt;
+&lt;pre class="highlight ruby"&gt;&lt;span class="k"&gt;class &lt;/span&gt;&lt;span class="nc"&gt;Ingredient&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="no"&gt;ActiveRecord&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Base&lt;/span&gt;
+  &lt;span class="k"&gt;def &lt;/span&gt;&lt;span class="nf"&gt;quantity&lt;/span&gt;
+    &lt;span class="n"&gt;read_attribute&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;:quantity&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="nf"&gt;.to_tablespoon&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;With this modification, each time we retrieve the quantity, we&amp;rsquo;ll get a
+measurement back with a value and a unit.&lt;/p&gt;
+&lt;pre class="highlight ruby"&gt;&lt;span class="no"&gt;Ingredient&lt;/span&gt;&lt;span class="nf"&gt;.last.quantity&lt;/span&gt; &lt;span class="c1"&gt;# =&amp;gt; #&amp;lt;Unitwise::Measurement value=1 unit=tablespoon&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;Unitwise comes with a handy &lt;code&gt;to_s&lt;/code&gt; method that should get invoked by your views,
+which means you can display this value to your users as &lt;code&gt;&amp;#39;1 tablespoon&amp;#39;&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Cool, but we can make this a little better yet.&lt;/p&gt;
+&lt;pre class="highlight ruby"&gt;&lt;span class="k"&gt;class &lt;/span&gt;&lt;span class="nc"&gt;Ingredient&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="no"&gt;ActiveRecord&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Base&lt;/span&gt;
+  &lt;span class="k"&gt;def &lt;/span&gt;&lt;span class="nf"&gt;quantity&lt;/span&gt;
+    &lt;span class="c1"&gt;# unchanged from above&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+
+  &lt;span class="k"&gt;def &lt;/span&gt;&lt;span class="nf"&gt;quantity&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;write_attribute&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;:quantity&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="nf"&gt;.to_tablespoon&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;Now we have the advantage of setting the quantity with any unit compatible
+with tablespoons &amp;ndash; that is, any volumetric unit.&lt;/p&gt;
+&lt;pre class="highlight ruby"&gt;&lt;span class="n"&gt;tomatoes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="no"&gt;Ingredient&lt;/span&gt;&lt;span class="nf"&gt;.create&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Crushed tomatoes&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;quantity: &lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="nf"&gt;.fluid_ounce&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;tomatoes&lt;/span&gt;&lt;span class="nf"&gt;.quantity&lt;/span&gt; &lt;span class="c1"&gt;# =&amp;gt; #&amp;lt;Unitwise::Measurement value=16 unit=tablespoon&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;With this change, we can now set the quantity with any compatible unit. When
+we retrieve the value, it comes back in tablespoons.&lt;/p&gt;
+
+&lt;p&gt;We are definitely making progress here. All the values stored and retrieved are
+based on tablespoons, no matter what unit you set it with. But, who buys tomatoes
+by the tablespoon? When the amount of tomatoes is displayed to the user, they
+probably just want to know how many cans (8 fluid ounces) or cups to use.&lt;/p&gt;
+
+&lt;p&gt;Lets make one more enhancement. This time, we are going to add a string column
+to the ingredients table so we can display an appropriate unit for any
+ingredient.&lt;/p&gt;
+&lt;pre class="highlight ruby"&gt;&lt;span class="c1"&gt;# create_table :ingredients do |t|&lt;/span&gt;
+&lt;span class="c1"&gt;#   t.string  :substance,     null: false&lt;/span&gt;
+&lt;span class="c1"&gt;#   t.decimal :quantity,      null: false,  default: 0&lt;/span&gt;
+&lt;span class="c1"&gt;#   t.string  :quantity_unit, null: false,  default: &amp;#39;tablespoon&amp;#39;&lt;/span&gt;
+&lt;span class="c1"&gt;#   t.integer :recipe_id,     null: false&lt;/span&gt;
+&lt;span class="c1"&gt;# end&lt;/span&gt;
+
+&lt;span class="k"&gt;class &lt;/span&gt;&lt;span class="nc"&gt;Ingredient&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="no"&gt;ActiveRecord&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Base&lt;/span&gt;
+
+  &lt;span class="k"&gt;def &lt;/span&gt;&lt;span class="nf"&gt;quantity&lt;/span&gt;
+    &lt;span class="n"&gt;read_attribute&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;:quantity&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="nf"&gt;.convert_to&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="nf"&gt;.quantity_unit&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+
+  &lt;span class="k"&gt;def &lt;/span&gt;&lt;span class="nf"&gt;quantity&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;write_attribute&lt;/span&gt; &lt;span class="ss"&gt;:quantity&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="nf"&gt;.to_tablespoon&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="nf"&gt;.respond_to?&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;:unit&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+      &lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="nf"&gt;.quantity_unit&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="nf"&gt;.unit.to_s&lt;/span&gt;
+    &lt;span class="k"&gt;end&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;Now we&amp;rsquo;ve got something solid. Now all database entries are stored in the same
+unit (tablespoon), which is nice, in case some other program or query wants to do
+something with that data. And now whatever unit we set the quantity with is what
+gets read into the model. For example:&lt;/p&gt;
+&lt;pre class="highlight ruby"&gt;&lt;span class="n"&gt;water&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="no"&gt;Ingredient&lt;/span&gt;&lt;span class="nf"&gt;.create&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;substance: &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Water&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;quantity: &lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="nf"&gt;.cup&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;water&lt;/span&gt;&lt;span class="nf"&gt;.quantity&lt;/span&gt; &lt;span class="c1"&gt;# =&amp;gt; #&amp;lt;Unitwise::Measurement value=1 unit=cup&amp;gt;&lt;/span&gt;
+
+&lt;span class="n"&gt;beer&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="no"&gt;Ingredient&lt;/span&gt;&lt;span class="nf"&gt;.create&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;wine: &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Beer&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;quantity: &lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="nf"&gt;.pint&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;beer&lt;/span&gt;&lt;span class="nf"&gt;.quantity&lt;/span&gt; &lt;span class="c1"&gt;# =&amp;gt; #&amp;lt;Unitwise::Measurmeent value=1 unit=pint&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;This example is fairly simple, but it should give you an idea of how to do
+something similar in your own domain.
+&lt;a href="//github.com/joshwlewis/unitwise/"&gt;Unitwise&lt;/a&gt; supports a ton of units, and has
+some other really nice features &amp;ndash; Check it out.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Unitwise: Ruby Unit Measurement Math and Conversion</title>
+    <link rel="alternate" href="/essays/unitwise-ruby-unit-measurement"/>
+    <id>/essays/unitwise-ruby-unit-measurement</id>
+    <published>2013-08-13T00:00:00Z</published>
+    <updated>2013-08-13T00:00:00Z</updated>
+    <author>
+      <name>Josh W Lewis</name>
+    </author>
+    <summary type="html">&lt;p&gt;So, way back in Mechanical Engineering school, I learned that a very effective way to check my answers was to make sure the units worked out. For an example, consider a basic physics problem:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;The average mass of an adult American male is 86 kilograms...&lt;/p&gt;
+&lt;/blockquote&gt;</summary>
+    <content type="html">&lt;p&gt;So, way back in Mechanical Engineering school, I learned that a very effective way to check my answers was to make sure the units worked out. For an example, consider a basic physics problem:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;The average mass of an adult American male is 86 kilograms. Determine weight of an average man on the moon where the gravitational field is one-sixth that of the Earth (9.8 m/s&lt;sup&gt;2&lt;/sup&gt;).&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;If you paid attention in physics, you would work it out like this:&lt;/p&gt;
+&lt;pre class="highlight ruby"&gt;  &lt;span class="n"&gt;mass&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;86&lt;/span&gt; &lt;span class="c1"&gt;# 86 kg&lt;/span&gt;
+  &lt;span class="n"&gt;acceleration&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;9&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt; &lt;span class="c1"&gt;# 1.633334 m/s2&lt;/span&gt;
+  &lt;span class="n"&gt;force&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;mass&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;acceleration&lt;/span&gt; 
+  &lt;span class="c1"&gt;# =&amp;gt; 140.4666666666667&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;Ok, so 140 &amp;ndash; but 140 what? Since we effectively performed &amp;lsquo;kg * m/s&lt;sup&gt;2&lt;/sup&gt;&amp;rsquo; it&amp;rsquo;s plain to see that our unit is &amp;#39;kg&amp;sdot;m/s&lt;sup&gt;2&lt;/sup&gt;&amp;rsquo;. Ok, great, so our unit result is in the form of a mass times an acceleration, just as we would expect to see when calculating a force. When you are using a pen and paper, this is a great way to make sure your result is what you expect (your force is a measurement force, your energy is a unit of energy).&lt;/p&gt;
+
+&lt;p&gt;But using straight up Numerics for calculation through Ruby means that we lose track of units. As the calculation gets more complicated, manual unit checking becomes monotonous and error-prone. On &lt;a href="https://www.emergentcoils.com/"&gt;emergentcoils.com&lt;/a&gt; I&amp;rsquo;ve had to do a fair amount of these types of calculations (namely heat transfer capacities), and I was getting tired of trying to remember what unit a Numeric value was in.&lt;/p&gt;
+
+&lt;p&gt;So, like any good Rubyist, I searched for a RubyGem that could track units as I performed math on them. There are a couple already out there (most notably &lt;a href="https://github.com/olbrich/ruby-units"&gt;ruby-units&lt;/a&gt;), and they certainly work for many (or probably most) situations. However, they either didn&amp;rsquo;t have a few of the units I needed or they only did conversion (not Math). &lt;/p&gt;
+
+&lt;p&gt;During my search, I ended up stumbling across &lt;a href="http://www.unitsofmeasure.org/"&gt;The Unified Code for Units of Measurement (UCUM)&lt;/a&gt; &amp;ndash; which had all the units I needed ready to go in XML format. From that &lt;a href="https://github.com/joshwlewis/unitwise"&gt;Unitwise&lt;/a&gt; was born.&lt;/p&gt;
+
+&lt;p&gt;Now, it&amp;rsquo;s really easy to track units for our example problem:&lt;/p&gt;
+&lt;pre class="highlight ruby"&gt;&lt;span class="n"&gt;mass&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;86&lt;/span&gt;&lt;span class="nf"&gt;.kg&lt;/span&gt;
+&lt;span class="c1"&gt;# =&amp;gt; &amp;lt;Unitwise::Measurement 86 kg&amp;gt;&lt;/span&gt;
+&lt;span class="n"&gt;acceleration&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;9&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="nf"&gt;.convert_to&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;m/s2&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;
+&lt;span class="c1"&gt;# =&amp;gt; &amp;lt;Unitwise::Measurement 1.6333333333333335 m/s2&amp;gt;&lt;/span&gt;
+&lt;span class="n"&gt;force&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;mass&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;acceleration&lt;/span&gt;
+&lt;span class="c1"&gt;# =&amp;gt; &amp;lt;Unitwise::Measurement 140.4666666666667 kg.m/s2&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;And of course it does conversion:&lt;/p&gt;
+&lt;pre class="highlight text"&gt;mass.to_pound
+=&amp;gt; &amp;lt;Unitwise::Measurement 189.5975454789947 pound&amp;gt;
+
+force.to_newton
+=&amp;gt; &amp;lt;Unitwise::Measurement 140.4666666666667 newton&amp;gt;
+&lt;/pre&gt;
+&lt;p&gt;Obviously, this is a very simple example, but the possibilities are certainly endless. UCUM (and by extension Unitwise) features 95 metric units, 199 non-metric units, and 24 unit prefixes. That&amp;rsquo;s approximately 2,500 basic units to start you with, but these can be combined with multiplication and division for infinite combinations.&lt;/p&gt;
+
+&lt;p&gt;You can find Unitwise at &lt;a href="https://github.com/joshwlewis/unitwise"&gt;github.com/joshwlewis/unitwise&lt;/a&gt;. Check out the README there for installation and additional usage instructions.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Rails' ActiveSupport try</title>
+    <link rel="alternate" href="/essays/rails-active-support-try"/>
+    <id>/essays/rails-active-support-try</id>
+    <published>2013-04-26T00:00:00Z</published>
+    <updated>2013-04-26T00:00:00Z</updated>
+    <author>
+      <name>Josh W Lewis</name>
+    </author>
+    <summary type="html">&lt;p&gt;ActiveSupport has a few great Ruby extensions that I just love. One of my favorites is try.&lt;/p&gt;
+
+&lt;h3&gt;.try()&lt;/h3&gt;
+
+&lt;p&gt;Try is a sneaky method for handling NoMethodErrors on NilClass. If you ever get stuck writing code like this:&lt;/p&gt;
+&lt;pre class="highlight ruby"&gt;&lt;span class="nb"&gt;name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="nf"&gt;.name&lt;/span&gt; &lt;span class="k"&gt;unless&lt;/span&gt; &lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="nf"&gt;.nil?&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;Consider...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;ActiveSupport has a few great Ruby extensions that I just love. One of my favorites is try.&lt;/p&gt;
+
+&lt;h3&gt;.try()&lt;/h3&gt;
+
+&lt;p&gt;Try is a sneaky method for handling NoMethodErrors on NilClass. If you ever get stuck writing code like this:&lt;/p&gt;
+&lt;pre class="highlight ruby"&gt;&lt;span class="nb"&gt;name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="nf"&gt;.name&lt;/span&gt; &lt;span class="k"&gt;unless&lt;/span&gt; &lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="nf"&gt;.nil?&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;Consider using try instead:&lt;/p&gt;
+&lt;pre class="highlight ruby"&gt;&lt;span class="nb"&gt;name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="nf"&gt;.try&lt;/span&gt; &lt;span class="ss"&gt;:name&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;It&amp;rsquo;s basically like using send, but it will return nil if the receiver is nil.&lt;/p&gt;
+
+&lt;p&gt;Here it works like send:&lt;/p&gt;
+&lt;pre class="highlight ruby"&gt;&lt;span class="n"&gt;user&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="no"&gt;User&lt;/span&gt;&lt;span class="nf"&gt;.new&lt;/span&gt; &lt;span class="nb"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Josh&amp;quot;&lt;/span&gt;    &lt;span class="c1"&gt;#=&amp;gt; #&amp;lt;User&amp;gt;&lt;/span&gt;
+&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="nf"&gt;.send&lt;/span&gt; &lt;span class="ss"&gt;:name&lt;/span&gt;                 &lt;span class="c1"&gt;#=&amp;gt; &amp;quot;Josh&amp;quot;&lt;/span&gt;
+&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="nf"&gt;.try&lt;/span&gt; &lt;span class="ss"&gt;:name&lt;/span&gt;                  &lt;span class="c1"&gt;#=&amp;gt; &amp;quot;Josh&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;And here it doesn&amp;rsquo;t blow up with a NoMethodError:&lt;/p&gt;
+&lt;pre class="highlight ruby"&gt;&lt;span class="n"&gt;user&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kp"&gt;nil&lt;/span&gt;                      &lt;span class="c1"&gt;#=&amp;gt; nil&lt;/span&gt;
+&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="nf"&gt;.send&lt;/span&gt; &lt;span class="ss"&gt;:name&lt;/span&gt;                 &lt;span class="c1"&gt;#=&amp;gt; NoMethodError&lt;/span&gt;
+&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="nf"&gt;.try&lt;/span&gt; &lt;span class="ss"&gt;:name&lt;/span&gt;                  &lt;span class="c1"&gt;#=&amp;gt; nil&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;EDIT: I still find try helpful in some cases, but I think it&amp;rsquo;s best to
+exercise caution with it. Many times delegation or the null object pattern
+can solve your problem a little more eloquently. If you find yourself chaining
+&lt;code&gt;try&lt;/code&gt; you should probably look at another way to factor your code.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Rails Flash Messages with Twitter Bootstrap</title>
+    <link rel="alternate" href="/essays/rails_flash_messages_with_twitter_bootstrap"/>
+    <id>/essays/rails_flash_messages_with_twitter_bootstrap</id>
+    <published>2013-03-02T00:00:00Z</published>
+    <updated>2013-03-02T00:00:00Z</updated>
+    <author>
+      <name>Josh W Lewis</name>
+    </author>
+    <summary type="html">&lt;p&gt;When building new Rails projects, I often use &lt;a href="//twitter.github.com/bootstrap"&gt;Bootstrap&lt;/a&gt; because it lets me focus more on the business logic, rather than design. Almost everytime I start one of these projects, I forget how I did flash messages the last time, and have to look at a...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;When building new Rails projects, I often use &lt;a href="//twitter.github.com/bootstrap"&gt;Bootstrap&lt;/a&gt; because it lets me focus more on the business logic, rather than design. Almost everytime I start one of these projects, I forget how I did flash messages the last time, and have to look at a past project or refer to Bootstrap&amp;rsquo;s documentation.&lt;/p&gt;
+
+&lt;p&gt;So, for my reference, and maybe your gain, this is the method that works for me.&lt;/p&gt;
+&lt;pre class="highlight haml"&gt;&lt;span class="p"&gt;-&lt;/span&gt; &lt;span class="n"&gt;flash&lt;/span&gt;&lt;span class="nf"&gt;.each&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;
+  &lt;span class="p"&gt;-&lt;/span&gt; &lt;span class="n"&gt;bootstrap_class&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;alert: &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;alert-error&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;notice: &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;alert-success&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;info: &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;alert-info&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+  &lt;span class="nt"&gt;%div&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;class: &lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="ss"&gt;:alert&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bootstrap_class&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="nt"&gt;%button&lt;/span&gt;&lt;span class="nc"&gt;.close&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;:{&lt;/span&gt;&lt;span class="ss"&gt;dismiss: :alert&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;} ×
+    &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;This partial renders all flash messages (In the rare case that you have more than one), and matches the flash type to the bootstrap class. It also uses lets users close the messages (via bootstrap-transitions.js or bootstrap.js)&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Static Site Creation with Middleman</title>
+    <link rel="alternate" href="/essays/static_site_creation_with_middleman"/>
+    <id>/essays/static_site_creation_with_middleman</id>
+    <published>2013-02-10T00:00:00Z</published>
+    <updated>2013-02-10T00:00:00Z</updated>
+    <author>
+      <name>Josh W Lewis</name>
+    </author>
+    <summary type="html">&lt;p&gt;I’ve put off building my personal website for a while. I’m a Rails developer,
+so it would be fairly straight forward to build a blogging application and host
+it somewhere. But, that seemed like a lot of overhead – content management 
+system, database...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;I&amp;rsquo;ve put off building my personal website for a while. I&amp;rsquo;m a Rails developer,
+so it would be fairly straight forward to build a blogging application and host
+it somewhere. But, that seemed like a lot of overhead &amp;ndash; content management 
+system, database, and a VPS to host it on. It just didn&amp;rsquo;t seem worth the
+expense and effort for a hobby site. Sure, I could hand build a simple html
+site, but I&amp;rsquo;m used to the conveniences of helpers and templating languages that
+make building html easy.&lt;/p&gt;
+
+&lt;h4&gt;Enter Static Site Generators&lt;/h4&gt;
+
+&lt;p&gt;Turns out there are tools out there to bridge the gap. They let you use all the
+great tools for making development easier, but compile to static HTML files. Some
+examples of these:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Jekyll&lt;/li&gt;
+&lt;li&gt;Octopress&lt;/li&gt;
+&lt;li&gt;Middleman&lt;/li&gt;
+&lt;li&gt;Nanoc&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I won&amp;rsquo;t go into the virtues of each of these, but my eventual choice was 
+Middleman.&lt;/p&gt;
+
+&lt;h3&gt;Middleman&lt;/h3&gt;
+
+&lt;p&gt;It&amp;rsquo;s built on Ruby, and it&amp;rsquo;s got a bunch of Rails already baked in. For example&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;I can use link_to, just like Rails:&lt;/p&gt;
+&lt;pre class="highlight ruby"&gt;&lt;span class="n"&gt;link_to&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Home&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;/&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;Or render a partial, just like Rails:&lt;/p&gt;
+&lt;pre class="highlight ruby"&gt;&lt;span class="n"&gt;partial&lt;/span&gt; &lt;span class="ss"&gt;:article_preview&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;:locals&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:article&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;article&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;I can use Haml for layouts, just like Rails:&lt;/p&gt;
+&lt;pre class="highlight haml"&gt;&lt;span class="nf"&gt;#page&lt;/span&gt;
+  &lt;span class="nc"&gt;.container&lt;/span&gt;
+    &lt;span class="nt"&gt;%section&lt;/span&gt;&lt;span class="nc"&gt;.content&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="k"&gt;yield&lt;/span&gt;
+    &lt;span class="p"&gt;-&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;blog&lt;/span&gt;&lt;span class="nf"&gt;.articles.present?&lt;/span&gt;
+      &lt;span class="nt"&gt;%footer&lt;/span&gt;&lt;span class="nc"&gt;.explore.center&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;And I can even write some Ruby to keep things DRY:&lt;/p&gt;
+&lt;pre class="highlight ruby"&gt;&lt;span class="k"&gt;def &lt;/span&gt;&lt;span class="nf"&gt;sentence_tag_list&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;article&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;tags&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;article&lt;/span&gt;&lt;span class="nf"&gt;.tags&lt;/span&gt;
+    &lt;span class="s2"&gt;&amp;quot;This article was filed under &amp;quot;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt;
+    &lt;span class="n"&gt;content_tag&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;:div&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;class: :tags&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt;
+      &lt;span class="n"&gt;article&lt;/span&gt;&lt;span class="nf"&gt;.tags.map&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;link_to&lt;/span&gt; &lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;/essays/categories/&lt;/span&gt;&lt;span class="si"&gt;#{&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="nf"&gt;.to_sentence&lt;/span&gt;
+    &lt;span class="k"&gt;end&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/pre&gt;
+&lt;h4&gt;Best of Both Worlds&lt;/h4&gt;
+
+&lt;p&gt;So in development, I can use Ruby, Sass, Coffeescript, Markdown, and Haml.
+So it&amp;rsquo;s a pleasure to build sites, and I&amp;rsquo;m a happy developer. &lt;/p&gt;
+
+&lt;p&gt;When it&amp;rsquo;s all ready to go, I build the static files and push to any static file
+web server. The advantage here is that I can deploy it basically anywhere,
+and because it&amp;rsquo;s just static files, the web server can be highly optimized for
+caching&amp;hellip;&lt;/p&gt;
+
+&lt;h3&gt;So its BLAZING FAST.&lt;/h3&gt;
+
+&lt;p&gt;VY8FZ2Z9FUU2&lt;/p&gt;
+</content>
+  </entry>
+</feed>
