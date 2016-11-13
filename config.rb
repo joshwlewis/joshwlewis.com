@@ -9,8 +9,6 @@ set :js_dir, 'javascripts'
 
 set :images_dir, 'images'
 
-set :haml, { :ugly => true }
-
 set :markdown_engine, :redcarpet
 set :markdown, :fenced_code_blocks => true,
                :autolink => true,
@@ -18,8 +16,10 @@ set :markdown, :fenced_code_blocks => true,
                :tables => true,
                :no_intra_emphasis => true
 
-set :relative_links, true
 activate :syntax
+
+set :relative_links, true
+set :trailing_slash, false
 
 activate :blog do |blog|
   blog.prefix = "essays"
@@ -33,16 +33,12 @@ activate :blog do |blog|
   blog.per_page = 3
 end
 
-activate :deploy do |deploy|
-  deploy.method = :git
-end
-
+activate :relative_assets
 activate :directory_indexes
-set :trailing_slash, false
 
 configure :build do
   activate :minify_css
   activate :minify_javascript
+  activate :minify_html
   activate :asset_hash
-  activate :relative_assets
 end

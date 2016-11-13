@@ -20,7 +20,7 @@
       sum of which is available #{ link_to "here", "/essays" }. Here are some of
       my most recent:
     %ul
-      - blog.articles.first(3).each do |article|
+      - blog.articles[0..2].each do |article|
         %li= link_to(article.data.title, article.url)
 
   .section
@@ -28,12 +28,12 @@
       I also occasionally give talks to user groups and conferences. The slides are listed
       #{ link_to "here", "/slides"}. Here are a few selections:
     %ul
-      - slide_decks.first(3).each do |deck|
+      = slide_decks.first(3).each do |deck|
         %li= link_to(deck.data.title, deck.url)
   .section
     %p
       If you'd like to connect, you can also find me via
-      #{link_to 'Github', '//github.com/joshwlewis/'},
+      #{ link_to 'Github', '//github.com/joshwlewis/'},
       #{ link_to 'Twitter', '//twitter.com/joshwlewis/' },
       #{ link_to 'LinkedIn', '//www.linkedin.com/in/joshwlewis' }, or
       #{ link_to 'Email',    '//mailto:josh.w.lewis@gmail.com' }.
