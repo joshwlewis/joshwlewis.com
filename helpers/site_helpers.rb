@@ -75,7 +75,7 @@ module SiteHelpers
   end
 
   def sentence_tag_list(article)
-    if tags = article.tags
+    if article.tags.present?
       "This article was filed under " +
       content_tag(:div, class: :tags) do
         article.tags.map{|t| link_to t, "/essays/categories/#{t}"}.to_sentence
@@ -87,7 +87,11 @@ module SiteHelpers
 
   def step(id, opts={}, &block)
     content_tag :div, id: id, class: :step, data: opts do
-      capture(&block) if block_given?
+      if block_given?
+        capture(&block)
+      else
+        ''
+      end
     end
   end
 
