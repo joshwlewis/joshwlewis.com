@@ -16,65 +16,76 @@ body
     right: 0
 
 #headline
-  margin: 7px 0
-  .name
+  padding: 24px 0
+  .name, .crumb
     display: inline-block
+    vertical-align: middle
+    margin-bottom: 0
+    margin-right: 6px
+    line-height: 40px
   img.avatar
-    margin-right: 10px
-    vertical-align: top
-    height: 30px
-    width:  30px
-    border-radius: 15px
+    margin-right: 12px
+    vertical-align: middle
+    height: 40px
+    width:  40px
+    border-radius: 100%
+    display: inline-block
 
+
+.highlight
+  padding: 18px 24px
+  margin: 24px auto
+  border: 1px solid rgba(0, 0, 0, 0.1)
+  background: rgba(255,255,255,0.92)
+  background-color: #fafafb
+
+pre.highlight
+  background-color: #fdfeff
 
 #index
+  padding-top: 28px
   .section
     margin: 12px 0
   #headline
-    margin-top: 3em
-    margin-bottom: 1em
+    margin-bottom: 12px
     img.avatar
-      margin-top: 10px
-      height: 80px
-      width: 80px
-      border-radius: 40px
+      height: 60px
+      width: 60px
     @media (max-width: 480px)
       .name
         font-size: 36px
         line-height: 42px
       img.avatar
         margin-right: 0
-        margin-top: 11px
         height: 50px
         width: 50px
-        border-radius: 25px
 
 .container
-  position: relative
   min-height: 100%
+  position: relative
 
-.with-footer
-  margin-bottom: 35px
+.footer-pad
+  padding-bottom: 40px
 
 #copyright
-  height: 30px
+  margin: 12px auto
+  float: left
   position: absolute
   left: 0
   right: 0
   bottom: 0
   text-align: center
-  font-size: 18px
 
 .space
   a
     +link-colors($p200, $p100, $c100, $p50, $c100)
-  h1, h2, h3, h4, p, li, span
+  h1, h2, h3, h4, h5, p, li, span
     text-shadow: rgba(0,0,0,0.2) 0.05em 0.1em 0.1em
     color: white
 
 .surface
-  margin: 1em auto
-  padding: 1em
+  margin: 0 auto 32px
+  padding: 32px 28px 8px
   h1
-  background: rgba(255,255,255,0.9)
+  background: rgba(255,255,255,0.92)
   box-shadow: 1px 3px 6px 1px rgba(0,0,0,0.25)

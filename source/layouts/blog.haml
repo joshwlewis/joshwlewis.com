@@ -1,7 +1,8 @@
 = wrap_layout :home do
   #headline.space
     %img.avatar{ src: '/images/joshwlewis.jpg', alt: 'Josh W Lewis' }
-    %a.name{ href: '/' } Josh W Lewis
-    %span /
-    = link_to 'Essays', '/essays'
+    %h4.crumb
+      %a{ href: '/' } Josh W Lewis
+    %h4.crumb /
+    %h4.crumb Essays
   = yield

@@ -80,7 +80,7 @@ Quadromper = function(container, colors) {
     this.quads.push(quad);
     return quad;
   };
-  this.animate = function() {
+  this.render = function() {
     if (this.step % 60 === 0) { this.buildQuad(); }
     if (this.step % 120 === 0) {
       var height = this.getHeight();
@@ -98,7 +98,6 @@ Quadromper = function(container, colors) {
       this.quads[0].destroy();
       this.quads.shift();
     }
-    window.requestAnimationFrame(this.animate.bind(this));
     this.step = this.step + 1;
   };
 };

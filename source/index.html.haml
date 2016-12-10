@@ -20,7 +20,7 @@
       sum of which is available #{ link_to "here", "/essays" }. Here are some of
       my most recent:
     %ul
-      - blog.articles[0..2].each do |article|
+      - blog.articles[0..3].each do |article|
         %li= link_to(article.data.title, article.url)
 
   .section
@@ -28,7 +28,7 @@
       I also occasionally give talks to user groups and conferences. The slides are listed
       #{ link_to "here", "/slides"}. Here are a few selections:
     %ul
-      = slide_decks.first(3).each do |deck|
+      - slide_decks.first(4).each do |deck|
         %li= link_to(deck.data.title, deck.url)
   .section
     %p

@@ -1,5 +1,3 @@
-@import url(http://fonts.googleapis.com/css?family=Lato:300|Droid+Sans+Mono)
-
 $p50: #E1F5FE
 $p100: #B3E5FC
 $p200: #81D4FA
@@ -27,15 +25,14 @@ $c700: #E64A19
 $c800: #D84315
 $c900: #BF360C
 
-$sansFontFamily: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif
-$monoFontFamily: "Droid Sans Mono", Menlo, Monaco, "Courier New", monospace
-$headingsFontFamily: $sansFontFamily
-$baseFontSize: 21px
-$baseLineHeight: 30px
+@import "fonts"
+
+$font-family-sans-serif: "Alright Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default
+$font-size-root: 16px !default
 
 @import "bootstrap"
 @import "vendor/font-awesome"
-@import "vendor/solarized"
+@import "vendor/base16-unikitty"
 
 @import "compass/typography/links/link-colors"
 @import "compass/css3/box-shadow"

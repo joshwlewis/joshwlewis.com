@@ -1,12 +1,13 @@
 #headline.space
   %img.avatar{ src: '/images/joshwlewis.jpg', alt: 'Josh W Lewis' }
-  %a.name{ href: '/' } Josh W Lewis
-  %span /
-  = link_to 'Essays', '/essays'
-  %span /
-  = link_to 'Categories', '/essays/categories'
-  %span /
-  = link_to tagname, "/essays/categories/#{tagname}"
+  %h4.crumb
+    %a{ href: '/' } Josh W Lewis
+  %h4.crumb /
+  %h4.crumb= link_to 'Essays', '/essays'
+  %h4.crumb /
+  %h4.crumb= link_to 'Categories', '/essays/categories'
+  %h4.crumb /
+  %h4.crumb= link_to tagname, "/essays/categories/#{tagname}"
 
 - if articles
   - articles.each do |a|

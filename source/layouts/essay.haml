@@ -1,22 +1,26 @@
 = wrap_layout :home do
   #headline.space
     %img.avatar{ src: '/images/joshwlewis.jpg', alt: 'Josh W Lewis' }
-    %a.name{ href: '/' } Josh W Lewis
-    %span /
-    = link_to 'Essays', '/essays'
-    %span /
-    = link_to current_article.title, current_article.url
+    %h5.crumb
+      %a{ href: '/' } Josh W Lewis
+    %h5.crumb /
+    %h5.crumb
+      = link_to 'Essays', '/essays'
+    %h5.crumb /
+    %h5.crumb
+      = link_to current_article.title, current_article.url
+
   .surface
     %h1= link_to current_article.title, current_article.url
+    %br
     %h4
       By
       %a{ href: '/', rel: 'author' } Josh W Lewis
-    %h5= "On #{long_date current_article.date}"
+      = "on #{long_date current_article.date}"
+    %br
+
     =yield
-    %hr
-    .well
+
+    .highlight
       This article was categorized as
       = current_article.tags.map{|t| link_to t, "/essays/categories/#{t}"}.to_sentence
-    #disqus_thread
-
-  = javascript_include_tag "app/integrations/disqus"
