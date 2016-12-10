@@ -6,48 +6,55 @@
 <title>Rails Flash Messages with Twitter Bootstrap | Josh W Lewis</title>
 <meta content='width=device-width, initial-scale=1.0' name='viewport'>
 
-<script src="../../javascripts/blog/head-8a505cfa.js" type="text/javascript"></script>
-<link href="../../stylesheets/blog-33e38085.css" media="screen" rel="stylesheet" type="text/css" />
+<script src="../../javascripts/vendor/jquery-1d85f0f3.js"></script>
+<script src="../../javascripts/vendor/modernizr-7a33327d.js"></script>
+<script src="../../javascripts/app/quadromper-6db0f8ba.js"></script>
+<link href="../../stylesheets/blog-798746e5.css" rel="stylesheet" />
 </head>
 <body>
 <div id='background'></div>
 <div class='container'>
 <div class='space' id='headline'>
-<img alt='Josh W Lewis' class='avatar' src='/images/joshwlewis-36466eda.jpg'>
-<a class='name' href='/'>Josh W Lewis</a>
-<span>/</span>
+<img alt='Josh W Lewis' class='avatar' src='../../images/joshwlewis-c95195e7.jpg'>
+<h5 class='crumb'>
+<a href='/'>Josh W Lewis</a>
+</h5>
+<h5 class='crumb'>/</h5>
+<h5 class='crumb'>
 <a href="/essays">Essays</a>
-<span>/</span>
+</h5>
+<h5 class='crumb'>/</h5>
+<h5 class='crumb'>
 <a href="/essays/rails_flash_messages_with_twitter_bootstrap">Rails Flash Messages with Twitter Bootstrap</a>
+</h5>
 </div>
 <div class='surface'>
 <h1><a href="/essays/rails_flash_messages_with_twitter_bootstrap">Rails Flash Messages with Twitter Bootstrap</a></h1>
+<br>
 <h4>
 By
 <a href='/' rel='author'>Josh W Lewis</a>
+on March 2, 2013
 </h4>
-<h5>On March 2, 2013</h5>
+<br>
 <p>When building new Rails projects, I often use <a href="//twitter.github.com/bootstrap">Bootstrap</a> because it lets me focus more on the business logic, rather than design. Almost everytime I start one of these projects, I forget how I did flash messages the last time, and have to look at a past project or refer to Bootstrap&rsquo;s documentation.</p>
 
 <p>So, for my reference, and maybe your gain, this is the method that works for me.</p>
-<pre class="highlight haml"><span class="p">-</span> <span class="n">flash</span><span class="nf">.each</span> <span class="k">do</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="o">|</span>
-  <span class="p">-</span> <span class="n">bootstrap_class</span> <span class="o">=</span> <span class="p">{</span><span class="ss">alert: </span><span class="s1">&#39;alert-error&#39;</span><span class="p">,</span> <span class="ss">notice: </span><span class="s1">&#39;alert-success&#39;</span><span class="p">,</span> <span class="ss">info: </span><span class="s1">&#39;alert-info&#39;</span><span class="p">}</span><span class="o">[</span><span class="n">k</span><span class="o">]</span>
-  <span class="nt">%div</span><span class="p">{</span><span class="ss">class: </span><span class="o">[</span><span class="ss">:alert</span><span class="p">,</span> <span class="n">bootstrap_class</span><span class="o">]</span><span class="p">}</span>
+<pre class="highlight haml"><code><span class="p">-</span> <span class="n">flash</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="o">|</span>
+  <span class="p">-</span> <span class="n">bootstrap_class</span> <span class="o">=</span> <span class="p">{</span><span class="ss">alert: </span><span class="s1">'alert-error'</span><span class="p">,</span> <span class="ss">notice: </span><span class="s1">'alert-success'</span><span class="p">,</span> <span class="ss">info: </span><span class="s1">'alert-info'</span><span class="p">}[</span><span class="n">k</span><span class="p">]</span>
+  <span class="nt">%div</span><span class="p">{</span><span class="ss">class: </span><span class="p">[</span><span class="ss">:alert</span><span class="p">,</span> <span class="n">bootstrap_class</span><span class="p">]}</span>
     <span class="nt">%button</span><span class="nc">.close</span><span class="p">{</span><span class="n">data</span><span class="p">:{</span><span class="ss">dismiss: :alert</span><span class="p">}</span>} ×
     <span class="p">=</span> <span class="n">v</span>
-</pre>
+</code></pre>
 <p>This partial renders all flash messages (In the rare case that you have more than one), and matches the flash type to the bootstrap class. It also uses lets users close the messages (via bootstrap-transitions.js or bootstrap.js)</p>
 
-<hr>
-<div class='well'>
+<div class='highlight'>
 This article was categorized as
 <a href="/essays/categories/ruby">ruby</a>, <a href="/essays/categories/rails">rails</a>, <a href="/essays/categories/bootstrap">bootstrap</a>, and <a href="/essays/categories/haml">haml</a>
 </div>
-<div id='disqus_thread'></div>
 </div>
-<script src="../../javascripts/app/integrations/disqus-579674f1.js" type="text/javascript"></script>
 
-<div class='with-footer'></div>
+<div class='footer-pad'></div>
 <footer class='space' id='copyright'>
 <span>
 Copyright &copy
@@ -64,6 +71,5 @@ Josh W Lewis
 </footer>
 
 </div>
-<script src="../../javascripts/blog/body-53988f5f.js" type="text/javascript"></script>
+<script src="../../javascripts/blog/body-e824cbca.js"></script>
 </body>
-

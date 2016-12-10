@@ -6,64 +6,71 @@
 <title>Rails' ActiveSupport try | Josh W Lewis: Ruby Developer</title>
 <meta content='width=device-width, initial-scale=1.0' name='viewport'>
 
-<script src="../../javascripts/blog/head-8a505cfa.js" type="text/javascript"></script>
-<link href="../../stylesheets/blog-33e38085.css" media="screen" rel="stylesheet" type="text/css" />
+<script src="../../javascripts/vendor/jquery-1d85f0f3.js"></script>
+<script src="../../javascripts/vendor/modernizr-7a33327d.js"></script>
+<script src="../../javascripts/app/quadromper-6db0f8ba.js"></script>
+<link href="../../stylesheets/blog-798746e5.css" rel="stylesheet" />
 </head>
 <body>
 <div id='background'></div>
 <div class='container'>
 <div class='space' id='headline'>
-<img alt='Josh W Lewis' class='avatar' src='/images/joshwlewis-36466eda.jpg'>
-<a class='name' href='/'>Josh W Lewis</a>
-<span>/</span>
+<img alt='Josh W Lewis' class='avatar' src='../../images/joshwlewis-c95195e7.jpg'>
+<h5 class='crumb'>
+<a href='/'>Josh W Lewis</a>
+</h5>
+<h5 class='crumb'>/</h5>
+<h5 class='crumb'>
 <a href="/essays">Essays</a>
-<span>/</span>
+</h5>
+<h5 class='crumb'>/</h5>
+<h5 class='crumb'>
 <a href="/essays/rails-active-support-try">Rails' ActiveSupport try</a>
+</h5>
 </div>
 <div class='surface'>
 <h1><a href="/essays/rails-active-support-try">Rails' ActiveSupport try</a></h1>
+<br>
 <h4>
 By
 <a href='/' rel='author'>Josh W Lewis</a>
+on April 26, 2013
 </h4>
-<h5>On April 26, 2013</h5>
+<br>
 <p>ActiveSupport has a few great Ruby extensions that I just love. One of my favorites is try.</p>
 
 <h3>.try()</h3>
 
 <p>Try is a sneaky method for handling NoMethodErrors on NilClass. If you ever get stuck writing code like this:</p>
-<pre class="highlight ruby"><span class="nb">name</span> <span class="o">=</span> <span class="n">user</span><span class="nf">.name</span> <span class="k">unless</span> <span class="n">user</span><span class="nf">.nil?</span>
-</pre>
+<pre class="highlight ruby"><code><span class="nb">name</span> <span class="o">=</span> <span class="n">user</span><span class="p">.</span><span class="nf">name</span> <span class="k">unless</span> <span class="n">user</span><span class="p">.</span><span class="nf">nil?</span>
+</code></pre>
 <p>Consider using try instead:</p>
-<pre class="highlight ruby"><span class="nb">name</span> <span class="o">=</span> <span class="n">user</span><span class="nf">.try</span> <span class="ss">:name</span>
-</pre>
+<pre class="highlight ruby"><code><span class="nb">name</span> <span class="o">=</span> <span class="n">user</span><span class="p">.</span><span class="nf">try</span> <span class="ss">:name</span>
+</code></pre>
 <p>It&rsquo;s basically like using send, but it will return nil if the receiver is nil.</p>
 
 <p>Here it works like send:</p>
-<pre class="highlight ruby"><span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="nf">.new</span> <span class="nb">name</span><span class="p">:</span> <span class="s2">&quot;Josh&quot;</span>    <span class="c1">#=&gt; #&lt;User&gt;</span>
-<span class="n">user</span><span class="nf">.send</span> <span class="ss">:name</span>                 <span class="c1">#=&gt; &quot;Josh&quot;</span>
-<span class="n">user</span><span class="nf">.try</span> <span class="ss">:name</span>                  <span class="c1">#=&gt; &quot;Josh&quot;</span>
-</pre>
+<pre class="highlight ruby"><code><span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="p">.</span><span class="nf">new</span> <span class="ss">name: </span><span class="s2">"Josh"</span>    <span class="c1">#=&gt; #&lt;User&gt;</span>
+<span class="n">user</span><span class="p">.</span><span class="nf">send</span> <span class="ss">:name</span>                 <span class="c1">#=&gt; "Josh"</span>
+<span class="n">user</span><span class="p">.</span><span class="nf">try</span> <span class="ss">:name</span>                  <span class="c1">#=&gt; "Josh"</span>
+</code></pre>
 <p>And here it doesn&rsquo;t blow up with a NoMethodError:</p>
-<pre class="highlight ruby"><span class="n">user</span> <span class="o">=</span> <span class="kp">nil</span>                      <span class="c1">#=&gt; nil</span>
-<span class="n">user</span><span class="nf">.send</span> <span class="ss">:name</span>                 <span class="c1">#=&gt; NoMethodError</span>
-<span class="n">user</span><span class="nf">.try</span> <span class="ss">:name</span>                  <span class="c1">#=&gt; nil</span>
-</pre>
+<pre class="highlight ruby"><code><span class="n">user</span> <span class="o">=</span> <span class="kp">nil</span>                      <span class="c1">#=&gt; nil</span>
+<span class="n">user</span><span class="p">.</span><span class="nf">send</span> <span class="ss">:name</span>                 <span class="c1">#=&gt; NoMethodError</span>
+<span class="n">user</span><span class="p">.</span><span class="nf">try</span> <span class="ss">:name</span>                  <span class="c1">#=&gt; nil</span>
+</code></pre>
 <p>EDIT: I still find try helpful in some cases, but I think it&rsquo;s best to
 exercise caution with it. Many times delegation or the null object pattern
 can solve your problem a little more eloquently. If you find yourself chaining
 <code>try</code> you should probably look at another way to factor your code.</p>
 
-<hr>
-<div class='well'>
+<div class='highlight'>
 This article was categorized as
 <a href="/essays/categories/rails">rails</a> and <a href="/essays/categories/ruby">ruby</a>
 </div>
-<div id='disqus_thread'></div>
 </div>
-<script src="../../javascripts/app/integrations/disqus-579674f1.js" type="text/javascript"></script>
 
-<div class='with-footer'></div>
+<div class='footer-pad'></div>
 <footer class='space' id='copyright'>
 <span>
 Copyright &copy
@@ -80,6 +87,5 @@ Josh W Lewis
 </footer>
 
 </div>
-<script src="../../javascripts/blog/body-53988f5f.js" type="text/javascript"></script>
+<script src="../../javascripts/blog/body-e824cbca.js"></script>
 </body>
-

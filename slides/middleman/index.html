@@ -7,7 +7,7 @@
 <meta content='Create fast sites fast with your favorite Ruby tools | Josh W Lewis: Ruby Developer, JavaScript Engineer, Consultant, Entrepreneur, Husband, and Dad' name='description'>
 <meta content='width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 <meta content='Josh W Lewis' name='author'>
-<link href="../../stylesheets/slides-156e4619.css" media="screen" rel="stylesheet" type="text/css" />
+<link href="../../stylesheets/slides-fb9a4763.css" rel="stylesheet" />
 </head>
 <body class='impress-not-supported'>
 <div class='fallback-message'><h3>Your browser doesn&rsquo;t support the features needed to display this presentation.</h3>
@@ -23,7 +23,7 @@
 </ul>
 </div>
 <div id='impress'>
-<div id="title" class="step" ><h1>Fast Sites with Middleman</h1>
+<div id="title" class="step"><h1>Fast Sites with Middleman</h1>
 <h4>
 Josh W Lewis
 <a href='//twitter.com/joshwlewis'>@joshwlewis</a>
@@ -53,17 +53,17 @@ Josh W Lewis
 <li>I could put it on ANY server...</li>
 </ul>
 </h4>
-</div><div id="sucks" class="step" data-x="-951" data-y="1000" data-z="-309" data-rotate-y="-288"><pre class="highlight html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</div><div id="sucks" class="step" data-x="-951" data-y="1000" data-z="-309" data-rotate-y="-288"><pre class="highlight html"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
 <span class="nt">&lt;html&gt;</span>
 <span class="nt">&lt;head&gt;</span>
-  <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">&#39;utf-8&#39;</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;meta</span> <span class="na">content=</span><span class="s">&#39;IE=edge,chrome=1&#39;</span> <span class="na">http-equiv=</span><span class="s">&#39;X-UA-Compatible&#39;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">'utf-8'</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;meta</span> <span class="na">content=</span><span class="s">'IE=edge,chrome=1'</span> <span class="na">http-equiv=</span><span class="s">'X-UA-Compatible'</span><span class="nt">&gt;</span>
   <span class="nt">&lt;title&gt;</span>Plain HTML Site<span class="nt">&lt;/title&gt;</span>
-  <span class="nt">&lt;meta</span> <span class="na">content=</span><span class="s">&quot;I don&#39;t want to write all this HTML&quot;</span> <span class="na">name=</span><span class="s">&#39;description&#39;</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;meta</span> <span class="na">content=</span><span class="s">&#39;width=device-width&#39;</span> <span class="na">name=</span><span class="s">&#39;viewport&#39;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;meta</span> <span class="na">content=</span><span class="s">"I don't want to write all this HTML"</span> <span class="na">name=</span><span class="s">'description'</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;meta</span> <span class="na">content=</span><span class="s">'width=device-width'</span> <span class="na">name=</span><span class="s">'viewport'</span><span class="nt">&gt;</span>
 <span class="nt">&lt;/head&gt;</span>
 ...
-</pre>
+</code></pre>
 <h3>....ugh! No Thanks!</h3>
 </div><div id="middleman" class="step" data-y="2000" data-rotate-y="-360"><h2>Enter Middleman</h2>
 <h4>Ruby based Static Site Generator</h4>
@@ -90,36 +90,31 @@ Josh W Lewis
 <li>Bundler</li>
 </ul>
 <h3>Installation</h3>
-<pre class="highlight shell">gem install middleman
-</pre>
-</div><div id="workflow" class="step" data-y="3750" data-x="650" data-z="375" data-rotate-y="-480"><h3>Middleman Workflow</h3>
+<pre class="highlight shell"><code>gem install middleman
+</code></pre></div><div id="workflow" class="step" data-y="3750" data-x="650" data-z="375" data-rotate-y="-480"><h3>Middleman Workflow</h3>
 <ol>
 <li>
 Create project
-<pre class="highlight shell">middleman init sample
-</pre>
-</li>
+<pre class="highlight shell"><code>middleman init sample
+</code></pre></li>
 <li>
 Install dependencies
-<pre class="highlight shell"><span class="nb">cd </span>sample
+<pre class="highlight shell"><code><span class="nb">cd </span>sample
 bundle install
-</pre>
-</li>
+</code></pre></li>
 <li>
 Run development server (localhost:4567)
-<pre class="highlight shell">bundle <span class="nb">exec </span>middleman server
-</pre>
-</li>
+<pre class="highlight shell"><code>bundle <span class="nb">exec </span>middleman server
+</code></pre></li>
 <li>... ?</li>
 <li>
 Build static files
-<pre class="highlight shell">bundle <span class="nb">exec </span>middleman build
-</pre>
-</li>
+<pre class="highlight shell"><code>bundle <span class="nb">exec </span>middleman build
+</code></pre></li>
 <li>Profit!</li>
 </ol>
 </div><div id="structure" class="step" data-y="3750" data-x="-650" data-z="375" data-rotate-y="-600"><h3>Sample Project Structure</h3>
-<pre class="highlight text">- source
+<pre class="highlight plaintext"><code>- source
   - javascripts
     - example.coffee
   - stylesheets
@@ -135,7 +130,7 @@ Build static files
     - example.css
   - index.html
   - about.html
-</pre>
+</code></pre>
 </div><div id="meta-outside" class="step" data-y="4750" data-rotate-y="-720"><h2>The code in this presentation...</h2>
 </div><div id="meta-inside" class="step" data-x="319" data-y="4765" data-rotate-y="-720" data-scale="0.0025"><h2>...built this presentation.</h2>
 <dl>
@@ -150,57 +145,57 @@ Build static files
 </dl>
 </div><div id="layouts" class="step" data-x="2000" data-y="6000"><h2>Layouts</h2>
 <p>source/layouts/layout.haml</p>
-<pre class="highlight haml"><span class="nn">!!!5
+<pre class="highlight haml"><code><span class="nn">!!!5
 </span><span class="nt">%html</span>
   <span class="nt">%head</span>
-    <span class="nt">%meta</span><span class="p">{</span><span class="ss">charset: </span><span class="s2">&quot;utf-8&quot;</span><span class="p">}</span>
+    <span class="nt">%meta</span><span class="p">{</span><span class="ss">charset: </span><span class="s2">"utf-8"</span><span class="p">}</span>
     <span class="nt">%title</span><span class="p">=</span> <span class="n">page_title</span>
-    <span class="nt">%meta</span><span class="p">{</span><span class="nb">name</span><span class="p">:</span> <span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="ss">content: </span><span class="n">page_description</span><span class="p">}</span>
+    <span class="nt">%meta</span><span class="p">{</span><span class="ss">name: </span><span class="s2">"description"</span><span class="p">,</span> <span class="ss">content: </span><span class="n">page_description</span><span class="p">}</span>
     ...
-    <span class="p">=</span> <span class="n">stylesheet_link_tag</span> <span class="s2">&quot;application&quot;</span>
+    <span class="p">=</span> <span class="n">stylesheet_link_tag</span> <span class="s2">"application"</span>
   <span class="nt">%body</span>
-    <span class="nc">.fallback-message</span><span class="p">=</span> <span class="n">partial</span> <span class="s1">&#39;fallback&#39;</span>
+    <span class="nc">.fallback-message</span><span class="p">=</span> <span class="n">partial</span> <span class="s1">'fallback'</span>
     <span class="p">=</span> <span class="k">yield</span>
     ...
-    <span class="p">=</span> <span class="n">javascript_include_tag</span> <span class="s2">&quot;application&quot;</span>
-</pre>
+    <span class="p">=</span> <span class="n">javascript_include_tag</span> <span class="s2">"application"</span>
+</code></pre>
 </div><div id="helpers" class="step" data-x="1247" data-y="6000" data-z="-1564" data-rotate-y="51.5"><h2>Helpers</h2>
 <p>source/helpers/site_helper.rb</p>
-<pre class="highlight ruby"><span class="k">module</span> <span class="nn">SiteHelpers</span>
-  <span class="k">def </span><span class="nf">page_title</span>
-    <span class="o">[</span><span class="n">data</span><span class="nf">.page.title</span><span class="p">,</span> <span class="s2">&quot;Josh W Lewis&quot;</span><span class="o">]</span><span class="nf">.compact.join</span><span class="p">(</span><span class="s1">&#39; | &#39;</span><span class="p">)</span>
+<pre class="highlight ruby"><code><span class="k">module</span> <span class="nn">SiteHelpers</span>
+  <span class="k">def</span> <span class="nf">page_title</span>
+    <span class="p">[</span><span class="n">data</span><span class="p">.</span><span class="nf">page</span><span class="p">.</span><span class="nf">title</span><span class="p">,</span> <span class="s2">"Josh W Lewis"</span><span class="p">].</span><span class="nf">compact</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="s1">' | '</span><span class="p">)</span>
   <span class="k">end</span>
 
-  <span class="k">def </span><span class="nf">page_description</span>
-    <span class="n">data</span><span class="nf">.page.description</span> <span class="o">||</span> <span class="s2">&quot;Slides by Josh W Lewis&quot;</span>
+  <span class="k">def</span> <span class="nf">page_description</span>
+    <span class="n">data</span><span class="p">.</span><span class="nf">page</span><span class="p">.</span><span class="nf">description</span> <span class="o">||</span> <span class="s2">"Slides by Josh W Lewis"</span>
   <span class="k">end</span>
 
-  <span class="k">def </span><span class="nf">step</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">opts</span><span class="o">=</span><span class="p">{},</span> <span class="o">&amp;</span><span class="n">block</span><span class="p">)</span>
-    <span class="n">content_tag</span> <span class="ss">:div</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">id</span><span class="p">,</span> <span class="ss">class: :step</span><span class="p">,</span> <span class="ss">data: </span><span class="n">opts</span> <span class="k">do</span>
+  <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">opts</span><span class="o">=</span><span class="p">{},</span> <span class="o">&amp;</span><span class="n">block</span><span class="p">)</span>
+    <span class="n">content_tag</span> <span class="ss">:div</span><span class="p">,</span> <span class="ss">id: </span><span class="nb">id</span><span class="p">,</span> <span class="ss">class: :step</span><span class="p">,</span> <span class="ss">data: </span><span class="n">opts</span> <span class="k">do</span>
       <span class="n">capture</span><span class="p">(</span><span class="o">&amp;</span><span class="n">block</span><span class="p">)</span> <span class="k">if</span> <span class="nb">block_given?</span>
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
-</pre>
+</code></pre>
 </div><div id="views" class="step" data-x="-445" data-y="6000" data-z="-1950" data-rotate-y="103"><h2>Views</h2>
 <p>source/middleman/index.haml</p>
-<pre class="highlight haml">
+<pre class="highlight haml"><code>
 <span class="p">-</span><span class="o">--</span>
 title: Fast Sites with Middleman
 published: true
 description: Create fast sites fast with your favorite Ruby tools
 <span class="p">-</span><span class="o">--</span>
 
-<span class="p">=</span> <span class="n">step</span> <span class="s2">&quot;title&quot;</span> <span class="k">do</span>
+<span class="p">=</span> <span class="n">step</span> <span class="s2">"title"</span> <span class="k">do</span>
   <span class="nt">%h1</span> Fast Sites with Middleman
   <span class="nt">%h4</span>
     Josh W Lewis
-    <span class="nt">%a</span><span class="p">{</span><span class="ss">href: </span><span class="s2">&quot;//twitter.com/joshwlewis&quot;</span><span class="p">}</span> @joshwlewis
+    <span class="nt">%a</span><span class="p">{</span><span class="ss">href: </span><span class="s2">"//twitter.com/joshwlewis"</span><span class="p">}</span> @joshwlewis
   <span class="nt">%date</span> 5/23/2013
-</pre>
+</code></pre>
 </div><div id="partials" class="step" data-x="-1802" data-y="6000" data-z="-868" data-rotate-y="154.5"><h2>Partials</h2>
 <p>source/_fallback.md</p>
-<pre class="highlight markdown"><span class="gu">### Your browser doesn&#39;t support the features needed to display this presentation.</span>
+<pre class="highlight markdown"><code><span class="gu">### Your browser doesn't support the features needed to display this presentation.</span>
 
 A simplified version of this presentation follows.
 
@@ -209,16 +204,16 @@ For the best experience, please use one of the following browsers:
 -</span> <span class="p">[</span><span class="nv">Chrome</span><span class="p">](</span><span class="sx">//www.google.com/chrome</span><span class="p">)</span>
 <span class="p">-</span> <span class="p">[</span><span class="nv">Safari</span><span class="p">](</span><span class="sx">//www.apple.com/safari</span><span class="p">)</span>
 <span class="p">-</span> <span class="p">[</span><span class="nv">Firefox</span><span class="p">](</span><span class="sx">//www.mozilla.org/firefox</span><span class="p">)</span>
-</pre>
+</code></pre>
 </div><div id="stylesheets" class="step" data-x="-1802" data-y="6000" data-z="868" data-rotate-y="206"><h2>Stylesheets</h2>
 <p>source/stylesheets/application.sass</p>
-<pre class="highlight sass"><span class="k">@import</span> <span class="s">url(//fonts.googleapis.com/css?family=Droid...</span>
-<span class="k">@import</span> <span class="s">&quot;vendor/solarized&quot;</span>
-<span class="nv">$sansFontFamily</span><span class="p">:</span> <span class="s2">&quot;Droid Sans&quot;</span><span class="o">,</span> <span class="s2">&quot;Helvetica Neue&quot;</span><span class="o">...</span>
-<span class="nv">$monoFontFamily</span><span class="p">:</span> <span class="s2">&quot;Droid Sans Mono&quot;</span><span class="o">,</span> <span class="n">Monaco</span><span class="o">...</span>
+<pre class="highlight sass"><code><span class="k">@import</span> <span class="s">url(//fonts.googleapis.com/css?family=Droid...</span>
+<span class="k">@import</span> <span class="s">"vendor/solarized"</span>
+<span class="nv">$sansFontFamily</span><span class="p">:</span> <span class="s2">"Droid Sans"</span><span class="o">,</span> <span class="s2">"Helvetica Neue"</span><span class="o">...</span>
+<span class="nv">$monoFontFamily</span><span class="p">:</span> <span class="s2">"Droid Sans Mono"</span><span class="o">,</span> <span class="n">Monaco</span><span class="o">...</span>
 <span class="nv">$baseFontSize</span><span class="p">:</span> <span class="m">26px</span>
 <span class="nv">$baseLineHeight</span><span class="p">:</span> <span class="m">38px</span>
-<span class="k">@import</span> <span class="s">&quot;bootstrap&quot;</span>
+<span class="k">@import</span> <span class="s">"bootstrap"</span>
 
 <span class="nt">body</span><span class="nc">.impress-supported</span>
   <span class="nc">.fallback-message</span>
@@ -227,31 +222,31 @@ For the best experience, please use one of the following browsers:
     <span class="nl">width</span><span class="p">:</span> <span class="m">900px</span>
   <span class="nn">#title</span><span class="o">,</span> <span class="nn">#middleman</span><span class="o">,</span> <span class="nn">#demo</span><span class="o">,</span> <span class="nn">#meta-outside</span>
     <span class="nl">text-align</span><span class="p">:</span> <span class="nb">center</span>
-</pre>
+</code></pre>
 </div><div id="javascripts" class="step" data-x="-445" data-y="6000" data-z="1950" data-rotate-y="257.5"><h2>Javascripts</h2>
 <p>source/javascripts/application/tweet.coffee</p>
-<pre class="highlight coffeescript"><span class="nx">jQuery</span> <span class="o">-&gt;</span>
-  <span class="nx">$</span><span class="p">(</span><span class="s">&quot;.tweets&quot;</span><span class="p">).</span><span class="na">tweet</span>
+<pre class="highlight coffeescript"><code><span class="nx">jQuery</span> <span class="o">-&gt;</span>
+  <span class="nx">$</span><span class="p">(</span><span class="s">".tweets"</span><span class="p">).</span><span class="na">tweet</span>
     <span class="na">avatar_size</span><span class="o">:</span> <span class="mi">48</span>
     <span class="na">count</span><span class="o">:</span> <span class="mi">3</span>
-    <span class="na">query</span><span class="o">:</span> <span class="s">&quot;#memtech&quot;</span>
-</pre>
+    <span class="na">query</span><span class="o">:</span> <span class="s">"#memtech"</span>
+</code></pre>
 <div class='well'>
 EDIT: This worked well until Twitter revised their API to require all requests to be authenticated.
 </div>
 </div><div id="minification" class="step" data-x="1247" data-y="6000" data-z="1564" data-rotate-y="309"><h2>Asset Minification and Hashes</h2>
 <h4>source/stylesheets/application.css.sass</h4>
-<pre class="highlight sass"><span class="nt">body</span><span class="nc">.impress-supported</span>
+<pre class="highlight sass"><code><span class="nt">body</span><span class="nc">.impress-supported</span>
   <span class="nc">.fallback-message</span>
     <span class="nl">display</span><span class="p">:</span> <span class="nb">none</span>
   <span class="nc">.step</span>
     <span class="nl">width</span><span class="p">:</span> <span class="m">900px</span>
   <span class="nn">#title</span><span class="o">,</span> <span class="nn">#middleman</span><span class="o">,</span> <span class="nn">#demo</span><span class="o">,</span> <span class="nn">#meta-outside</span>
     <span class="nl">text-align</span><span class="p">:</span> <span class="nb">center</span>
-</pre>
+</code></pre>
 <h4>build/stylesheets/application-ea1c367d.css</h4>
-<pre class="highlight css"><span class="nt">body</span><span class="nc">.impress-supported</span> <span class="nc">.fallback-message</span><span class="p">{</span><span class="nl">display</span><span class="p">:</span><span class="nb">none</span><span class="p">}</span><span class="nt">body</span><span class="nc">.impress-supported</span> <span class="nc">.step</span><span class="p">{</span><span class="nl">width</span><span class="p">:</span><span class="m">850px</span><span class="p">}</span><span class="nt">body</span><span class="nc">.impress-supported</span> <span class="nf">#title</span><span class="o">,</span><span class="nt">body</span><span class="nc">.impress-supported</span> <span class="nf">#middleman</span><span class="o">,</span><span class="nt">body</span><span class="nc">.impress-supported</span> <span class="nf">#demo</span><span class="o">,</span><span class="nt">body</span><span class="nc">.impress-supported</span> <span class="nf">#meta-outside</span><span class="p">{</span><span class="nl">text-align</span><span class="p">:</span><span class="nb">center</span><span class="p">}</span>
-</pre>
+<pre class="highlight css"><code><span class="nt">body</span><span class="nc">.impress-supported</span> <span class="nc">.fallback-message</span><span class="p">{</span><span class="nl">display</span><span class="p">:</span><span class="nb">none</span><span class="p">}</span><span class="nt">body</span><span class="nc">.impress-supported</span> <span class="nc">.step</span><span class="p">{</span><span class="nl">width</span><span class="p">:</span><span class="m">850px</span><span class="p">}</span><span class="nt">body</span><span class="nc">.impress-supported</span> <span class="nf">#title</span><span class="o">,</span><span class="nt">body</span><span class="nc">.impress-supported</span> <span class="nf">#middleman</span><span class="o">,</span><span class="nt">body</span><span class="nc">.impress-supported</span> <span class="nf">#demo</span><span class="o">,</span><span class="nt">body</span><span class="nc">.impress-supported</span> <span class="nf">#meta-outside</span><span class="p">{</span><span class="nl">text-align</span><span class="p">:</span><span class="nb">center</span><span class="p">}</span>
+</code></pre>
 </div><div id="demo" class="step" data-y="6000" data-rotate-y="360" data-scale="1.5"><h2>Live Demo</h2>
 <p>What could go wrong?</p>
 </div><div id="extensions" class="step" data-y="7000"><h2>Middleman Extensions</h2>
@@ -295,6 +290,7 @@ EDIT: This worked well until Twitter revised their API to require all requests t
 </div><div id="overview" class="step" data-y="3750" data-scale="6.5" data-rotate-x="20" data-rotate-z="70"></div>
 
 </div>
-<script src="../../javascripts/slides/body-dd9f322b.js" type="text/javascript"></script>
+<script src="../../javascripts/vendor/impress-c389aa57.js"></script>
+<script src="../../javascripts/slides/body-a3539a0f.js"></script>
 </body>
 </html>

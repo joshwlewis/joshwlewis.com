@@ -1,0 +1,1 @@
+(function(){$(function(){var n,r,e;return r=$("#background"),n=["#29B6F6","#039BE5","#0277BD","#F4511E","#D84315"],window.quadromper=new Quadromper(r,n),(e=function(n){return function(){return window.quadromper.render(),window.requestAnimationFrame(e)}}(this))()})}).call(this);

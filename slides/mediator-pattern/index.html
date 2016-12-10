@@ -7,7 +7,7 @@
 <meta content='Encapsulate your business logic in mediators for cleaner services. | Josh W Lewis: Ruby Developer, JavaScript Engineer, Consultant, and Entrepreneur' name='description'>
 <meta content='width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 <meta content='Josh W Lewis' name='author'>
-<link href="../../stylesheets/slides-156e4619.css" media="screen" rel="stylesheet" type="text/css" />
+<link href="../../stylesheets/slides-fb9a4763.css" rel="stylesheet" />
 </head>
 <body class='impress-not-supported'>
 <div class='fallback-message'><h3>Your browser doesn&rsquo;t support the features needed to display this presentation.</h3>
@@ -23,7 +23,7 @@
 </ul>
 </div>
 <div id='impress'>
-<div id="title" class="step" ><h1>The Mediator Pattern</h1>
+<div id="title" class="step"><h1>The Mediator Pattern</h1>
 <br>
 <h4>Memphis Ruby</h4>
 <date>9/22/2016</date>
@@ -44,31 +44,30 @@
 </ul>
 <h4>Where does the Business Logic go?</h4>
 </div><div id="bad_model" class="step" data-x="4000"><h2>Have you seen me?</h2>
-<pre class="highlight ruby"><span class="k">class </span><span class="nc">Dojo</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">Dojo</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
   <span class="n">validates_presence_of</span> <span class="ss">:sensei</span>
   <span class="n">validates_presence_of</span> <span class="ss">:name</span>
 
   <span class="n">after_create</span>                <span class="ss">:requisition_katanas</span>
   <span class="n">before_validation_on_create</span> <span class="ss">:recommend</span>
 
-  <span class="k">def </span><span class="nf">requisition_katanas</span>
-    <span class="k">if</span> <span class="no">Katana</span><span class="nf">.in_warehouse.count</span> <span class="o">&gt;</span> <span class="mi">10</span>
-      <span class="no">Katana</span><span class="nf">.limit</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="nf">.each</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="o">|</span> <span class="n">k</span><span class="nf">.update</span><span class="p">(</span><span class="ss">dojo: </span><span class="nb">self</span><span class="p">)</span> <span class="p">}</span>
+  <span class="k">def</span> <span class="nf">requisition_katanas</span>
+    <span class="k">if</span> <span class="no">Katana</span><span class="p">.</span><span class="nf">in_warehouse</span><span class="p">.</span><span class="nf">count</span> <span class="o">&gt;</span> <span class="mi">10</span>
+      <span class="no">Katana</span><span class="p">.</span><span class="nf">limit</span><span class="p">(</span><span class="mi">10</span><span class="p">).</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="o">|</span> <span class="n">k</span><span class="p">.</span><span class="nf">update</span><span class="p">(</span><span class="ss">dojo: </span><span class="nb">self</span><span class="p">)</span> <span class="p">}</span>
     <span class="k">else</span>
-      <span class="no">DojoMailer</span><span class="nf">.send_katanas_needed_email</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span>
+      <span class="no">DojoMailer</span><span class="p">.</span><span class="nf">send_katanas_needed_email</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span>
     <span class="k">end</span>
   <span class="k">end</span>
 
-  <span class="k">def </span><span class="nf">recommend</span>
+  <span class="k">def</span> <span class="nf">recommend</span>
     <span class="k">if</span> <span class="n">has_sensei?</span>
-      <span class="no">Ninjas</span><span class="nf">.without_dojo.recommend</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span>
+      <span class="no">Ninjas</span><span class="p">.</span><span class="nf">without_dojo</span><span class="p">.</span><span class="nf">recommend</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span>
     <span class="k">else</span>
-      <span class="no">Sensei</span><span class="nf">.without_dojo.recommend</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span>
+      <span class="no">Sensei</span><span class="p">.</span><span class="nf">without_dojo</span><span class="p">.</span><span class="nf">recommend</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span>
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
-</pre>
-</div><div id="biz_logic_in_model" class="step" data-x="6000"><h2>Business logic in Models?</h2>
+</code></pre></div><div id="biz_logic_in_model" class="step" data-x="6000"><h2>Business logic in Models?</h2>
 <ul>
 <li>Mixed concerns</li>
 <ul>
@@ -82,32 +81,31 @@
 <li>No logging trail</li>
 </ul>
 </div><div id="bad_controller" class="step" data-x="8000"><h2>Have you seen me?</h2>
-<pre class="highlight ruby"><span class="k">class </span><span class="nc">DojoController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
-  <span class="k">def </span><span class="nf">create</span>
-    <span class="n">params</span> <span class="o">=</span> <span class="n">params</span><span class="nf">.require</span><span class="p">(</span><span class="ss">:dojo</span><span class="p">)</span><span class="nf">.allow</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:sensei_id</span><span class="p">)</span>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">DojoController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="k">def</span> <span class="nf">create</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">params</span><span class="p">.</span><span class="nf">require</span><span class="p">(</span><span class="ss">:dojo</span><span class="p">).</span><span class="nf">allow</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:sensei_id</span><span class="p">)</span>
 
-    <span class="vi">@dojo</span> <span class="o">=</span> <span class="no">Dojo</span><span class="nf">.new</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="vi">@dojo</span> <span class="o">=</span> <span class="no">Dojo</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="vi">@dojo</span><span class="nf">.save</span>
-      <span class="k">if</span> <span class="vi">@dojo</span><span class="nf">.has_sensei?</span>
-        <span class="no">Ninjas</span><span class="nf">.without_dojo.recommend</span><span class="p">(</span><span class="vi">@dojo</span><span class="p">)</span>
+    <span class="k">if</span> <span class="vi">@dojo</span><span class="p">.</span><span class="nf">save</span>
+      <span class="k">if</span> <span class="vi">@dojo</span><span class="p">.</span><span class="nf">has_sensei?</span>
+        <span class="no">Ninjas</span><span class="p">.</span><span class="nf">without_dojo</span><span class="p">.</span><span class="nf">recommend</span><span class="p">(</span><span class="vi">@dojo</span><span class="p">)</span>
       <span class="k">else</span>
-        <span class="no">Sensei</span><span class="nf">.without_dojo.recommend</span><span class="p">(</span><span class="vi">@dojo</span><span class="p">)</span>
+        <span class="no">Sensei</span><span class="p">.</span><span class="nf">without_dojo</span><span class="p">.</span><span class="nf">recommend</span><span class="p">(</span><span class="vi">@dojo</span><span class="p">)</span>
       <span class="k">end</span>
 
-      <span class="k">if</span> <span class="no">Katana</span><span class="nf">.in_warehouse.count</span> <span class="o">&gt;</span> <span class="mi">10</span>
-        <span class="no">Katana</span><span class="nf">.limit</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="nf">.each</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="o">|</span> <span class="n">k</span><span class="nf">.update</span><span class="p">(</span><span class="ss">dojo: </span><span class="vi">@dojo</span><span class="p">)</span> <span class="p">}</span>
+      <span class="k">if</span> <span class="no">Katana</span><span class="p">.</span><span class="nf">in_warehouse</span><span class="p">.</span><span class="nf">count</span> <span class="o">&gt;</span> <span class="mi">10</span>
+        <span class="no">Katana</span><span class="p">.</span><span class="nf">limit</span><span class="p">(</span><span class="mi">10</span><span class="p">).</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="o">|</span> <span class="n">k</span><span class="p">.</span><span class="nf">update</span><span class="p">(</span><span class="ss">dojo: </span><span class="vi">@dojo</span><span class="p">)</span> <span class="p">}</span>
       <span class="k">else</span>
-        <span class="no">DojoMailer</span><span class="nf">.send_katanas_needed_email</span><span class="p">(</span><span class="vi">@dojo</span><span class="p">)</span>
+        <span class="no">DojoMailer</span><span class="p">.</span><span class="nf">send_katanas_needed_email</span><span class="p">(</span><span class="vi">@dojo</span><span class="p">)</span>
       <span class="k">end</span>
     <span class="k">else</span>
-      <span class="n">flash</span><span class="nf">.now</span><span class="o">[</span><span class="ss">:error</span><span class="o">]</span> <span class="o">=</span> <span class="s2">&quot;Could not create dojo&quot;</span>
+      <span class="n">flash</span><span class="p">.</span><span class="nf">now</span><span class="p">[</span><span class="ss">:error</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"Could not create dojo"</span>
       <span class="n">render</span> <span class="ss">:new</span>
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
-</pre>
-</div><div id="whats_wrong_controller" class="step" data-x="10000"><h2>Business logic in Controllers?</h2>
+</code></pre></div><div id="whats_wrong_controller" class="step" data-x="10000"><h2>Business logic in Controllers?</h2>
 <ul>
 <li>Mixed concerns (request handling and biz logic)</li>
 <li>Long synchronous request</li>
@@ -130,14 +128,14 @@ other, but instead communicate through the mediator. This reduces the
 dependencies between communicating objects, thereby lowering the coupling.
 </blockquote>
 </div><div id="example" class="step" data-x="16000"><h2>A Mediator</h2>
-<pre class="highlight ruby"><span class="k">class </span><span class="nc">Mediators</span><span class="o">::</span><span class="no">Dojo</span><span class="o">::</span><span class="no">Creator</span> <span class="o">&lt;</span> <span class="no">Base</span>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">Mediators</span><span class="o">::</span><span class="no">Dojo</span><span class="o">::</span><span class="no">Creator</span> <span class="o">&lt;</span> <span class="no">Base</span>
   <span class="kp">attr_reader</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:sensei_id</span>
-  <span class="k">def </span><span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">:,</span> <span class="n">sensei_id</span><span class="p">:)</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">:,</span> <span class="n">sensei_id</span><span class="p">:)</span>
     <span class="vi">@name</span><span class="p">,</span> <span class="vi">@sensei_id</span> <span class="o">=</span> <span class="nb">name</span><span class="p">,</span> <span class="n">sensei_id</span>
   <span class="k">end</span>
 
-  <span class="k">def </span><span class="nf">call</span>
-    <span class="no">Dojo</span><span class="nf">.transaction</span> <span class="k">do</span>
+  <span class="k">def</span> <span class="nf">call</span>
+    <span class="no">Dojo</span><span class="p">.</span><span class="nf">transaction</span> <span class="k">do</span>
       <span class="n">create_dojo</span>
       <span class="n">recommend_dojo</span>
       <span class="n">requisition_katanas</span>
@@ -145,38 +143,35 @@ dependencies between communicating objects, thereby lowering the coupling.
     <span class="k">return</span> <span class="vi">@dojo</span>
   <span class="k">end</span>
 
-  <span class="k">def </span><span class="nf">create_dojo</span>
-    <span class="vi">@dojo</span> <span class="o">=</span> <span class="no">Dojo</span><span class="nf">.create</span><span class="p">(</span><span class="nb">name</span><span class="p">:</span> <span class="nb">name</span><span class="p">,</span> <span class="ss">sensei: </span><span class="n">sensei</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">create_dojo</span>
+    <span class="vi">@dojo</span> <span class="o">=</span> <span class="no">Dojo</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">name: </span><span class="nb">name</span><span class="p">,</span> <span class="ss">sensei: </span><span class="n">sensei</span><span class="p">)</span>
   <span class="k">end</span>
 
-  <span class="k">def </span><span class="nf">recommend_dojo</span>
+  <span class="k">def</span> <span class="nf">recommend_dojo</span>
     <span class="c1"># ...</span>
   <span class="k">end</span>
 
-  <span class="k">def </span><span class="nf">requisition_katanas</span>
+  <span class="k">def</span> <span class="nf">requisition_katanas</span>
     <span class="c1"># ...</span>
   <span class="k">end</span>
 <span class="k">end</span>
-</pre>
-</div><div id="controller_fixes" class="step" data-x="18000"><h2>Improved Controller</h2>
-<pre class="highlight ruby"><span class="k">class </span><span class="nc">DojoController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
-  <span class="k">def </span><span class="nf">create</span>
-    <span class="n">params</span> <span class="o">=</span> <span class="n">params</span><span class="nf">.require</span><span class="p">(</span><span class="ss">:dojo</span><span class="p">)</span><span class="nf">.allow</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:sensei_id</span><span class="p">)</span>
+</code></pre></div><div id="controller_fixes" class="step" data-x="18000"><h2>Improved Controller</h2>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">DojoController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="k">def</span> <span class="nf">create</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">params</span><span class="p">.</span><span class="nf">require</span><span class="p">(</span><span class="ss">:dojo</span><span class="p">).</span><span class="nf">allow</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:sensei_id</span><span class="p">)</span>
 
-    <span class="vi">@dojo</span> <span class="o">=</span> <span class="no">Mediators</span><span class="o">::</span><span class="no">Dojo</span><span class="o">::</span><span class="no">Creator</span><span class="nf">.run</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="vi">@dojo</span> <span class="o">=</span> <span class="no">Mediators</span><span class="o">::</span><span class="no">Dojo</span><span class="o">::</span><span class="no">Creator</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
   <span class="k">rescue</span>
-    <span class="n">flash</span><span class="nf">.now</span><span class="o">[</span><span class="ss">:error</span><span class="o">]</span> <span class="o">=</span> <span class="s2">&quot;Could not create dojo&quot;</span>
+    <span class="n">flash</span><span class="p">.</span><span class="nf">now</span><span class="p">[</span><span class="ss">:error</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"Could not create dojo"</span>
     <span class="n">render</span> <span class="ss">:new</span>
   <span class="k">end</span>
 <span class="k">end</span>
-</pre>
-</div><div id="model_fixes" class="step" data-x="20000"><h2>Improved Model</h2>
-<pre class="highlight ruby"><span class="k">class </span><span class="nc">Dojo</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</code></pre></div><div id="model_fixes" class="step" data-x="20000"><h2>Improved Model</h2>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">Dojo</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
   <span class="n">validates_presence_of</span> <span class="ss">:sensei</span>
   <span class="n">validates_presence_of</span> <span class="ss">:name</span>
 <span class="k">end</span>
-</pre>
-</div><div id="summary" class="step" data-x="22000"><h2>MVCM?</h2>
+</code></pre></div><div id="summary" class="step" data-x="22000"><h2>MVCM?</h2>
 <ul>
 <li>Model - Now concerned only with validation and persistence</li>
 <li>View - Still only concerned with rendering</li>
@@ -189,13 +184,13 @@ dependencies between communicating objects, thereby lowering the coupling.
 <li>We still have one long synchronous request</li>
 </ul>
 </div><div id="logging" class="step" data-x="26000"><h2>Simple logging</h2>
-<pre class="highlight ruby"><span class="k">class </span><span class="nc">Mediators</span><span class="o">::</span><span class="no">Dojo</span><span class="o">::</span><span class="no">Creator</span> <span class="o">&lt;</span> <span class="no">Mediators</span><span class="o">::</span><span class="no">Base</span>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">Mediators</span><span class="o">::</span><span class="no">Dojo</span><span class="o">::</span><span class="no">Creator</span> <span class="o">&lt;</span> <span class="no">Mediators</span><span class="o">::</span><span class="no">Base</span>
   <span class="c1"># ...</span>
 
-  <span class="k">def </span><span class="nf">create_dojo</span>
+  <span class="k">def</span> <span class="nf">create_dojo</span>
     <span class="n">log</span><span class="p">(</span><span class="ss">creating_dojo: </span><span class="kp">true</span><span class="p">)</span> <span class="k">do</span>
-      <span class="vi">@dojo</span> <span class="o">=</span> <span class="no">Dojo</span><span class="nf">.create</span><span class="p">(</span><span class="nb">name</span><span class="p">:</span> <span class="nb">name</span><span class="p">,</span> <span class="ss">sensei_id: </span><span class="n">sensei_id</span><span class="p">)</span>
-      <span class="n">log</span><span class="p">(</span><span class="ss">dojo_id: </span><span class="n">dojo</span><span class="nf">.id</span><span class="p">)</span>
+      <span class="vi">@dojo</span> <span class="o">=</span> <span class="no">Dojo</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">name: </span><span class="nb">name</span><span class="p">,</span> <span class="ss">sensei_id: </span><span class="n">sensei_id</span><span class="p">)</span>
+      <span class="n">log</span><span class="p">(</span><span class="ss">dojo_id: </span><span class="n">dojo</span><span class="p">.</span><span class="nf">id</span><span class="p">)</span>
     <span class="k">end</span>
   <span class="k">end</span>
 
@@ -203,26 +198,25 @@ dependencies between communicating objects, thereby lowering the coupling.
 
   <span class="kp">private</span>
 
-  <span class="k">def </span><span class="nf">log</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
-    <span class="no">Pliny</span><span class="nf">.log</span><span class="p">({</span>
+  <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+    <span class="no">Pliny</span><span class="p">.</span><span class="nf">log</span><span class="p">({</span>
       <span class="ss">dojo_creator: </span><span class="kp">true</span><span class="p">,</span>
-      <span class="nb">name</span><span class="p">:</span>         <span class="nb">name</span><span class="p">,</span>
+      <span class="ss">name:         </span><span class="nb">name</span><span class="p">,</span>
       <span class="ss">sensei_id:    </span><span class="n">sensei_id</span>
-    <span class="p">}</span><span class="nf">.merge</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+    <span class="p">}.</span><span class="nf">merge</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
   <span class="k">end</span>
 <span class="k">end</span>
-</pre>
-</div><div id="log_results" class="step" data-x="28000"><h2>Structured searchable logs:</h2>
+</code></pre></div><div id="log_results" class="step" data-x="28000"><h2>Structured searchable logs:</h2>
 <div class='well'>2016-09-22T20:43:08.337698+00:00 54.226.135.103 local7.info app[web.1]: - d.123-450-33241 app=shuriken deployment=production name=foo sensei_id=123 creating_dojo at=start</div>
 <div class='well'>2016-09-22T20:43:08.654278+00:00 54.226.135.103 local7.info app[web.1]: - d.123-450-33241 app=shuriken deployment=production name=foo sensei_id=123 dojo_id: 12345</div>
 <div class='well'>2016-09-22T20:43:08.897738+00:00 54.226.135.103 local7.info app[web.1]: - d.123-450-33241 app=shuriken deployment=production name=foo sensei_id=123 creating_dojo at=finish</div>
 <h3>Do this in every mediator!</h3>
 </div><div id="async" class="step" data-x="30000"><h2>Introduce a Sidekiq Job</h2>
-<pre class="highlight ruby"><span class="k">class </span><span class="nc">Jobs</span><span class="o">::</span><span class="no">Dojo</span><span class="o">::</span><span class="no">Prepare</span>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">Jobs</span><span class="o">::</span><span class="no">Dojo</span><span class="o">::</span><span class="no">Prepare</span>
   <span class="kp">include</span> <span class="no">Sidekiq</span><span class="o">::</span><span class="no">Worker</span>
 
   <span class="kp">attr_reader</span> <span class="ss">:dojo_id</span>
-  <span class="k">def </span><span class="nf">perform</span><span class="p">(</span><span class="n">dojo_id</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">perform</span><span class="p">(</span><span class="n">dojo_id</span><span class="p">)</span>
     <span class="vi">@dojo_id</span> <span class="o">=</span> <span class="n">dojo_id</span>
 
     <span class="n">recommend_dojo</span>
@@ -231,44 +225,42 @@ dependencies between communicating objects, thereby lowering the coupling.
 
   <span class="kp">private</span>
 
-  <span class="k">def </span><span class="nf">dojo</span>
-    <span class="vi">@dojo</span> <span class="o">||=</span> <span class="no">Dojo</span><span class="nf">.find</span><span class="p">(</span><span class="n">dojo_id</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">dojo</span>
+    <span class="vi">@dojo</span> <span class="o">||=</span> <span class="no">Dojo</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">dojo_id</span><span class="p">)</span>
   <span class="k">end</span>
 
-  <span class="k">def </span><span class="nf">recommend_dojo</span>
+  <span class="k">def</span> <span class="nf">recommend_dojo</span>
     <span class="c1"># ...</span>
   <span class="k">end</span>
 
-  <span class="k">def </span><span class="nf">requisition_katanas</span>
+  <span class="k">def</span> <span class="nf">requisition_katanas</span>
     <span class="c1"># ...</span>
   <span class="k">end</span>
 <span class="k">end</span>
-</pre>
-</div><div id="improved_mediator" class="step" data-x="32000"><h2>Improved Mediator</h2>
-<pre class="highlight ruby"><span class="k">class </span><span class="nc">Mediators</span><span class="o">::</span><span class="no">Dojo</span><span class="o">::</span><span class="no">Creator</span> <span class="o">&lt;</span> <span class="no">Base</span>
+</code></pre></div><div id="improved_mediator" class="step" data-x="32000"><h2>Improved Mediator</h2>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">Mediators</span><span class="o">::</span><span class="no">Dojo</span><span class="o">::</span><span class="no">Creator</span> <span class="o">&lt;</span> <span class="no">Base</span>
   <span class="kp">attr_reader</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:sensei_id</span>
-  <span class="k">def </span><span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">:,</span> <span class="n">sensei_id</span><span class="p">:)</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">:,</span> <span class="n">sensei_id</span><span class="p">:)</span>
     <span class="vi">@name</span><span class="p">,</span> <span class="vi">@sensei_id</span> <span class="o">=</span> <span class="nb">name</span><span class="p">,</span> <span class="n">sensei_id</span>
   <span class="k">end</span>
 
-  <span class="k">def </span><span class="nf">call</span>
+  <span class="k">def</span> <span class="nf">call</span>
     <span class="n">create_dojo</span>
     <span class="n">prepare_dojo</span>
     <span class="k">return</span> <span class="vi">@dojo</span>
   <span class="k">end</span>
 
-  <span class="k">def </span><span class="nf">create_dojo</span>
+  <span class="k">def</span> <span class="nf">create_dojo</span>
     <span class="c1"># ...</span>
   <span class="k">end</span>
 
-  <span class="k">def </span><span class="nf">prepare_dojo</span>
-    <span class="no">Jobs</span><span class="o">::</span><span class="no">Dojo</span><span class="o">::</span><span class="no">Prepare</span><span class="nf">.perform_async</span><span class="p">(</span><span class="n">dojo_id</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">prepare_dojo</span>
+    <span class="no">Jobs</span><span class="o">::</span><span class="no">Dojo</span><span class="o">::</span><span class="no">Prepare</span><span class="p">.</span><span class="nf">perform_async</span><span class="p">(</span><span class="n">dojo_id</span><span class="p">)</span>
   <span class="k">end</span>
 
   <span class="c1"># ...</span>
 <span class="k">end</span>
-</pre>
-</div><div id="whats_wrong_job" class="step" data-x="34000"><h2>What's wrong with that?</h2>
+</code></pre></div><div id="whats_wrong_job" class="step" data-x="34000"><h2>What's wrong with that?</h2>
 <ul>
 <li>Job has mixed concerns</li>
 <ul>
@@ -278,36 +270,35 @@ dependencies between communicating objects, thereby lowering the coupling.
 <li>There is no logging for asynchornous work</li>
 </ul>
 </div><div id="another_mediator" class="step" data-x="36000"><h2>A New Mediator</h2>
-<pre class="highlight ruby"><span class="k">class </span><span class="nc">Mediators</span><span class="o">::</span><span class="no">Dojo</span><span class="o">::</span><span class="no">Preparer</span> <span class="o">&lt;</span> <span class="no">Mediators</span><span class="o">::</span><span class="no">Base</span>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">Mediators</span><span class="o">::</span><span class="no">Dojo</span><span class="o">::</span><span class="no">Preparer</span> <span class="o">&lt;</span> <span class="no">Mediators</span><span class="o">::</span><span class="no">Base</span>
   <span class="kp">attr_reader</span> <span class="ss">:dojo</span>
-  <span class="k">def </span><span class="nf">initialize</span><span class="p">(</span><span class="n">dojo</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">dojo</span><span class="p">)</span>
     <span class="vi">@dojo</span> <span class="o">=</span> <span class="n">dojo</span>
   <span class="k">end</span>
 
-  <span class="k">def </span><span class="nf">call</span>
+  <span class="k">def</span> <span class="nf">call</span>
     <span class="n">log</span><span class="p">(</span><span class="ss">prepare_dojo: </span><span class="kp">true</span><span class="p">)</span> <span class="k">do</span>
       <span class="n">recommend_dojo</span>
       <span class="n">requisition_katanas</span>
     <span class="k">end</span>
   <span class="k">end</span>
 
-  <span class="k">def </span><span class="nf">recommend_dojo</span>
+  <span class="k">def</span> <span class="nf">recommend_dojo</span>
     <span class="c1"># ...</span>
   <span class="k">end</span>
 
-  <span class="k">def </span><span class="nf">requisition_katanas</span>
+  <span class="k">def</span> <span class="nf">requisition_katanas</span>
     <span class="c1"># ...</span>
   <span class="k">end</span>
 
   <span class="c1"># ...</span>
 <span class="k">end</span>
-</pre>
-</div><div id="improved_job" class="step" data-x="38000"><h2>Improved Job</h2>
-<pre class="highlight ruby"><span class="k">class </span><span class="nc">Jobs</span><span class="o">::</span><span class="no">Dojo</span><span class="o">::</span><span class="no">Prepare</span>
+</code></pre></div><div id="improved_job" class="step" data-x="38000"><h2>Improved Job</h2>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">Jobs</span><span class="o">::</span><span class="no">Dojo</span><span class="o">::</span><span class="no">Prepare</span>
   <span class="kp">include</span> <span class="no">Sidekiq</span><span class="o">::</span><span class="no">Worker</span>
 
   <span class="kp">attr_reader</span> <span class="ss">:dojo_id</span>
-  <span class="k">def </span><span class="nf">perform</span><span class="p">(</span><span class="n">dojo_id</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">perform</span><span class="p">(</span><span class="n">dojo_id</span><span class="p">)</span>
     <span class="vi">@dojo_id</span> <span class="o">=</span> <span class="n">dojo_id</span>
 
     <span class="n">prepare_dojo</span>
@@ -315,16 +306,15 @@ dependencies between communicating objects, thereby lowering the coupling.
 
   <span class="kp">private</span>
 
-  <span class="k">def </span><span class="nf">dojo</span>
-    <span class="vi">@dojo</span> <span class="o">||=</span> <span class="no">Dojo</span><span class="nf">.find</span><span class="p">(</span><span class="n">dojo_id</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">dojo</span>
+    <span class="vi">@dojo</span> <span class="o">||=</span> <span class="no">Dojo</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">dojo_id</span><span class="p">)</span>
   <span class="k">end</span>
 
-  <span class="k">def </span><span class="nf">prepare_dojo</span>
-    <span class="no">Mediators</span><span class="o">::</span><span class="no">Dojo</span><span class="o">::</span><span class="no">Preparer</span><span class="nf">.run</span><span class="p">(</span><span class="n">dojo</span><span class="p">)</span> <span class="k">if</span> <span class="n">dojo</span>
+  <span class="k">def</span> <span class="nf">prepare_dojo</span>
+    <span class="no">Mediators</span><span class="o">::</span><span class="no">Dojo</span><span class="o">::</span><span class="no">Preparer</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="n">dojo</span><span class="p">)</span> <span class="k">if</span> <span class="n">dojo</span>
   <span class="k">end</span>
 <span class="k">end</span>
-</pre>
-</div><div id="mvcmj" class="step" data-x="40000"><h2>MVCMJ?</h2>
+</code></pre></div><div id="mvcmj" class="step" data-x="40000"><h2>MVCMJ?</h2>
 <ul>
 <li>Model - Data validation and persistence</li>
 <li>View - Rendering</li>
@@ -360,6 +350,7 @@ dependencies between communicating objects, thereby lowering the coupling.
 </ul>
 </div>
 </div>
-<script src="../../javascripts/slides/body-dd9f322b.js" type="text/javascript"></script>
+<script src="../../javascripts/vendor/impress-c389aa57.js"></script>
+<script src="../../javascripts/slides/body-a3539a0f.js"></script>
 </body>
 </html>

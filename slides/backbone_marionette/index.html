@@ -7,7 +7,7 @@
 <meta content='Use Backbone.js and Marionette.js to create a fully featured single page application. | Josh W Lewis: Ruby Developer, JavaScript Engineer, and Consultant' name='description'>
 <meta content='width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 <meta content='Josh W Lewis' name='author'>
-<link href="../../stylesheets/slides-156e4619.css" media="screen" rel="stylesheet" type="text/css" />
+<link href="../../stylesheets/slides-fb9a4763.css" rel="stylesheet" />
 </head>
 <body class='impress-not-supported'>
 <div class='fallback-message'><h3>Your browser doesn&rsquo;t support the features needed to display this presentation.</h3>
@@ -23,7 +23,7 @@
 </ul>
 </div>
 <div id='impress'>
-<div id="title" class="step" ><h1>Single Page Applications with Backbone.js and Marionette.js</h1>
+<div id="title" class="step"><h1>Single Page Applications with Backbone.js and Marionette.js</h1>
 <br>
 <h4>Tech Camp Memphis</h4>
 <date>11/1/2014</date>
@@ -48,16 +48,16 @@ Josh W Lewis -
 <li>Audio and video</li>
 </ul>
 </div><div id="javascript" class="step" data-x="5000"><div class='text-center'>
-<img src='/images/javascript-use-you-must-6eb8109c.jpg'>
+<img src='../../images/javascript-use-you-must-6eb8109c.jpg'>
 </div>
 </div><div id="traditional-web-applications" class="step" data-x="7500"><div class='text-center'>
 <h2>Traditional Web Applications</h2>
-<img src='/images/traditional-web-app-a68f7fb4.png'>
+<img src='../../images/traditional-web-app-a68f7fb4.png'>
 <h4>Reddit, Wikipedia, Hacker News</h4>
 </div>
 </div><div id="single-page-applications" class="step" data-x="10000"><div class='text-center'>
 <h2>Single Page Application</h2>
-<img src='/images/single-page-web-app-7a095c2d.png'>
+<img src='../../images/single-page-web-app-7a095c2d.png'>
 <h4>Twitter, Facebook, Gmail</h4>
 </div>
 </div><div id="single-page-advantages" class="step" data-x="12500"><h3>Advantages of an SPA</h3>
@@ -71,7 +71,7 @@ Josh W Lewis -
 <li>May use the same server to build other client applications.</li>
 </ul>
 </div><div id="warning" class="step" data-x="15000"><div class='text-center'>
-<img src='/images/simply-write-javascript-bbcef8e0.jpg'>
+<img src='../../images/simply-write-javascript-bbcef8e0.jpg'>
 <p></p>
 <p>Rendering</p>
 <p>Routing</p>
@@ -90,7 +90,7 @@ Josh W Lewis -
 <li>Underscore</li>
 <li>jQuery</li>
 </ul>
-</div><div id="backbone" class="step" data-x="20000"><img src='/images/backbone-d3f87dfb.png' style='height: 75px;'>
+</div><div id="backbone" class="step" data-x="20000"><img src='../../images/backbone-d3f87dfb.png' style='height: 75px;'>
 <h3>A lightweight foundation to build on.</h3>
 <ul>
 <li>Models</li>
@@ -103,7 +103,7 @@ Josh W Lewis -
 <h4>
 <a href='//backbonejs.org'>backbonejs.org</a>
 </h4>
-</div><div id="marionette" class="step" data-x="22500"><img src='/images/marionette-4eeb07e5.png' style='height: 175px;'>
+</div><div id="marionette" class="step" data-x="22500"><img src='../../images/marionette-4eeb07e5.png' style='height: 175px;'>
 <h3>Common design patterns and components.</h3>
 <ul>
 <li>Application</li>
@@ -116,7 +116,7 @@ Josh W Lewis -
 <a href='//marionettejs.com'>marionettejs.com</a>
 </h4>
 </div><div id="meowmeowbeenz" class="step" data-x="25000"><div class='text-center'>
-<img src='/images/meowmeowbeenz-d4ff2346.png'>
+<img src='../../images/meowmeowbeenz-d4ff2346.png'>
 <br>
 <h4>Beenz - JSON API</h4>
 <a href='//beenz.joshwlewis.com'>beenz.joshwlewis.com</a>
@@ -129,102 +129,102 @@ Josh W Lewis -
 </div>
 </div><div id="json_api" class="step" data-x="27500"><h3>Data is persisted via JSON API</h3>
 <p>GET beenz.joshwlewis.com/ratings</p>
-<pre class="highlight json"><span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;ratee_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;beenz&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="p">},</span><span class="w">
-  </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;ratee_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;beenz&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">},</span><span class="w">
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w"> </span><span class="s2">"ratee_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="s2">"beenz"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w"> </span><span class="s2">"ratee_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s2">"beenz"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">},</span><span class="w">
   </span><span class="err">...</span><span class="w">
 </span><span class="p">]</span><span class="w">
-</span></pre>
+</span></code></pre>
 <p>POST beenz.joshwlewis.com/ratings</p>
-<pre class="highlight json"><span class="p">{</span><span class="w"> </span><span class="s2">&quot;ratee_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;beenz&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">}</span><span class="w">
-</span></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="w"> </span><span class="s2">"ratee_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="s2">"beenz"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">}</span><span class="w">
+</span></code></pre>
 <p>PUT beenz.joshwlewis.com/ratings/2</p>
-<pre class="highlight json"><span class="p">{</span><span class="w"> </span><span class="s2">&quot;beenz&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="p">}</span><span class="w">
-</span></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="w"> </span><span class="s2">"beenz"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="p">}</span><span class="w">
+</span></code></pre>
 </div><div id="model" class="step" data-x="30000"><h3>Backbone.Model</h3>
 <h4>Encapsulates Data</h4>
-<pre class="highlight javascript"><span class="c1">// src/scripts/models/rating.js
-</span><span class="nx">Rating</span> <span class="o">=</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
-  <span class="na">urlRoot</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">apiHost</span> <span class="o">+</span> <span class="s1">&#39;/ratings&#39;</span><span class="p">,</span>
+<pre class="highlight javascript"><code><span class="c1">// src/scripts/models/rating.js</span>
+<span class="nx">Rating</span> <span class="o">=</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+  <span class="na">urlRoot</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">apiHost</span> <span class="o">+</span> <span class="s1">'/ratings'</span><span class="p">,</span>
   <span class="na">defaults</span><span class="p">:</span> <span class="p">{</span>
     <span class="na">ratee_id</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="na">beenz</span><span class="p">:</span> <span class="kc">null</span>
   <span class="p">}</span>
 <span class="p">});</span>
-</pre>
+</code></pre>
 </div><div id="templates" class="step" data-x="32500"><h3>Underscore Templates</h3>
 <h4>Pre-configured html</h4>
-<pre class="highlight html"><span class="c">&lt;!-- src/templates/profile.html --&gt;</span>
-<span class="nt">&lt;img</span> <span class="na">class=</span><span class="s">&#39;avatar img-circle&#39;</span> <span class="na">src=</span><span class="s">&#39;{{ gravatar_url }}&#39;</span><span class="nt">&gt;</span>
-<span class="nt">&lt;h3</span> <span class="na">class=</span><span class="s">&#39;name&#39;</span><span class="nt">&gt;</span>{{ name }}<span class="nt">&lt;/h3&gt;</span>
-<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&#39;beenz-line&#39;</span><span class="nt">&gt;&lt;/div&gt;</span>
-</pre>
+<pre class="highlight html"><code><span class="c">&lt;!-- src/templates/profile.html --&gt;</span>
+<span class="nt">&lt;img</span> <span class="na">class=</span><span class="s">'avatar img-circle'</span> <span class="na">src=</span><span class="s">'{{ gravatar_url }}'</span><span class="nt">&gt;</span>
+<span class="nt">&lt;h3</span> <span class="na">class=</span><span class="s">'name'</span><span class="nt">&gt;</span>{{ name }}<span class="nt">&lt;/h3&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">'beenz-line'</span><span class="nt">&gt;&lt;/div&gt;</span>
+</code></pre>
 </div><div id="item_view" class="step" data-x="35000"><h3>Marionette.ItemView</h3>
 <h4>Manages Model-DOM Relationship</h4>
-<pre class="highlight javascript"><span class="c1">// src/scripts/views/profile_view.js
-</span><span class="nx">ProfileView</span> <span class="o">=</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
-  <span class="na">template</span><span class="p">:</span> <span class="s1">&#39;profile&#39;</span><span class="p">,</span>
-  <span class="na">className</span><span class="p">:</span> <span class="s1">&#39;profile-view&#39;</span><span class="p">,</span>
+<pre class="highlight javascript"><code><span class="c1">// src/scripts/views/profile_view.js</span>
+<span class="nx">ProfileView</span> <span class="o">=</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+  <span class="na">template</span><span class="p">:</span> <span class="s1">'profile'</span><span class="p">,</span>
+  <span class="na">className</span><span class="p">:</span> <span class="s1">'profile-view'</span><span class="p">,</span>
   <span class="na">ui</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s1">&#39;beenz_line&#39;</span><span class="err">:</span> <span class="s1">&#39;.beenz-line&#39;</span>
+    <span class="s1">'beenz_line'</span><span class="p">:</span> <span class="s1">'.beenz-line'</span>
   <span class="p">},</span>
   <span class="na">onRender</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="kd">var</span> <span class="nx">beenz</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;beenz&#39;</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">beenz</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'beenz'</span><span class="p">);</span>
     <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">been</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">been</span> <span class="o">&lt;=</span> <span class="nx">beenz</span><span class="p">;</span> <span class="nx">been</span><span class="o">++</span> <span class="p">)</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">img</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;img&gt;&#39;</span><span class="p">)</span>
-                    <span class="p">.</span><span class="nx">addClass</span><span class="p">(</span><span class="s1">&#39;beenz beenz-&#39;</span> <span class="o">+</span> <span class="nx">beenz</span><span class="p">);</span>
-                    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;src&#39;</span><span class="p">,</span> <span class="s1">&#39;beenz-&#39;</span> <span class="o">+</span> <span class="nx">beenz</span> <span class="o">+</span> <span class="s1">&#39;.png&#39;</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">img</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">'&lt;img&gt;'</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nx">addClass</span><span class="p">(</span><span class="s1">'beenz beenz-'</span> <span class="o">+</span> <span class="nx">beenz</span><span class="p">);</span>
+                    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'src'</span><span class="p">,</span> <span class="s1">'beenz-'</span> <span class="o">+</span> <span class="nx">beenz</span> <span class="o">+</span> <span class="s1">'.png'</span><span class="p">);</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">beenz_line</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">img</span><span class="p">);</span>
     <span class="p">}</span>
   <span class="p">}</span>
 <span class="p">});</span>
-</pre>
+</code></pre>
 </div><div id="collection" class="step" data-x="37500"><h3>Backbone.Collection</h3>
 <h4>Manages Model Lists</h4>
-<pre class="highlight javascript"><span class="c1">// src/scripts/collections/rating_collection.js
-</span><span class="nx">RatingCollection</span> <span class="o">=</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
-  <span class="na">url</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">apiHost</span> <span class="o">+</span> <span class="s1">&#39;/ratings&#39;</span><span class="p">,</span>
+<pre class="highlight javascript"><code><span class="c1">// src/scripts/collections/rating_collection.js</span>
+<span class="nx">RatingCollection</span> <span class="o">=</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+  <span class="na">url</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">apiHost</span> <span class="o">+</span> <span class="s1">'/ratings'</span><span class="p">,</span>
   <span class="na">model</span><span class="p">:</span> <span class="nx">Rating</span>
 <span class="p">});</span>
-</pre>
+</code></pre>
 </div><div id="collection_view" class="step" data-x="40000"><h3>Marionette.CollectionView</h3>
 <h4>Manages lists of ItemViews</h4>
-<pre class="highlight javascript"><span class="c1">// src/scripts/views/user_collection_view.js
-</span><span class="nx">UserCollectionView</span> <span class="o">=</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">CollectionView</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
-  <span class="na">tagName</span><span class="p">:</span> <span class="s1">&#39;ul&#39;</span><span class="p">,</span>
-  <span class="na">className</span><span class="p">:</span> <span class="s1">&#39;list user-collection-view&#39;</span><span class="p">,</span>
+<pre class="highlight javascript"><code><span class="c1">// src/scripts/views/user_collection_view.js</span>
+<span class="nx">UserCollectionView</span> <span class="o">=</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">CollectionView</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+  <span class="na">tagName</span><span class="p">:</span> <span class="s1">'ul'</span><span class="p">,</span>
+  <span class="na">className</span><span class="p">:</span> <span class="s1">'list user-collection-view'</span><span class="p">,</span>
   <span class="na">getChildView</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">return</span> <span class="nx">UserItemView</span><span class="p">;</span>
   <span class="p">}</span>
 <span class="p">});</span>
-</pre>
+</code></pre>
 </div><div id="index" class="step" data-x="42500"><h3>The browser needs an initial DOM</h3>
-<pre class="highlight html"><span class="c">&lt;!-- src/static/index.html --&gt;</span>
+<pre class="highlight html"><code><span class="c">&lt;!-- src/static/index.html --&gt;</span>
 <span class="cp">&lt;!doctype html&gt;</span>
-<span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">&quot;en&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">"en"</span><span class="nt">&gt;</span>
   <span class="nt">&lt;head&gt;</span>
     <span class="nt">&lt;title&gt;</span>Meow Meow Beenz<span class="nt">&lt;/title&gt;</span>
-    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;app.css&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">href=</span><span class="s">"app.css"</span><span class="nt">&gt;</span>
   <span class="nt">&lt;/head&gt;</span>
   <span class="nt">&lt;body&gt;</span>
-    <span class="nt">&lt;header</span> <span class="na">id=</span><span class="s">&#39;intro&#39;</span><span class="nt">&gt;</span>
-      <span class="nt">&lt;h1</span> <span class="na">class=</span><span class="s">&#39;title&#39;</span><span class="nt">&gt;</span>Meow Meow Beenz<span class="nt">&lt;/h1&gt;</span>
-      <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;header-container&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+    <span class="nt">&lt;header</span> <span class="na">id=</span><span class="s">'intro'</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;h1</span> <span class="na">class=</span><span class="s">'title'</span><span class="nt">&gt;</span>Meow Meow Beenz<span class="nt">&lt;/h1&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"header-container"</span><span class="nt">&gt;&lt;/div&gt;</span>
     <span class="nt">&lt;/header&gt;</span>
-    <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;main-container&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
-    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;app.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"main-container"</span><span class="nt">&gt;&lt;/div&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"app.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
   <span class="nt">&lt;/body&gt;</span>
 <span class="nt">&lt;/html&gt;</span>
-</pre>
+</code></pre>
 </div><div id="app" class="step" data-x="45000"><h3>Marionette.Application</h3>
 <h4>Bootstraps the Environment</h4>
-<pre class="highlight javascript"><span class="c1">// src/scripts/app.js
-</span><span class="nx">app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">Application</span><span class="p">();</span>
+<pre class="highlight javascript"><code><span class="c1">// src/scripts/app.js</span>
+<span class="nx">app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">Application</span><span class="p">();</span>
 
 <span class="nx">app</span><span class="p">.</span><span class="nx">addInitializer</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
   <span class="nx">app</span><span class="p">.</span><span class="nx">addRegions</span><span class="p">({</span>
-    <span class="na">header_container</span><span class="p">:</span> <span class="s1">&#39;#header-container&#39;</span><span class="p">,</span>
-    <span class="na">main_container</span><span class="p">:</span>   <span class="s1">&#39;#main-container&#39;</span>
+    <span class="na">header_container</span><span class="p">:</span> <span class="s1">'#header-container'</span><span class="p">,</span>
+    <span class="na">main_container</span><span class="p">:</span>   <span class="s1">'#main-container'</span>
   <span class="p">});</span>
   <span class="nx">app</span><span class="p">.</span><span class="nx">controller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AppController</span><span class="p">();</span>
   <span class="nx">app</span><span class="p">.</span><span class="nx">router</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AppRouter</span><span class="p">({</span>
@@ -233,68 +233,68 @@ Josh W Lewis -
   <span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">.</span><span class="nx">showProfile</span><span class="p">();</span>
   <span class="nx">Backbone</span><span class="p">.</span><span class="nx">history</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
 <span class="p">});</span>
-</pre>
+</code></pre>
 </div><div id="controller" class="step" data-x="47500"><h3>Marionette.Controller</h3>
 <h4>Sets up Individual Components</h4>
-<pre class="highlight javascript"><span class="nx">AppController</span> <span class="o">=</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">Controller</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+<pre class="highlight javascript"><code><span class="nx">AppController</span> <span class="o">=</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">Controller</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
   <span class="na">listUsers</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="kd">var</span> <span class="nx">users</span> <span class="o">=</span> <span class="nx">app</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="s1">&#39;users&#39;</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">users</span> <span class="o">=</span> <span class="nx">app</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="s1">'users'</span><span class="p">);</span>
     <span class="kd">var</span> <span class="nx">view</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">UserCollectionView</span><span class="p">({</span> <span class="na">collection</span><span class="p">:</span> <span class="nx">users</span> <span class="p">});</span>
     <span class="nx">app</span><span class="p">.</span><span class="nx">main_container</span><span class="p">.</span><span class="nx">show</span><span class="p">(</span><span class="nx">view</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">});</span>
-</pre>
+</code></pre>
 </div><div id="router" class="step" data-x="50000"><h3>Marionette.AppRouter</h3>
 <h4>Maps urls to Controller Methods</h4>
-<pre class="highlight javascript"><span class="c1">// src/scripts/routers/app_router.js
-</span><span class="nx">AppRouter</span> <span class="o">=</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">AppRouter</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+<pre class="highlight javascript"><code><span class="c1">// src/scripts/routers/app_router.js</span>
+<span class="nx">AppRouter</span> <span class="o">=</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">AppRouter</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
   <span class="na">appRoutes</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s1">&#39;&#39;</span><span class="err">:</span> <span class="s1">&#39;listUsers&#39;</span>
+    <span class="s1">''</span><span class="p">:</span> <span class="s1">'listUsers'</span>
   <span class="p">}</span>
 <span class="p">});</span>
-</pre>
+</code></pre>
 </div><div id="events" class="step" data-x="52500"><h3>Backbone.Events</h3>
 <h4>Allow loosely coupled object communicate messages</h4>
-<pre class="highlight javascript"><span class="c1">// src/scripts/models/session.js
-</span><span class="nx">Session</span> <span class="o">=</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
-  <span class="na">urlRoot</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">apiHost</span> <span class="o">+</span> <span class="s1">&#39;/session&#39;</span><span class="p">,</span>
+<pre class="highlight javascript"><code><span class="c1">// src/scripts/models/session.js</span>
+<span class="nx">Session</span> <span class="o">=</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+  <span class="na">urlRoot</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">apiHost</span> <span class="o">+</span> <span class="s1">'/session'</span><span class="p">,</span>
   <span class="na">initialize</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;change:token&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">token</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">app</span><span class="p">.</span><span class="nx">vent</span><span class="p">.</span><span class="nx">trigger</span><span class="p">(</span><span class="s1">&#39;change:token&#39;</span><span class="p">,</span> <span class="nx">token</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'change:token'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">token</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">app</span><span class="p">.</span><span class="nx">vent</span><span class="p">.</span><span class="nx">trigger</span><span class="p">(</span><span class="s1">'change:token'</span><span class="p">,</span> <span class="nx">token</span><span class="p">);</span>
     <span class="p">});</span>
   <span class="p">}</span>
 <span class="p">});</span>
-<span class="c1">// src/scripts/app.js
-</span><span class="nx">app</span><span class="p">.</span><span class="nx">vent</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;change:token&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">token</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span><span class="p">(</span><span class="s1">&#39;token&#39;</span><span class="p">,</span> <span class="nx">token</span><span class="p">);</span>
+<span class="c1">// src/scripts/app.js</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">vent</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">"change:token"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">token</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span><span class="p">(</span><span class="s1">'token'</span><span class="p">,</span> <span class="nx">token</span><span class="p">);</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">token</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">app</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="s1">&#39;profile&#39;</span><span class="p">).</span><span class="nx">fetch</span><span class="p">();</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="s1">'profile'</span><span class="p">).</span><span class="nx">fetch</span><span class="p">();</span>
   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="nx">app</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="s1">&#39;profile&#39;</span><span class="p">).</span><span class="nx">clear</span><span class="p">();</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="s1">'profile'</span><span class="p">).</span><span class="nx">clear</span><span class="p">();</span>
   <span class="p">}</span>
 <span class="p">});</span>
-</pre>
+</code></pre>
 </div><div id="request_response" class="step" data-x="55000"><h3>Marionette.reqres</h3>
 <h4>Application can manage global state</h4>
-<pre class="highlight javascript"><span class="c1">// src/scripts/app.js
-</span><span class="nx">app</span><span class="p">.</span><span class="nx">reqres</span><span class="p">.</span><span class="nx">setHandler</span><span class="p">(</span><span class="s1">&#39;profile&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+<pre class="highlight javascript"><code><span class="c1">// src/scripts/app.js</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">reqres</span><span class="p">.</span><span class="nx">setHandler</span><span class="p">(</span><span class="s1">'profile'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">app</span><span class="p">.</span><span class="nx">profile</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">app</span><span class="p">.</span><span class="nx">profile</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Profile</span><span class="p">();</span>
     <span class="nx">app</span><span class="p">.</span><span class="nx">profile</span><span class="p">.</span><span class="nx">fetch</span><span class="p">();</span>
   <span class="p">}</span>
   <span class="k">return</span> <span class="nx">app</span><span class="p">.</span><span class="nx">profile</span><span class="p">;</span>
 <span class="p">});</span>
-<span class="c1">// src/scripts/views/user_item_view.js
-</span><span class="nx">UserItemView</span> <span class="o">=</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">LayoutView</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+<span class="c1">// src/scripts/views/user_item_view.js</span>
+<span class="nx">UserItemView</span> <span class="o">=</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">LayoutView</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
   <span class="na">showRating</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">app</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="s1">&#39;profile&#39;</span><span class="p">).</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">rating</span> <span class="o">=</span> <span class="nx">app</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="s1">&#39;rating&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">app</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="s1">'profile'</span><span class="p">).</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">rating</span> <span class="o">=</span> <span class="nx">app</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="s1">'rating'</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
       <span class="nx">view</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RatingView</span><span class="p">({</span> <span class="na">model</span><span class="p">:</span> <span class="nx">rating</span> <span class="p">});</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">rating_container</span><span class="p">.</span><span class="nx">show</span><span class="p">(</span><span class="nx">view</span><span class="p">);</span>
     <span class="p">}</span>
   <span class="p">}</span>
 <span class="p">});</span>
-</pre>
+</code></pre>
 </div><div id="resources" class="step" data-x="57500"><h2>Resources</h2>
 <dl>
 <dt>This Presentation</dt>
@@ -320,6 +320,7 @@ Josh W Lewis -
 </dl>
 </div>
 </div>
-<script src="../../javascripts/slides/body-dd9f322b.js" type="text/javascript"></script>
+<script src="../../javascripts/vendor/impress-c389aa57.js"></script>
+<script src="../../javascripts/slides/body-a3539a0f.js"></script>
 </body>
 </html>
