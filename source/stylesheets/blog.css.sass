@@ -6,14 +6,26 @@ body, html
 body
   background: $p600
 
-#background
-  canvas.quad
-    z-index: -999
-    position: fixed
-    top: 0
-    bottom: 0
-    left: 0
-    right: 0
+.quadromper
+  z-index: -999
+  position: fixed
+  top: 0
+  bottom: 0
+  left: 0
+  right: 0
+  .quad
+    opacity: 0
+    animation: 30s fade-in-and-out 1
+
+@keyframes fade-in-and-out
+  0%
+    opacity: 0
+  40%
+    opacity: 1
+  60%
+    opacity: 1
+  100%
+    opacity: 0
 
 #headline
   padding: 24px 0
@@ -36,6 +48,7 @@ body
   padding-top: 28px
   .section
     margin: 12px 0
+
   #headline
     margin-bottom: 12px
     img.avatar
@@ -67,10 +80,11 @@ body
   text-align: center
 
 .space
+  -webkit-font-smoothing: subpixel-antialiased
   a
     +link-colors($p200, $p100, $c100, $p50, $c100)
   h1, h2, h3, h4, h5, p, li, span
-    text-shadow: rgba(0,0,0,0.2) 0.05em 0.1em 0.1em
+    text-shadow: rgba(0,0,0,0.5) 1px 1px 3px
     color: white
 
 .surface
