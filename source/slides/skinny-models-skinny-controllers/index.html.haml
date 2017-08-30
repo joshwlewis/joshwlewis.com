@@ -1,0 +1,30 @@
+---
+title: Skinny Models, Skinny Controllers
+published: true
+description: 'Fat Models, Skinny Controllers' is a poor goal and anti-pattern. Don't fall into this trap. Instead, I call for a new mantra...
+---
+
+- step :title do
+  %h1 Skinny Models, Skinny Controlllers
+  %br
+  %h4 Southeast Ruby
+  %date 10/6/2017
+  %br
+  %h4
+    %a{ href: "//twitter.com/joshwlewis" } @joshwlewis
+    = " - "
+    %a{ href: '//twitter.com/heroku.com' } @heroku
+  %br
+    %a{ href: '//joshwlewis.com/slides/skinny-models-skinny-controllers' } joshwlewis.com/slides/skinny-models-skinny-controllers
+
+= step :cowboy, x: 2000 do
+  %h2 🤠
+
+
+= step :fat_controller, x: 4000 do
+  = code "ruby" do
+    :plain
+      class HouseController < ApplicationController
+        def create
+        end
+      end
