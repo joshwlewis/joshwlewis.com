@@ -1,30 +1,108 @@
 ---
 title: Skinny Models, Skinny Controllers
 published: true
-description: 'Fat Models, Skinny Controllers' is a poor goal and anti-pattern. Don't fall into this trap. Instead, I call for a new mantra...
+description: 'Fat Models, Skinny Controllers' is an old Rails mantra, but a
+  poor goal, an anti-pattern, and an easy trap to fall into. There is a better
+  way...
 ---
 
-- step :title do
-  %h1 Skinny Models, Skinny Controlllers
+= step :title do
+  %h1 Skinny Controller, Skinny Model
   %br
-  %h4 Southeast Ruby
-  %date 10/6/2017
-  %br
-  %h4
+  %h3
     %a{ href: "//twitter.com/joshwlewis" } @joshwlewis
     = " - "
     %a{ href: '//twitter.com/heroku.com' } @heroku
   %br
-    %a{ href: '//joshwlewis.com/slides/skinny-models-skinny-controllers' } joshwlewis.com/slides/skinny-models-skinny-controllers
+  %h4
+    Southeast Ruby -
+    %date 10/6/2017
+  %br
+    %a{ href: '//joshwlewis.com/slides/skinny-controller-skinny-model' }
+      joshwlewis.com/slides/skinny-controller-skinny-model
 
-= step :cowboy, x: 2000 do
-  %h2 🤠
+= step :demo_time, x: 1000 do
+  %h1 Example App: Memefab
+  %ul
+    %li
+      %a{ href: 'https://memefab.herokuapp.com' } memefab.herokuapp.com
+    %li
+      %a{ href: 'https://github.com/joshwlewis/memefab' } github.com/joshwlewis/memefab
 
+= step :history, x: 2000 do
+  %h1 "Skinny Controller, Fat Model"
+  %br
 
-= step :fat_controller, x: 4000 do
+  %h4.pull-right - Jamis Buck, 2006
+  %br
+  %a.pull-right{ href: 'http://weblog.jamisbuck.org/2006/10/18/skinny-controller-fat-model' }
+    weblog.jamisbuck.org/2006/10/18/skinny-controller-fat-model
+
+= step :cowboy, x: 4000 do
+  %h1 🐴🤠🐮
+  %h2 Pew Pew Pew!
+  %h2 I'm a Cowboy!
+
+= step :fat_controller, x: 6000 do
+  %h2 The Fat Controller
   = code "ruby" do
     :plain
-      class HouseController < ApplicationController
+      class MemesController
         def create
+          @meme = Meme.new(meme_params)
+          @meme.upload_id = SecureRandom.uuid
+
+          begin
+            captioned_image = memeify(@meme.image, @meme.top, @meme.bottom)
+            cloud_client.upload(captioned_image, @meme.upload_id)
+          rescue
+            @meme.errors.add(:base, "Meme creation failed")
+          end
+
+          if @meme.valid? && @meme.save
+            twitter_client.update(@meme.share_url)
+            render :show
+          else
+            cloud_client.destroy(@meme.upload_id)
+            render :edit
+          end
         end
       end
+
+= step :skinny_model, x: 7000 do
+  %h2 The Skinny Model
+  = code "ruby" do
+    :plain
+      class Meme
+        belongs_to :image
+        validates_presence_of :top, :bottom, :image
+      end
+
+= step :fat_model, x: 8000 do
+  %h2 The Fat Model
+  = code "ruby" do
+    :plain
+      class Meme < ActiveRecord::Base
+        before_validation :caption_and_upload, on: :create
+        after_create :post_to_twitter
+
+        def caption_and_upload
+          captioned_image = memeify(image, top, bottom)
+          upload = cloud_client.upload(captioned_image)
+          self.upload_id = upload[:id]
+        rescue
+          errors.add("Meme creation failed")
+        end
+
+        def post_to_twitter
+          twitter_client.update(share_url)
+        end
+      end
+
+= step :skinny_controller, x: 10000 do
+  %h2 The Skinny Controller
+  = code "ruby" do
+    :plain
+      
+
+
