@@ -7,44 +7,46 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
 ---
 
 = step :title do
-  %h1 Skinny Controller, Skinny Model
+  %h1.display-4.mb-2
+    Skinny Controller,
+    %br
+    Skinny Model
   %br
-  %h3
+  %h4
     %a{ href: "//twitter.com/joshwlewis" } @joshwlewis
     = " - "
     %a{ href: '//twitter.com/heroku.com' } @heroku
   %br
   %h4
-    Southeast Ruby -
-    %date 10/6/2017
-  %br
     %a{ href: '//joshwlewis.com/slides/skinny-controller-skinny-model' }
       joshwlewis.com/slides/skinny-controller-skinny-model
 
-= step :demo_time, x: 1000 do
-  %h1 Example App: Memefab
+= step :demo_time, x: 2000 do
+  %h1.mb-2 Example App: Memefab
   %ul
     %li
-      %a{ href: 'https://memefab.herokuapp.com' } memefab.herokuapp.com
+      %a.h2{ href: 'https://memefab.herokuapp.com' } memefab.herokuapp.com
     %li
-      %a{ href: 'https://github.com/joshwlewis/memefab' } github.com/joshwlewis/memefab
+      %a.h2{ href: 'https://github.com/joshwlewis/memefab' } github.com/joshwlewis/memefab
 
-= step :history, x: 2000 do
-  %h1 "Skinny Controller, Fat Model"
-  %br
+= step :history, x: 4000 do
+  %blockquote.blockquote.mb-2
+    %h1.mb-1 Skinny Controller, Fat Model
+    %h3.text-muted
+      :plain
+        - Jamis Buck, 2006
 
-  %h4.pull-right - Jamis Buck, 2006
-  %br
-  %a.pull-right{ href: 'http://weblog.jamisbuck.org/2006/10/18/skinny-controller-fat-model' }
+  %a.h4{ href: 'http://weblog.jamisbuck.org/2006/10/18/skinny-controller-fat-model' }
     weblog.jamisbuck.org/2006/10/18/skinny-controller-fat-model
 
-= step :cowboy, x: 4000 do
-  %h1 🐴🤠🐮
-  %h2 Pew Pew Pew!
-  %h2 I'm a Cowboy!
+= step :cowboy, x: 6000 do
+  %div.text-center
+    %h1.display-1.mb-2 🐴🤠🐮
+    %h2.display-4 Pew Pew Pew!
+    %h2.display-4 I'm a Cowboy!
 
-= step :fat_controller, x: 6000 do
-  %h2 The Fat Controller
+= step :fat_controller, x: 8000 do
+  %h1 The Fat Controller
   = code "ruby" do
     :plain
       class MemesController
@@ -53,23 +55,28 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
           @meme.upload_id = SecureRandom.uuid
 
           begin
-            captioned_image = memeify(@meme.image, @meme.top, @meme.bottom)
-            cloud_client.upload(captioned_image, @meme.upload_id)
+            memeified = memeify(@meme.image, @meme.top, @meme.bottom)
+            Cloud.upload(memefied, @meme.upload_id)
           rescue
             @meme.errors.add(:base, "Meme creation failed")
           end
 
           if @meme.valid? && @meme.save
-            twitter_client.update(@meme.share_url)
+            Twitter.update(url_for(@meme))
             render :show
           else
-            cloud_client.destroy(@meme.upload_id)
+            Cloud.destroy(@meme.upload_id)
             render :edit
           end
         end
+
+        private
+
+        def memeify; redacted; end
+        def meme_params; redacted; end
       end
 
-= step :skinny_model, x: 7000 do
+= step :skinny_model, x: 10000 do
   %h2 The Skinny Model
   = code "ruby" do
     :plain
@@ -78,8 +85,15 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
         validates_presence_of :top, :bottom, :image
       end
 
-= step :fat_model, x: 8000 do
-  %h2 The Fat Model
+= step :fat_controller_skinny_model, x: 12000 do
+  %h1.mb-2 Fat Controller, Skinny Model
+  %ul.list-unstyled
+    %li.h3 👍 Model is only concerned with data
+    %li.h3 👎 Controller code is not reusable
+    %li.h3 👎 Controller has mixed concerns
+
+= step :fat_model, x: 14000 do
+  %h1 The Fat Model
   = code "ruby" do
     :plain
       class Meme < ActiveRecord::Base
@@ -87,11 +101,14 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
         after_create :post_to_twitter
 
         def caption_and_upload
-          captioned_image = memeify(image, top, bottom)
-          upload = cloud_client.upload(captioned_image)
-          self.upload_id = upload[:id]
-        rescue
-          errors.add("Meme creation failed")
+          self.upload_id = SecureRandom.uuid
+          begin
+            captioned_image = memeify(image, top, bottom)
+            upload = Cloud.upload(captioned_image)
+          rescue
+            errors.add("Meme creation failed")
+            Cloud.destroy(self.upload_id)
+          end
         end
 
         def post_to_twitter
@@ -99,10 +116,135 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
         end
       end
 
-= step :skinny_controller, x: 10000 do
-  %h2 The Skinny Controller
+= step :skinny_controller, x: 16000 do
+  %h1 The Skinny Controller
   = code "ruby" do
     :plain
-      
+      class MemesController
+        def create
+          @meme = Meme.new(meme_params)
 
+          if @meme.save
+            render :show
+          else
+            render :edit
+          end
+        end
+
+        def meme_params; redacted; end
+      end
+
+= step :skinny_controller_fat_model, x: 18000 do
+  %h1.mb-2 Skinny Controller, Fat Model
+  %ul.list-unstyled
+    %li.h3 👍 Controller is only concerned with serving requests
+    %li.h3 👍 Business logic can be reused
+    %li.h3 👎 Order of operations is unclear
+    %li.h3 👎 Surprising API
+    %li.h3 👎 Model has mixed concerns
+
+= step :where_does_business_logic_go, x: 20000 do
+  %h1.mb-2 Business logic goes where?
+  %ul.list-unstyled
+    %li.h2 🙈 Model
+    %li.h2 🙉 View
+    %li.h2 🙊 Controller
+    %li.h2 🤔 Something Else
+
+= step :mediator_pattern, x: 22000 do
+  %h2 The Mediator Pattern
+  %blockquote.blockquote
+    %p
+      With the mediator pattern, communication between objects is encapsulated
+      with a mediator object. Objects no longer communicate directly with each
+      other, but instead communicate through the mediator. This reduces the
+      dependencies between communicating objects, thereby lowering the coupling.
+
+= step :installation, x: 24000 do
+  %h1 Installation
+  = code "bash" do
+    :plain
+      mkdir app/mediators
+
+= step :fat_mediator, x: 26000 do
+  %h1 The Fat Mediator
+  = code "ruby" do
+    :plain
+      class MemeCreator
+        def initialize(attrs = {}, model: Meme, uploader: Cloud, twitter: Twitter)
+          @attrs, @model, @uploader, @twitter = attrs, model, uploader, twitter
+        end
+
+        def call
+          memeify_image
+          upload_image
+          save_record
+          post_to_twitter
+          meme
+        end
+
+        def meme
+          @meme ||= model.new(attributes.merge(upload_id: upload_id))
+        end
+
+        private
+
+        attr_reader :attributes, :model, :uploader, :twitter
+
+        def upload_id
+          @upload_id ||= SecureRandom.uuid
+        end
+
+        def memeify_image
+          @memefied ||= memeify(image, top, bottom)
+        rescue
+          meme.errors.add(:base, "Error captioning meme")
+          raise
+        end
+
+        def upload_image
+          uploader.upload(@memefied, upload_id)
+        rescue
+          meme.errors.add(:base, "Error uploading meme to cloud")
+          raise
+        end
+
+        def save_record
+          meme.save!
+        rescue
+          uploader.destroy(upload_id)
+          raise
+        end
+
+        def post_to_twitter
+          twitter.update(url_for(meme))
+        end
+      end
+
+
+= step :skinny_controller_mediator, x: 28000 do
+  %h1 Skinny Controller (using Mediator)
+  = code "ruby" do
+    :plain
+      class MemesController
+        def create
+          creator = MemeCreator.new(meme_params)
+          @meme = creator.meme
+          creator.call
+          render :show
+        rescue
+          render :edit
+        end
+
+        def meme_params; redacted; end
+      end
+
+= step :skinny_model_mediator, x: 30000 do
+  %h1 Skinny Model (using Mediator)
+  = code "ruby" do
+    :plain
+      class Meme
+        belongs_to :image
+        validates_presence_of :top, :bottom, :image
+      end
 
