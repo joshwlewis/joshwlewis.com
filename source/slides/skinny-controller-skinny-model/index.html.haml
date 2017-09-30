@@ -63,7 +63,8 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
 
           if @meme.valid? && @meme.save
             Twitter.update(url_for(@meme))
-            render :show
+            flash[:notice] = "Successfully fabricated a fabulous meme."
+            redirect_to @meme
           else
             Cloud.destroy(@meme.upload_id)
             render :edit
@@ -82,41 +83,20 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
     :plain
       class Meme
         belongs_to :image
-        validates_presence_of :top, :bottom, :image
+        validates_presence_of :image
+        validates_length_of :top, :bottom, maximum: 50
       end
 
 = step :fat_controller_skinny_model, x: 12000 do
   %h1.mb-2 Fat Controller, Skinny Model
   %ul.list-unstyled
-    %li.h3 👍 Model is only concerned with data
-    %li.h3 👎 Controller code is not reusable
+    %li.h3 👍 Model is only concerned with it's data
     %li.h3 👎 Controller has mixed concerns
+    %li.h3 👎 Business logic is not reusable
+    %li.h3 👎 Business logic can not be unit tested
+    %li.h3 👎 Controller is tightly coupled
 
-= step :fat_model, x: 14000 do
-  %h1 The Fat Model
-  = code "ruby" do
-    :plain
-      class Meme < ActiveRecord::Base
-        before_validation :caption_and_upload, on: :create
-        after_create :post_to_twitter
-
-        def caption_and_upload
-          self.upload_id = SecureRandom.uuid
-          begin
-            captioned_image = memeify(image, top, bottom)
-            upload = Cloud.upload(captioned_image)
-          rescue
-            errors.add("Meme creation failed")
-            Cloud.destroy(self.upload_id)
-          end
-        end
-
-        def post_to_twitter
-          twitter_client.update(share_url)
-        end
-      end
-
-= step :skinny_controller, x: 16000 do
+= step :skinny_controller, x: 14000 do
   %h1 The Skinny Controller
   = code "ruby" do
     :plain
@@ -125,7 +105,8 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
           @meme = Meme.new(meme_params)
 
           if @meme.save
-            render :show
+            flash[:notice] = "Successfully fabricated a fabulous meme."
+            redirect_to @meme
           else
             render :edit
           end
@@ -134,14 +115,40 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
         def meme_params; redacted; end
       end
 
+= step :fat_model, x: 16000 do
+  %h1 Fat Model
+  = code "ruby" do
+    :plain
+      class Meme < ActiveRecord::Base
+        before_validation :memeify_and_upload, on: :create
+        after_create :post_to_twitter
+
+        def memeify_and_upload
+          self.upload_id = SecureRandom.uuid
+          begin
+            captioned_image = memeify(image, top, bottom)
+            upload = Cloud.upload(captioned_image)
+          rescue
+            errors.add(:base, "Meme creation failed")
+            Cloud.destroy(self.upload_id)
+          end
+        end
+
+        def post_to_twitter
+          Twitter.update(url_for(self))
+        end
+      end
+
 = step :skinny_controller_fat_model, x: 18000 do
   %h1.mb-2 Skinny Controller, Fat Model
   %ul.list-unstyled
     %li.h3 👍 Controller is only concerned with serving requests
     %li.h3 👍 Business logic can be reused
+    %li.h3 👍 Business logic may be unit tested
+    %li.h3 👎 Model has mixed concerns
+    %li.h3 👎 Model is tightly coupled
     %li.h3 👎 Order of operations is unclear
     %li.h3 👎 Surprising API
-    %li.h3 👎 Model has mixed concerns
 
 = step :where_does_business_logic_go, x: 20000 do
   %h1.mb-2 Business logic goes where?
@@ -161,16 +168,30 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
       dependencies between communicating objects, thereby lowering the coupling.
 
 = step :installation, x: 24000 do
-  %h1 Installation
+  %h1 No Installation
+
+  %pre.highlight
+    %code.text-strikethrough
+      $ gem install mediators
+
+  %h1 Just plain ol' Ruby
   = code "bash" do
     :plain
-      mkdir app/mediators
+      $ mkdir app/mediators
+  = code "ruby" do
+    :plain
+      # app/mediators/application_mediator.rb
+      class ApplicationMediator
+        def self.run(*args)
+          new(*args).call
+        end
+      end
 
 = step :fat_mediator, x: 26000 do
   %h1 The Fat Mediator
   = code "ruby" do
     :plain
-      class MemeCreator
+      class MemeFabricator < ApplicationMediator
         def initialize(attrs = {}, model: Meme, uploader: Cloud, twitter: Twitter)
           @attrs, @model, @uploader, @twitter = attrs, model, uploader, twitter
         end
@@ -222,16 +243,17 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
       end
 
 
-= step :skinny_controller_mediator, x: 28000 do
-  %h1 Skinny Controller (using Mediator)
+= step :skinny_controller_fat_mediator, x: 28000 do
+  %h1 Skinny Controller, Fat Mediator
   = code "ruby" do
     :plain
       class MemesController
         def create
-          creator = MemeCreator.new(meme_params)
+          creator = MemeFabricator.new(meme_params)
           @meme = creator.meme
           creator.call
-          render :show
+          flash[:notice] = "Successfully fabricated a fabulous meme."
+          redirect_to @meme
         rescue
           render :edit
         end
@@ -239,12 +261,96 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
         def meme_params; redacted; end
       end
 
-= step :skinny_model_mediator, x: 30000 do
-  %h1 Skinny Model (using Mediator)
+= step :skinny_model_fat_mediator, x: 30000 do
+  %h1 Skinny Model, Fat Mediator
   = code "ruby" do
     :plain
       class Meme
         belongs_to :image
-        validates_presence_of :top, :bottom, :image
+        validates_presence_of :image
+        validates_length_of :top, :bottom, maximum: 50
       end
+
+= step :trusty_methods, x: 32000 do
+  %h1 A trusty API for business logic
+  = code "ruby" do
+    :plain
+      # With fat model, you get unexpected side-effects
+      Image.create({ upload_id: 123, meme_attributes: { top: "surprise!" })
+      Image.last.build_meme(bottom: "you just posted to twitter").save
+      Meme.find_or_create_by(top: "scary 😧")
+
+      # With fat mediator, you choose when to execute side effects
+      Meme.create(top: "trusty method call", bottom: "didnt tweet 🙌")
+      MemeFabricator.run(top: "my mediators", bottom: "bring the tweeps to the yard")
+
+= step :high_level_documentation, x: 34000 do
+  %h1 High-level functionality documentation
+  = code "bash" do
+    :plain
+      # With fat model, you understand only data.
+      $ ls /app/models
+      image.rb
+      meme.rb
+
+      # with fat mediator, you understand actions, too.
+      $ ls /app/mediators
+      image_uploader.rb
+      meme_fabricator.rb
+
+
+= step :low_level_documentation, x: 36000 do
+  %h1 Low-level functionality documentation
+  = code "ruby" do
+    :plain
+      # Actions to take and the order aren't immediately obvious
+      class Meme < ApplicationRecord
+        before_validation :memeify_and_upload, on: :create
+        after_create :post_to_twitter
+      end
+
+  = code "ruby" do
+    :plain
+      # Actions to take and the order are immediately obvious
+      class MemeFabricator < ApplicationMediator
+        def call
+          memeify_image
+          upload_image
+          save_record
+          post_to_twitter
+          meme
+        end
+      end
+
+= step :simplifies_unit_testing, x: 40000 do
+  %h1 Simpler Unit Testing
+  = code "ruby" do
+    # With fat model, constants must be stubbed to mock
+    test "uploads to cloud" do
+      mock = Minitest::Mock.new
+      mock.expect(:call, nil, [String])
+      Twitter.stub(:update, mock) do
+        Meme.create(top: "stubbed constant", bottom: "with a mock")
+      end
+      assert mock.verify
+    end
+
+    # With fat mediator, pass in mocks as dependencies
+    test "uploads to cloud" do
+      mock = Minitest::Mock.new
+      mock.expect(:update, nil, [String])
+      MemeFabricator.run(top: "just a", bottom: "mock", twitter: mock)
+      assert mock.verify
+    end
+
+= step :skinny_controller_skinny_model_fat_mediator, x: 38000 do
+  %h1.mb-2 Skinny Controller, Skinny Model, Fat Mediator
+  %ul.list-unstyled
+    %li.h3 👍 Controller is only concerned with serving requests
+    %li.h3 👍 Model is only concerned with it\'s data
+    %li.h3 👍 Business logic may be reused
+    %li.h3 👍 Business logic may be unit tested
+    %li.h3 👍 Order of operations is clear
+    %li.h3 👍 API is unsurprising
+    %li.h3 👎 Net lines of code increased
 
