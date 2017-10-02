@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+<meta content='IE=edge,chrome=1' http-equiv='X-UA-Compatible'>
+<title>Josh W Lewis: Ruby Developer, JavaScript Engineer, and Consultant</title>
+<meta content='Josh W Lewis: Ruby Developer, JavaScript Engineer, Consultant, Entrepreneur, Husband, Dad, Memphian, and Disc Golfer' name='description'>
+<meta content='width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+<meta content='Josh W Lewis' name='author'>
+<link href="../../stylesheets/slides-f35eda66.css" rel="stylesheet" />
+</head>
+<body class='impress-not-supported'>
+<div class='fallback-message'><h3>Your browser doesn&rsquo;t support the features needed to display this presentation.</h3>
+
+<p>A simplified version of this presentation follows.</p>
+
+<p>For the best experience, please use one of the following browsers:</p>
+
+<ul>
+<li><a href="//www.google.com/chrome">Chrome</a></li>
+<li><a href="//www.apple.com/safari">Safari</a></li>
+<li><a href="//www.mozilla.org/firefox">Firefox</a></li>
+</ul>
+</div>
+<div id='impress'>
+<div id="title" class="step"><h1 class='display-4 mb-2'>
+Skinny Controller,
+<br>
+Skinny Model
+</h1>
+<br>
+<h4>
+<a href='//twitter.com/joshwlewis'>@joshwlewis</a>
+ - 
+<a href='//twitter.com/heroku.com'>@heroku</a>
+</h4>
+<br>
+<h4>
+<a href='//joshwlewis.com/slides/skinny-controller-skinny-model'>
+joshwlewis.com/slides/skinny-controller-skinny-model
+</a>
+</h4>
+</div><div id="outline" class="step" data-x="2000"><h1 class='mb-2'>👋  I'm Josh.</h1>
+<h2 class='mb-2'>
+Today, we'll cover:
+</h2>
+<ul>
+<li class='h4'>Pitfalls of "Fat Controller"</li>
+<li class='h4'>Origin (and promise) of "Skinny Controller, Fat Model"</li>
+<li class='h4'>Traps hidden in "Fat Model"</li>
+<li class='h4'>A pattern to avoid "Fat Model" and "Fat Controller"</li>
+<li class='h4'>Tips to use the pattern successfully</li>
+</ul>
+</div><div id="demo_time" class="step" data-x="4000"><div class='text-center'>
+<img alt='Memeify all the things' class='mb-3' height='300px' src='../../images/memeify_all-the-things-75f39931.jpg'>
+<h1 class='mb-2 display-4'>Memefab</h1>
+<h2>
+<a class='h2' href='https://memefab.herokuapp.com'>
+memefab.herokuapp.com
+</a>
+</h2>
+<h2>
+<a href='https://github.com/joshwlewis/memefab'>
+github.com/joshwlewis/memefab
+</a>
+</h2>
+</div>
+</div><div id="cowboy" class="step" data-x="6000"><div class='text-center'>
+<h1 class='display-1 mb-2'>🐴🤠🐮</h1>
+<h2 class='display-4'>Pew Pew Pew!</h2>
+<h2 class='display-4'>I'm a Cowboy!</h2>
+</div>
+</div><div id="fat_controller" class="step" data-x="8000"><h1>The Fat Controller</h1>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">MemesController</span>
+  <span class="k">def</span> <span class="nf">create</span>
+    <span class="vi">@meme</span> <span class="o">=</span> <span class="no">Meme</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">meme_params</span><span class="p">)</span>
+    <span class="vi">@meme</span><span class="p">.</span><span class="nf">upload_id</span> <span class="o">=</span> <span class="no">SecureRandom</span><span class="p">.</span><span class="nf">uuid</span>
+
+    <span class="k">begin</span>
+      <span class="n">memeified</span> <span class="o">=</span> <span class="n">memeify</span><span class="p">(</span><span class="vi">@meme</span><span class="p">.</span><span class="nf">image</span><span class="p">,</span> <span class="vi">@meme</span><span class="p">.</span><span class="nf">top</span><span class="p">,</span> <span class="vi">@meme</span><span class="p">.</span><span class="nf">bottom</span><span class="p">)</span>
+      <span class="no">Cloud</span><span class="p">.</span><span class="nf">upload</span><span class="p">(</span><span class="n">memefied</span><span class="p">,</span> <span class="vi">@meme</span><span class="p">.</span><span class="nf">upload_id</span><span class="p">)</span>
+    <span class="k">rescue</span>
+      <span class="vi">@meme</span><span class="p">.</span><span class="nf">errors</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="ss">:base</span><span class="p">,</span> <span class="s2">"Meme creation failed"</span><span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="k">if</span> <span class="vi">@meme</span><span class="p">.</span><span class="nf">valid?</span> <span class="o">&amp;&amp;</span> <span class="vi">@meme</span><span class="p">.</span><span class="nf">save</span>
+      <span class="no">Twitter</span><span class="p">.</span><span class="nf">update</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="vi">@meme</span><span class="p">))</span> <span class="k">rescue</span> <span class="kp">nil</span>
+      <span class="n">flash</span><span class="p">[</span><span class="ss">:notice</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"Successfully fabricated a fabulous meme."</span>
+      <span class="n">redirect_to</span> <span class="vi">@meme</span>
+    <span class="k">else</span>
+      <span class="no">Cloud</span><span class="p">.</span><span class="nf">destroy</span><span class="p">(</span><span class="vi">@meme</span><span class="p">.</span><span class="nf">upload_id</span><span class="p">)</span>
+      <span class="n">render</span> <span class="ss">:edit</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="kp">private</span>
+
+  <span class="k">def</span> <span class="nf">memeify</span><span class="p">;</span> <span class="n">redacted</span><span class="p">;</span> <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">meme_params</span><span class="p">;</span> <span class="n">redacted</span><span class="p">;</span> <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div><div id="skinny_model" class="step" data-x="10000"><h2>The Skinny Model</h2>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">Meme</span>
+  <span class="n">belongs_to</span> <span class="ss">:image</span>
+  <span class="n">validates_presence_of</span> <span class="ss">:image</span>
+  <span class="n">validates_length_of</span> <span class="ss">:top</span><span class="p">,</span> <span class="ss">:bottom</span><span class="p">,</span> <span class="ss">maximum: </span><span class="mi">50</span>
+<span class="k">end</span>
+</code></pre></div><div id="fat_controller_skinny_model" class="step" data-x="12000"><h1 class='mb-2'>Fat Controller, Skinny Model</h1>
+<ul class='list-unstyled'>
+<li class='h3'>👍 Model is only concerned with it's data</li>
+<li class='h3'>👎 Controller has mixed concerns</li>
+<li class='h3'>👎 Business logic is not reusable</li>
+<li class='h3'>👎 Business logic can not be unit tested</li>
+<li class='h3'>👎 Controller is tightly coupled</li>
+</ul>
+</div><div id="history" class="step" data-x="14000"><blockquote class='blockquote mb-2'>
+<h1 class='mb-1'>Skinny Controller, Fat Model</h1>
+<h3 class='text-muted'>
+- Jamis Buck, 2006
+</h3>
+</blockquote>
+<a class='h4' href='http://weblog.jamisbuck.org/2006/10/18/skinny-controller-fat-model'>
+weblog.jamisbuck.org/2006/10/18/skinny-controller-fat-model
+</a>
+</div><div id="skinny_controller" class="step" data-x="16000"><h1>The Skinny Controller</h1>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">MemesController</span>
+  <span class="k">def</span> <span class="nf">create</span>
+    <span class="vi">@meme</span> <span class="o">=</span> <span class="no">Meme</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">meme_params</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="vi">@meme</span><span class="p">.</span><span class="nf">save</span>
+      <span class="n">flash</span><span class="p">[</span><span class="ss">:notice</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"Successfully fabricated a fabulous meme."</span>
+      <span class="n">redirect_to</span> <span class="vi">@meme</span>
+    <span class="k">else</span>
+      <span class="n">render</span> <span class="ss">:edit</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">meme_params</span><span class="p">;</span> <span class="n">redacted</span><span class="p">;</span> <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div><div id="fat_model" class="step" data-x="18000"><h1>The Fat Model</h1>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">Meme</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+  <span class="kp">include</span> <span class="no">Rails</span><span class="p">.</span><span class="nf">application</span><span class="p">.</span><span class="nf">routes</span><span class="p">.</span><span class="nf">url_helpers</span>
+
+  <span class="n">before_validation</span> <span class="ss">:memeify_and_upload</span><span class="p">,</span> <span class="ss">on: :create</span>
+  <span class="n">after_create</span> <span class="ss">:post_to_twitter</span>
+
+  <span class="k">def</span> <span class="nf">memeify_and_upload</span>
+    <span class="nb">self</span><span class="p">.</span><span class="nf">upload_id</span> <span class="o">=</span> <span class="no">SecureRandom</span><span class="p">.</span><span class="nf">uuid</span>
+    <span class="k">begin</span>
+      <span class="n">memeified_image</span> <span class="o">=</span> <span class="n">memeify</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">bottom</span><span class="p">)</span>
+      <span class="no">Cloud</span><span class="p">.</span><span class="nf">upload</span><span class="p">(</span><span class="n">memeified_image</span><span class="p">,</span> <span class="n">upload_id</span><span class="p">)</span>
+    <span class="k">rescue</span> <span class="no">CloudError</span>
+      <span class="n">errors</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="ss">:base</span><span class="p">,</span> <span class="s2">"Meme creation failed"</span><span class="p">)</span>
+      <span class="no">Cloud</span><span class="p">.</span><span class="nf">destroy</span><span class="p">(</span><span class="n">upload_id</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">post_to_twitter</span>
+    <span class="no">Twitter</span><span class="p">.</span><span class="nf">update</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="nb">self</span><span class="p">))</span>
+  <span class="k">rescue</span> <span class="no">TwitterError</span>
+    <span class="kp">nil</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div><div id="skinny_controller_fat_model" class="step" data-x="20000"><h1 class='mb-2'>Skinny Controller, Fat Model</h1>
+<ul class='list-unstyled'>
+<li class='h3'>👍 Controller is only concerned with serving requests</li>
+<li class='h3'>👍 Business logic can be reused</li>
+<li class='h3'>👍 Business logic may be unit tested</li>
+<li class='h3'>👎 Model has mixed concerns</li>
+<li class='h3'>👎 Model is tightly coupled</li>
+<li class='h3'>👎 Order of operations is unclear</li>
+<li class='h3'>👎 Surprising API</li>
+</ul>
+</div><div id="its_a_trap" class="step" data-x="22000"><div class='text-center'>
+<img alt="it's a trap" src='../../images/fat-models_its-a-trap-c45ffd90.jpg'>
+</div>
+</div><div id="where_does_business_logic_go" class="step" data-x="24000"><h1 class='mb-2'>Business logic goes where?</h1>
+<ul class='list-unstyled'>
+<li class='h2'>🙈 Model</li>
+<li class='h2'>🙉 View</li>
+<li class='h2'>🙊 Controller</li>
+<li class='h2'>🤔 Something Else...</li>
+</ul>
+</div><div id="mediator_pattern" class="step" data-x="26000"><h2>The Mediator Pattern</h2>
+<blockquote class='blockquote'>
+<p>
+With the mediator pattern, communication between objects is encapsulated
+with a mediator object. Objects no longer communicate directly with each
+other, but instead communicate through the mediator. This reduces the
+dependencies between communicating objects, thereby lowering the coupling.
+</p>
+</blockquote>
+</div><div id="installation" class="step" data-x="28000"><h1>No Installation</h1>
+<pre class='highlight'><code class='text-strikethrough'>$ gem install mediators</code></pre>
+<h1>Just plain ol' Ruby</h1>
+<pre class="highlight shell"><code><span class="gp">$ </span>mkdir app/mediators
+</code></pre><pre class="highlight ruby"><code><span class="c1"># app/mediators/application_mediator.rb</span>
+<span class="k">class</span> <span class="nc">ApplicationMediator</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">run</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+    <span class="kp">new</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">).</span><span class="nf">call</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div><div id="fat_mediator" class="step" data-x="30000"><h1>The Fat Mediator</h1>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">MemeFabricator</span> <span class="o">&lt;</span> <span class="no">ApplicationMediator</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{},</span> <span class="ss">model: </span><span class="no">Meme</span><span class="p">,</span> <span class="ss">uploader: </span><span class="no">Cloud</span><span class="p">,</span> <span class="ss">twitter: </span><span class="no">Twitter</span><span class="p">)</span>
+    <span class="vi">@attrs</span><span class="p">,</span> <span class="vi">@model</span><span class="p">,</span> <span class="vi">@uploader</span><span class="p">,</span> <span class="vi">@twitter</span> <span class="o">=</span> <span class="n">attrs</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">uploader</span><span class="p">,</span> <span class="n">twitter</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">call</span>
+    <span class="n">memeify_image</span>
+    <span class="n">upload_image</span>
+    <span class="n">save_record</span>
+    <span class="n">post_to_twitter</span>
+    <span class="n">meme</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">meme</span>
+    <span class="vi">@meme</span> <span class="o">||=</span> <span class="n">model</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">attributes</span><span class="p">.</span><span class="nf">merge</span><span class="p">(</span><span class="ss">upload_id: </span><span class="n">upload_id</span><span class="p">))</span>
+  <span class="k">end</span>
+
+  <span class="kp">private</span>
+
+  <span class="kp">attr_reader</span> <span class="ss">:attributes</span><span class="p">,</span> <span class="ss">:model</span><span class="p">,</span> <span class="ss">:uploader</span><span class="p">,</span> <span class="ss">:twitter</span>
+
+  <span class="k">def</span> <span class="nf">upload_id</span>
+    <span class="vi">@upload_id</span> <span class="o">||=</span> <span class="no">SecureRandom</span><span class="p">.</span><span class="nf">uuid</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">memeify_image</span>
+    <span class="vi">@memefied</span> <span class="o">||=</span> <span class="n">memeify</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">bottom</span><span class="p">)</span>
+  <span class="k">rescue</span> <span class="no">StandardError</span>
+    <span class="n">meme</span><span class="p">.</span><span class="nf">errors</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="ss">:base</span><span class="p">,</span> <span class="s2">"Error captioning meme"</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="no">FailedMediator</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">upload_image</span>
+    <span class="n">uploader</span><span class="p">.</span><span class="nf">upload</span><span class="p">(</span><span class="vi">@memefied</span><span class="p">,</span> <span class="n">upload_id</span><span class="p">)</span>
+  <span class="k">rescue</span>
+    <span class="n">meme</span><span class="p">.</span><span class="nf">errors</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="ss">:base</span><span class="p">,</span> <span class="s2">"Error uploading meme to cloud"</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="no">FailedMediator</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">save_record</span>
+    <span class="n">meme</span><span class="p">.</span><span class="nf">save!</span>
+  <span class="k">rescue</span>
+    <span class="n">uploader</span><span class="p">.</span><span class="nf">destroy</span><span class="p">(</span><span class="n">upload_id</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="no">FailedMediator</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">post_to_twitter</span>
+    <span class="n">twitter</span><span class="p">.</span><span class="nf">update</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="n">meme</span><span class="p">))</span>
+  <span class="k">rescue</span>
+    <span class="kp">nil</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div><div id="skinny_controller_fat_mediator" class="step" data-x="32000"><h1>Skinny Controller, Fat Mediator</h1>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">MemesController</span>
+  <span class="k">def</span> <span class="nf">create</span>
+    <span class="n">creator</span> <span class="o">=</span> <span class="no">MemeFabricator</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">meme_params</span><span class="p">)</span>
+    <span class="vi">@meme</span> <span class="o">=</span> <span class="n">creator</span><span class="p">.</span><span class="nf">meme</span>
+    <span class="n">creator</span><span class="p">.</span><span class="nf">call</span>
+    <span class="n">flash</span><span class="p">[</span><span class="ss">:notice</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"Successfully fabricated a fabulous meme."</span>
+    <span class="n">redirect_to</span> <span class="vi">@meme</span>
+  <span class="k">rescue</span>
+    <span class="n">render</span> <span class="ss">:edit</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">meme_params</span><span class="p">;</span> <span class="n">redacted</span><span class="p">;</span> <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div><div id="skinny_model_fat_mediator" class="step" data-x="34000"><h1>Skinny Model, Fat Mediator</h1>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">Meme</span>
+  <span class="n">belongs_to</span> <span class="ss">:image</span>
+  <span class="n">validates_presence_of</span> <span class="ss">:image</span>
+  <span class="n">validates_length_of</span> <span class="ss">:top</span><span class="p">,</span> <span class="ss">:bottom</span><span class="p">,</span> <span class="ss">maximum: </span><span class="mi">50</span>
+<span class="k">end</span>
+</code></pre></div><div id="trusty_methods" class="step" data-x="36000"><h1>A trusty API for business logic</h1>
+<pre class="highlight ruby"><code><span class="c1"># With fat model, you get unexpected side-effects</span>
+<span class="no">Image</span><span class="p">.</span><span class="nf">create</span><span class="p">({</span> <span class="ss">upload_id: </span><span class="mi">123</span><span class="p">,</span> <span class="ss">meme_attributes: </span><span class="p">{</span> <span class="ss">top: </span><span class="s2">"surprise!"</span> <span class="p">})</span>
+<span class="no">Image</span><span class="p">.</span><span class="nf">last</span><span class="p">.</span><span class="nf">build_meme</span><span class="p">(</span><span class="ss">bottom: </span><span class="s2">"you just posted to twitter"</span><span class="p">).</span><span class="nf">save</span>
+<span class="no">Meme</span><span class="p">.</span><span class="nf">find_or_create_by</span><span class="p">(</span><span class="ss">top: </span><span class="s2">"scary 😧"</span><span class="p">)</span>
+
+<span class="c1"># With fat mediator, you choose when to execute side effects</span>
+<span class="no">Meme</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">top: </span><span class="s2">"trusty method call"</span><span class="p">,</span> <span class="ss">bottom: </span><span class="s2">"didnt tweet 🙌"</span><span class="p">)</span>
+<span class="no">MemeFabricator</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="ss">top: </span><span class="s2">"my mediators"</span><span class="p">,</span> <span class="ss">bottom: </span><span class="s2">"bring the tweeps to the yard"</span><span class="p">)</span>
+</code></pre></div><div id="high_level_documentation" class="step" data-x="38000"><h1>High-level functionality documentation</h1>
+<pre class="highlight shell"><code><span class="c"># With fat model, you understand only data.</span>
+<span class="gp">$ </span>ls /app/models
+image.rb
+meme.rb
+
+<span class="c"># with fat mediator, you understand actions, too.</span>
+<span class="gp">$ </span>ls /app/mediators
+image_uploader.rb
+meme_fabricator.rb
+</code></pre></div><div id="low_level_documentation" class="step" data-x="40000"><h1>Low-level functionality documentation</h1>
+<pre class="highlight ruby"><code><span class="c1"># Actions to take and the order aren't immediately obvious</span>
+<span class="k">class</span> <span class="nc">Meme</span> <span class="o">&lt;</span> <span class="no">ApplicationRecord</span>
+  <span class="n">before_validation</span> <span class="ss">:memeify_and_upload</span><span class="p">,</span> <span class="ss">on: :create</span>
+  <span class="n">after_create</span> <span class="ss">:post_to_twitter</span>
+<span class="k">end</span>
+</code></pre><pre class="highlight ruby"><code><span class="c1"># Actions to take and the order are immediately obvious</span>
+<span class="k">class</span> <span class="nc">MemeFabricator</span> <span class="o">&lt;</span> <span class="no">ApplicationMediator</span>
+  <span class="c1"># ...</span>
+
+  <span class="k">def</span> <span class="nf">call</span>
+    <span class="n">memeify_image</span>
+    <span class="n">upload_image</span>
+    <span class="n">save_record</span>
+    <span class="n">post_to_twitter</span>
+    <span class="n">meme</span>
+  <span class="k">end</span>
+
+  <span class="c1"># ...</span>
+<span class="k">end</span>
+</code></pre></div><div id="simplifies_unit_testing" class="step" data-x="42000"><h1>Simpler Unit Testing</h1>
+<pre class="highlight ruby"><code><span class="c1"># With fat model, constants must be stubbed to mock</span>
+<span class="nb">test</span> <span class="s2">"uploads to cloud"</span> <span class="k">do</span>
+  <span class="n">uploader</span> <span class="o">=</span> <span class="no">Minitest</span><span class="o">::</span><span class="no">Mock</span><span class="p">.</span><span class="nf">new</span>
+  <span class="n">uploader</span><span class="p">.</span><span class="nf">expect</span><span class="p">(</span><span class="ss">:call</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="p">[</span><span class="no">String</span><span class="p">])</span>
+  <span class="no">Cloud</span><span class="p">.</span><span class="nf">stub</span><span class="p">(</span><span class="ss">:upload</span><span class="p">,</span> <span class="n">uploader</span><span class="p">)</span> <span class="k">do</span>
+    <span class="no">Meme</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">top: </span><span class="s2">"stubbed constant"</span><span class="p">,</span> <span class="ss">bottom: </span><span class="s2">"with a mock"</span><span class="p">)</span>
+  <span class="k">end</span>
+  <span class="n">assert</span> <span class="n">mock</span><span class="p">.</span><span class="nf">verify</span>
+<span class="k">end</span>
+
+<span class="c1"># With fat mediator, pass in mocks as dependencies</span>
+<span class="nb">test</span> <span class="s2">"uploads to cloud"</span> <span class="k">do</span>
+  <span class="n">uploader</span> <span class="o">=</span> <span class="no">Minitest</span><span class="o">::</span><span class="no">Mock</span><span class="p">.</span><span class="nf">new</span>
+  <span class="n">uploader</span><span class="p">.</span><span class="nf">expect</span><span class="p">(</span><span class="ss">:upload</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="p">[</span><span class="no">String</span><span class="p">])</span>
+  <span class="no">MemeFabricator</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="ss">top: </span><span class="s2">"just a"</span><span class="p">,</span> <span class="ss">bottom: </span><span class="s2">"mock"</span><span class="p">,</span> <span class="ss">uploader: </span><span class="n">uploader</span><span class="p">)</span>
+  <span class="n">assert</span> <span class="n">uploader</span><span class="p">.</span><span class="nf">verify</span>
+<span class="k">end</span>
+</code></pre></div><div id="skinny_controller_skinny_model_fat_mediator" class="step" data-x="44000"><h1 class='mb-2'>Skinny Controller, Skinny Model, Fat Mediator</h1>
+<ul class='list-unstyled'>
+<li class='h3'>👍 Controller is only concerned with serving requests</li>
+<li class='h3'>👍 Model is only concerned with it's data</li>
+<li class='h3'>👍 Business logic may be reused</li>
+<li class='h3'>👍 Business logic may be unit tested</li>
+<li class='h3'>👍 Order of operations is clear</li>
+<li class='h3'>👍 API is unsurprising</li>
+<li class='h3'>👎 Net lines of code increased</li>
+</ul>
+</div><div id="fat_mediator_skinny_job" class="step" data-x="46000"><h1>Fat Mediator, Skinny Job</h1>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">MemeFabricator</span> <span class="o">&lt;</span> <span class="no">ApplicationMediator</span>
+  <span class="c1"># ...</span>
+  <span class="k">def</span> <span class="nf">post_to_twitter</span>
+    <span class="no">TweetMeme</span><span class="p">.</span><span class="nf">perform_later</span><span class="p">(</span><span class="n">meme</span><span class="p">.</span><span class="nf">id</span><span class="p">)</span>
+  <span class="k">end</span>
+  <span class="c1"># ...</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">TweetMeme</span> <span class="o">&lt;</span> <span class="no">ApplicationJob</span>
+  <span class="kp">include</span> <span class="no">Rails</span><span class="p">.</span><span class="nf">application</span><span class="p">.</span><span class="nf">routes</span><span class="p">.</span><span class="nf">url_helpers</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">meme_id</span><span class="p">:)</span>
+    <span class="vi">@meme_id</span> <span class="o">=</span> <span class="n">meme_id</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">perform</span>
+    <span class="no">Twitter</span><span class="p">.</span><span class="nf">update</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="k">if</span> <span class="n">meme</span>
+  <span class="k">end</span>
+
+  <span class="kp">private</span>
+
+  <span class="k">def</span> <span class="nf">meme</span>
+    <span class="vi">@meme</span> <span class="o">||=</span> <span class="no">Meme</span><span class="p">.</span><span class="nf">find_by_id</span><span class="p">(</span><span class="n">meme_id</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">url</span>
+    <span class="vi">@url</span> <span class="o">||</span> <span class="o">=</span> <span class="n">url_for</span><span class="p">(</span><span class="n">meme</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div><div id="job_vs_mediator" class="step" data-x="48000"><div class='container'>
+<div class='row'>
+<h1>Mediators and Jobs</h1>
+<h2>Similar but not equal</h2>
+<pre class="highlight ruby"><code><span class="c1"># Same result for both</span>
+<span class="no">FooMediator</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="n">some_arguments</span><span class="p">)</span>
+<span class="no">FooJob</span><span class="p">.</span><span class="nf">perform_now</span><span class="p">(</span><span class="n">sme_arguments</span><span class="p">)</span>
+</code></pre></div>
+<div class='row'>
+<div class='col-md-6'>
+<h3>Jobs (like controllers):</h3>
+<ul>
+<li>(de)serialize arguments</li>
+<li>accept outside inputs</li>
+<li>must maintain backwards compatibility</li>
+</ul>
+</div>
+<div class='col-md-6'>
+<h3>Mediators:</h3>
+<ul>
+<li>accept any arguments</li>
+<li>have internal-only contracts</li>
+<li>must only maintain current compatibility</li>
+</ul>
+</div>
+</div>
+</div>
+</div><div id="call_from_anywhere" class="step" data-x="50000"><div class='container'>
+<div class='row mb-3'>
+<img height='350px' src='../../images/jobs-and-mediators_why-not-both-e4190ee5.jpg'>
+</div>
+<div class='row'>
+<h2>Mediators are the internal API.</h2>
+<h2 class='mb-1'>Consume them from external APIs:</h2>
+<ul>
+<li>Controllers</li>
+<li>Jobs</li>
+<li>Rake tasks</li>
+<li>Scripts</li>
+<li>Console</li>
+</ul>
+</div>
+</div>
+</div><div id="fat_mediator_skinny_job_skinny_mediator" class="step" data-x="52000"><h1>Fat Mediator, Skinny Job, Skinny Mediator</h1>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">TweetMeme</span> <span class="o">&lt;</span> <span class="no">ApplicationJob</span>
+  <span class="k">def</span> <span class="nf">perform</span><span class="p">(</span><span class="n">meme_id</span><span class="p">:)</span>
+    <span class="n">meme</span> <span class="o">=</span> <span class="no">Meme</span><span class="p">.</span><span class="nf">find_by_id</span><span class="p">(</span><span class="n">meme_id</span><span class="p">)</span>
+    <span class="no">MemeTweeter</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="n">meme</span><span class="p">)</span> <span class="k">if</span> <span class="n">meme</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">MemeTweeter</span> <span class="o">&lt;</span> <span class="no">ApplicationMediator</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">meme</span><span class="p">:,</span> <span class="ss">twitter: </span><span class="no">Twitter</span><span class="p">,</span> <span class="ss">url_for: </span><span class="kp">nil</span><span class="p">)</span>
+    <span class="vi">@meme</span><span class="p">,</span> <span class="vi">@twitter</span> <span class="o">=</span> <span class="n">meme</span><span class="p">,</span> <span class="n">twitter</span>
+    <span class="vi">@url_for</span> <span class="o">=</span> <span class="n">url_for</span> <span class="o">||</span> <span class="no">Rails</span><span class="p">.</span><span class="nf">application</span><span class="p">.</span><span class="nf">routes</span><span class="p">.</span><span class="nf">url_helpers</span><span class="p">.</span><span class="nf">method</span><span class="p">(</span><span class="ss">:url_for</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">call</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">url_for</span><span class="p">(</span><span class="n">meme</span><span class="p">)</span>
+    <span class="n">twitter</span><span class="p">.</span><span class="nf">update</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="kp">private</span>
+
+  <span class="kp">attr_reader</span> <span class="ss">:meme</span><span class="p">,</span> <span class="ss">:twitter</span><span class="p">,</span> <span class="ss">:url_for</span>
+<span class="k">end</span>
+</code></pre></div><div id="the_pattern" class="step" data-x="54000"><h3>For the design pattern aficionado:</h3>
+<pre class="highlight shell"><code><span class="gp">$ </span>ls app/commands
+tachyon_shifter.rb
+axionic_deflector.rb
+</code></pre><h3>For the Rails community follower:</h3>
+<pre class="highlight shell"><code><span class="gp">$ </span>ls app/services
+pulse_inhibitor.rb
+resonance_manipulator.rb
+</code></pre><h3>For the Ruby purist:</h3>
+<pre class="highlight shell"><code><span class="gp">$ </span>ls lib/
+hyperwave_pulse_injector.rb
+nitrogen_synthesizer.rb
+</code></pre></div><div id="plain_ruby" class="step" data-x="56000"><div class='text-center'>
+<img alt='Plain Ruby, save you it will.' src='../../images/plain-ruby_save-you-it-will-5e139df1.jpg'>
+</div>
+</div><div id="resources" class="step" data-x="58000"><h1 class='mb-2'>Thanks! 🙂</h1>
+<dl class='h4'>
+<dt>This presentation</dt>
+<dd class='mb-1'>
+<a href='/slides/skinny-controller-skinny-model'>
+joshwlewis.com/slides/skinny-controller-skinny-model
+</a>
+</dd>
+<dt>Memefab source on GitHub</dt>
+<dd class='mb-1'>
+<a href='https://github.com/heroku/memefab'>
+github.com/heroku/memefab
+</a>
+</dd>
+<dt>Memefab app on Heroku</dt>
+<dd class='mb-1'>
+<a href='https://memefab.herokuapp.com'>
+memefab.herokuapp.com
+</a>
+</dd>
+<dt>Pliny, a Sinatra framework with mediator support</dt>
+<dd class='mb-1'>
+<a href='https://github.com/interagent/pliny'>
+github.com/interagent/pliny
+</a>
+</dd>
+</dl>
+</div>
+</div>
+<script src="../../javascripts/vendor/impress-c389aa57.js"></script>
+<script src="../../javascripts/slides/body-a3539a0f.js"></script>
+</body>
+</html>
