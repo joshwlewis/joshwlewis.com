@@ -71,7 +71,7 @@ github.com/joshwlewis/memefab
 <h2 class='display-4'>I'm a Cowboy!</h2>
 </div>
 </div><div id="fat_controller" class="step" data-x="8000"><h1>The Fat Controller</h1>
-<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">MemesController</span>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">MemesController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
   <span class="k">def</span> <span class="nf">create</span>
     <span class="vi">@meme</span> <span class="o">=</span> <span class="no">Meme</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">meme_params</span><span class="p">)</span>
     <span class="vi">@meme</span><span class="p">.</span><span class="nf">upload_id</span> <span class="o">=</span> <span class="no">SecureRandom</span><span class="p">.</span><span class="nf">uuid</span>
@@ -122,7 +122,7 @@ github.com/joshwlewis/memefab
 weblog.jamisbuck.org/2006/10/18/skinny-controller-fat-model
 </a>
 </div><div id="skinny_controller" class="step" data-x="16000"><h1>The Skinny Controller</h1>
-<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">MemesController</span>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">MemesController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
   <span class="k">def</span> <span class="nf">create</span>
     <span class="vi">@meme</span> <span class="o">=</span> <span class="no">Meme</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">meme_params</span><span class="p">)</span>
 
@@ -137,7 +137,7 @@ weblog.jamisbuck.org/2006/10/18/skinny-controller-fat-model
   <span class="k">def</span> <span class="nf">meme_params</span><span class="p">;</span> <span class="n">redacted</span><span class="p">;</span> <span class="k">end</span>
 <span class="k">end</span>
 </code></pre></div><div id="fat_model" class="step" data-x="18000"><h1>The Fat Model</h1>
-<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">Meme</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">Meme</span> <span class="o">&lt;</span> <span class="no">ApplicationRecord</span>
   <span class="kp">include</span> <span class="no">Rails</span><span class="p">.</span><span class="nf">application</span><span class="p">.</span><span class="nf">routes</span><span class="p">.</span><span class="nf">url_helpers</span>
 
   <span class="n">before_validation</span> <span class="ss">:memeify_and_upload</span><span class="p">,</span> <span class="ss">on: :create</span>
@@ -253,7 +253,7 @@ dependencies between communicating objects, thereby lowering the coupling.
   <span class="k">end</span>
 <span class="k">end</span>
 </code></pre></div><div id="skinny_controller_fat_mediator" class="step" data-x="32000"><h1>Skinny Controller, Fat Mediator</h1>
-<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">MemesController</span>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">MemesController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
   <span class="k">def</span> <span class="nf">create</span>
     <span class="n">creator</span> <span class="o">=</span> <span class="no">MemeFabricator</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">meme_params</span><span class="p">)</span>
     <span class="vi">@meme</span> <span class="o">=</span> <span class="n">creator</span><span class="p">.</span><span class="nf">meme</span>
@@ -267,7 +267,7 @@ dependencies between communicating objects, thereby lowering the coupling.
   <span class="k">def</span> <span class="nf">meme_params</span><span class="p">;</span> <span class="n">redacted</span><span class="p">;</span> <span class="k">end</span>
 <span class="k">end</span>
 </code></pre></div><div id="skinny_model_fat_mediator" class="step" data-x="34000"><h1>Skinny Model, Fat Mediator</h1>
-<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">Meme</span>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">Meme</span> <span class="o">&lt;</span> <span class="no">ApplicationRecord</span>
   <span class="n">belongs_to</span> <span class="ss">:image</span>
   <span class="n">validates_presence_of</span> <span class="ss">:image</span>
   <span class="n">validates_length_of</span> <span class="ss">:top</span><span class="p">,</span> <span class="ss">:bottom</span><span class="p">,</span> <span class="ss">maximum: </span><span class="mi">50</span>
