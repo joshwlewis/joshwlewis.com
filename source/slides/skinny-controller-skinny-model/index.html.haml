@@ -55,7 +55,7 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
   %h1 The Fat Controller
   = code "ruby" do
     :plain
-      class MemesController
+      class MemesController < ApplicationController
         def create
           @meme = Meme.new(meme_params)
           @meme.upload_id = SecureRandom.uuid
@@ -116,7 +116,7 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
   %h1 The Skinny Controller
   = code "ruby" do
     :plain
-      class MemesController
+      class MemesController < ApplicationController
         def create
           @meme = Meme.new(meme_params)
 
@@ -135,7 +135,7 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
   %h1 The Fat Model
   = code "ruby" do
     :plain
-      class Meme < ActiveRecord::Base
+      class Meme < ApplicationRecord
         include Rails.application.routes.url_helpers
 
         before_validation :memeify_and_upload, on: :create
@@ -272,7 +272,7 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
   %h1 Skinny Controller, Fat Mediator
   = code "ruby" do
     :plain
-      class MemesController
+      class MemesController < ApplicationController
         def create
           creator = MemeFabricator.new(meme_params)
           @meme = creator.meme
@@ -290,7 +290,7 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
   %h1 Skinny Model, Fat Mediator
   = code "ruby" do
     :plain
-      class Meme
+      class Meme < ApplicationRecord
         belongs_to :image
         validates_presence_of :image
         validates_length_of :top, :bottom, maximum: 50
