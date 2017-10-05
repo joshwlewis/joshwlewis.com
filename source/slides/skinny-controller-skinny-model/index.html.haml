@@ -42,8 +42,8 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
       %a.h2{href: 'https://memefab.herokuapp.com'}
         memefab.herokuapp.com
     %h2
-      %a{href: 'https://github.com/joshwlewis/memefab'}
-        github.com/joshwlewis/memefab
+      %a{href: 'https://github.com/heroku/memefab'}
+        github.com/heroku/memefab
 
 = step :cowboy, x: 6000 do
   %div.text-center
@@ -87,7 +87,7 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
   %h2 The Skinny Model
   = code "ruby" do
     :plain
-      class Meme
+      class Meme < ApplicationRecord
         belongs_to :image
         validates_presence_of :image
         validates_length_of :top, :bottom, maximum: 50
@@ -383,7 +383,10 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
     %li.h3 👍 API is unsurprising
     %li.h3 👎 Net lines of code increased
 
-= step :fat_mediator_skinny_job, x: 46000 do
+= step :we_need_a_job, x: 46000 do
+  %img{src: "/images/yes-please-post-to-twitter_ill-wait.jpg", alt: "Yes, please post to twitter; I'll wait"}
+
+= step :fat_mediator_skinny_job, x: 48000 do
   %h1 Fat Mediator, Skinny Job
   = code "ruby" do
     :plain
@@ -417,7 +420,7 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
         end
       end
 
-= step :job_vs_mediator, x: 48000 do
+= step :job_vs_mediator, x: 50000 do
   %div.container
     %div.row
       %h1 Mediators and Jobs
@@ -442,7 +445,7 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
           %li have internal-only contracts
           %li must only maintain current compatibility
 
-= step :call_from_anywhere, x: 50000 do
+= step :call_from_anywhere, x: 52000 do
   %div.container
     %div.row.mb-3
       %img{height: '350px', src: "/images/jobs-and-mediators_why-not-both.jpg"}
@@ -456,7 +459,7 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
         %li Scripts
         %li Console
 
-= step :fat_mediator_skinny_job_skinny_mediator, x: 52000 do
+= step :fat_mediator_skinny_job_skinny_mediator, x: 54000 do
   %h1 Fat Mediator, Skinny Job, Skinny Mediator
   = code "ruby" do
     :plain
@@ -483,7 +486,7 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
         attr_reader :meme, :twitter, :url_for
       end
 
-= step :the_pattern, x: 54000 do
+= step :the_pattern, x: 56000 do
   %h3 For the design pattern aficionado:
   = code "bash" do
     :plain
@@ -505,11 +508,11 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
       hyperwave_pulse_injector.rb
       nitrogen_synthesizer.rb
 
-= step :plain_ruby, x: 56000 do
+= step :plain_ruby, x: 58000 do
   %div.text-center
     %img{src: "/images/plain-ruby_save-you-it-will.jpg", alt: "Plain Ruby, save you it will."}
 
-= step :resources, x: 58000 do
+= step :resources, x: 60000 do
   %h1.mb-2 Thanks! 🙂
 
   %dl.h4
