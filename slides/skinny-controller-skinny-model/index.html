@@ -7,7 +7,7 @@
 <meta content='Josh W Lewis: Ruby Developer, JavaScript Engineer, Consultant, Entrepreneur, Husband, Dad, Memphian, and Disc Golfer' name='description'>
 <meta content='width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 <meta content='Josh W Lewis' name='author'>
-<link href="../../stylesheets/slides-f35eda66.css" rel="stylesheet" />
+<link href="../../stylesheets/slides-c8c4dc53.css" rel="stylesheet" />
 </head>
 <body class='impress-not-supported'>
 <div class='fallback-message'><h3>Your browser doesn&rsquo;t support the features needed to display this presentation.</h3>
@@ -50,8 +50,8 @@ Today, we'll cover:
 <li class='h4'>Pitfalls of "Fat Controller"</li>
 <li class='h4'>Origin (and promise) of "Skinny Controller, Fat Model"</li>
 <li class='h4'>Traps hidden in "Fat Model"</li>
-<li class='h4'>A pattern to avoid "Fat Model" and "Fat Controller"</li>
-<li class='h4'>Tips to use the pattern successfully</li>
+<li class='h4'>One weird trick to avoid "Fat Model" and "Fat Controller"</li>
+<li class='h4'>Tips to use the trick successfully</li>
 </ul>
 </div><div id="demo_time" class="step" data-x="4000"><div class='text-center'>
 <img alt='Memeify all the things' class='mb-3' height='300px' src='../../images/memeify_all-the-things-75f39931.jpg'>
@@ -362,12 +362,12 @@ meme_fabricator.rb
   <span class="k">end</span>
 <span class="k">end</span>
 </code></pre></div><div id="job_vs_mediator" class="step" data-x="50000"><div class='container'>
-<div class='row'>
+<div class='row mb-2'>
 <h1>Mediators and Jobs</h1>
 <h2>Similar...</h2>
 <pre class="highlight ruby"><code><span class="c1"># Same result for both</span>
+<span class="no">FooJob</span><span class="p">.</span><span class="nf">perform_now</span><span class="p">(</span><span class="n">some_arguments</span><span class="p">)</span>
 <span class="no">FooMediator</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="n">some_arguments</span><span class="p">)</span>
-<span class="no">FooJob</span><span class="p">.</span><span class="nf">perform_now</span><span class="p">(</span><span class="n">sme_arguments</span><span class="p">)</span>
 </code></pre></div>
 <div class='row'>
 <h2>But not equal...</h2>
