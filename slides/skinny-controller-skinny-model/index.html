@@ -60,8 +60,8 @@ memefab.herokuapp.com
 </a>
 </h2>
 <h2>
-<a href='https://github.com/joshwlewis/memefab'>
-github.com/joshwlewis/memefab
+<a href='https://github.com/heroku/memefab'>
+github.com/heroku/memefab
 </a>
 </h2>
 </div>
@@ -99,7 +99,7 @@ github.com/joshwlewis/memefab
   <span class="k">def</span> <span class="nf">meme_params</span><span class="p">;</span> <span class="n">redacted</span><span class="p">;</span> <span class="k">end</span>
 <span class="k">end</span>
 </code></pre></div><div id="skinny_model" class="step" data-x="10000"><h2>The Skinny Model</h2>
-<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">Meme</span>
+<pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">Meme</span> <span class="o">&lt;</span> <span class="no">ApplicationRecord</span>
   <span class="n">belongs_to</span> <span class="ss">:image</span>
   <span class="n">validates_presence_of</span> <span class="ss">:image</span>
   <span class="n">validates_length_of</span> <span class="ss">:top</span><span class="p">,</span> <span class="ss">:bottom</span><span class="p">,</span> <span class="ss">maximum: </span><span class="mi">50</span>
@@ -311,7 +311,7 @@ meme_fabricator.rb
 
   <span class="c1"># ...</span>
 <span class="k">end</span>
-</code></pre></div><div id="simplifies_unit_testing" class="step" data-x="42000"><h1>Simpler Unit Testing</h1>
+</code></pre></div><div id="simplifies_unit_testing" class="step" data-x="42000"><h1>Simplified Unit Testing</h1>
 <pre class="highlight ruby"><code><span class="c1"># With fat model, constants must be stubbed to mock</span>
 <span class="nb">test</span> <span class="s2">"uploads to cloud"</span> <span class="k">do</span>
   <span class="n">uploader</span> <span class="o">=</span> <span class="no">Minitest</span><span class="o">::</span><span class="no">Mock</span><span class="p">.</span><span class="nf">new</span>
@@ -334,12 +334,13 @@ meme_fabricator.rb
 <li class='h3'>👍 Controller is only concerned with serving requests</li>
 <li class='h3'>👍 Model is only concerned with it's data</li>
 <li class='h3'>👍 Business logic may be reused</li>
-<li class='h3'>👍 Business logic may be unit tested</li>
+<li class='h3'>👍 Business logic may be tested independently</li>
 <li class='h3'>👍 Order of operations is clear</li>
 <li class='h3'>👍 API is unsurprising</li>
 <li class='h3'>👎 Net lines of code increased</li>
 </ul>
-</div><div id="fat_mediator_skinny_job" class="step" data-x="46000"><h1>Fat Mediator, Skinny Job</h1>
+</div><div id="we_need_a_job" class="step" data-x="46000"><img alt="Yes, please post to twitter; I'll wait" src='../../images/yes-please-post-to-twitter_ill-wait-2a32edb8.jpg'>
+</div><div id="fat_mediator_skinny_job" class="step" data-x="48000"><h1>Fat Mediator, Skinny Job</h1>
 <pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">MemeFabricator</span> <span class="o">&lt;</span> <span class="no">ApplicationMediator</span>
   <span class="c1"># ...</span>
   <span class="k">def</span> <span class="nf">post_to_twitter</span>
@@ -350,34 +351,24 @@ meme_fabricator.rb
 
 <span class="k">class</span> <span class="nc">TweetMeme</span> <span class="o">&lt;</span> <span class="no">ApplicationJob</span>
   <span class="kp">include</span> <span class="no">Rails</span><span class="p">.</span><span class="nf">application</span><span class="p">.</span><span class="nf">routes</span><span class="p">.</span><span class="nf">url_helpers</span>
-
-  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">meme_id</span><span class="p">:)</span>
-    <span class="vi">@meme_id</span> <span class="o">=</span> <span class="n">meme_id</span>
-  <span class="k">end</span>
-
-  <span class="k">def</span> <span class="nf">perform</span>
-    <span class="no">Twitter</span><span class="p">.</span><span class="nf">update</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="k">if</span> <span class="n">meme</span>
-  <span class="k">end</span>
-
-  <span class="kp">private</span>
-
-  <span class="k">def</span> <span class="nf">meme</span>
-    <span class="vi">@meme</span> <span class="o">||=</span> <span class="no">Meme</span><span class="p">.</span><span class="nf">find_by_id</span><span class="p">(</span><span class="n">meme_id</span><span class="p">)</span>
-  <span class="k">end</span>
-
-  <span class="k">def</span> <span class="nf">url</span>
-    <span class="vi">@url</span> <span class="o">||</span> <span class="o">=</span> <span class="n">url_for</span><span class="p">(</span><span class="n">meme</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">perform</span><span class="p">(</span><span class="n">meme_id</span><span class="p">:)</span>
+    <span class="n">meme</span> <span class="o">=</span> <span class="no">Meme</span><span class="p">.</span><span class="nf">find_by_id</span><span class="p">(</span><span class="n">meme_id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">meme</span>
+      <span class="n">url</span> <span class="o">=</span> <span class="n">url_for</span><span class="p">(</span><span class="n">meme</span><span class="p">)</span>
+      <span class="no">Twitter</span><span class="p">.</span><span class="nf">update</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
-</code></pre></div><div id="job_vs_mediator" class="step" data-x="48000"><div class='container'>
+</code></pre></div><div id="job_vs_mediator" class="step" data-x="50000"><div class='container'>
 <div class='row'>
 <h1>Mediators and Jobs</h1>
-<h2>Similar but not equal</h2>
+<h2>Similar...</h2>
 <pre class="highlight ruby"><code><span class="c1"># Same result for both</span>
 <span class="no">FooMediator</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="n">some_arguments</span><span class="p">)</span>
 <span class="no">FooJob</span><span class="p">.</span><span class="nf">perform_now</span><span class="p">(</span><span class="n">sme_arguments</span><span class="p">)</span>
 </code></pre></div>
 <div class='row'>
+<h2>But not equal...</h2>
 <div class='col-md-6'>
 <h3>Jobs (like controllers):</h3>
 <ul>
@@ -396,7 +387,7 @@ meme_fabricator.rb
 </div>
 </div>
 </div>
-</div><div id="call_from_anywhere" class="step" data-x="50000"><div class='container'>
+</div><div id="call_from_anywhere" class="step" data-x="52000"><div class='container'>
 <div class='row mb-3'>
 <img height='350px' src='../../images/jobs-and-mediators_why-not-both-e4190ee5.jpg'>
 </div>
@@ -412,7 +403,7 @@ meme_fabricator.rb
 </ul>
 </div>
 </div>
-</div><div id="fat_mediator_skinny_job_skinny_mediator" class="step" data-x="52000"><h1>Fat Mediator, Skinny Job, Skinny Mediator</h1>
+</div><div id="fat_mediator_skinny_job_skinny_mediator" class="step" data-x="54000"><h1>Fat Mediator, Skinny Job, Skinny Mediator</h1>
 <pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">TweetMeme</span> <span class="o">&lt;</span> <span class="no">ApplicationJob</span>
   <span class="k">def</span> <span class="nf">perform</span><span class="p">(</span><span class="n">meme_id</span><span class="p">:)</span>
     <span class="n">meme</span> <span class="o">=</span> <span class="no">Meme</span><span class="p">.</span><span class="nf">find_by_id</span><span class="p">(</span><span class="n">meme_id</span><span class="p">)</span>
@@ -435,7 +426,7 @@ meme_fabricator.rb
 
   <span class="kp">attr_reader</span> <span class="ss">:meme</span><span class="p">,</span> <span class="ss">:twitter</span><span class="p">,</span> <span class="ss">:url_for</span>
 <span class="k">end</span>
-</code></pre></div><div id="the_pattern" class="step" data-x="54000"><h3>For the design pattern aficionado:</h3>
+</code></pre></div><div id="the_pattern" class="step" data-x="56000"><h3>For the design pattern aficionado:</h3>
 <pre class="highlight shell"><code><span class="gp">$ </span>ls app/commands
 tachyon_shifter.rb
 axionic_deflector.rb
@@ -447,10 +438,10 @@ resonance_manipulator.rb
 <pre class="highlight shell"><code><span class="gp">$ </span>ls lib/
 hyperwave_pulse_injector.rb
 nitrogen_synthesizer.rb
-</code></pre></div><div id="plain_ruby" class="step" data-x="56000"><div class='text-center'>
+</code></pre></div><div id="plain_ruby" class="step" data-x="58000"><div class='text-center'>
 <img alt='Plain Ruby, save you it will.' src='../../images/plain-ruby_save-you-it-will-5e139df1.jpg'>
 </div>
-</div><div id="resources" class="step" data-x="58000"><h1 class='mb-2'>Thanks! 🙂</h1>
+</div><div id="resources" class="step" data-x="60000"><h1 class='mb-2'>Thanks! 🙂</h1>
 <dl class='h4'>
 <dt>This presentation</dt>
 <dd class='mb-1'>
