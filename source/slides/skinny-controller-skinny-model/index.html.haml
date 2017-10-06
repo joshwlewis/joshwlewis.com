@@ -21,7 +21,6 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
     %a{ href: '//joshwlewis.com/slides/skinny-controller-skinny-model' }
       joshwlewis.com/slides/skinny-controller-skinny-model
 
-
 = step :outline, x: 2000 do
   %h1.mb-2 👋  I'm Josh.
   %h2.mb-2
@@ -32,8 +31,8 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
     %li.h4 Pitfalls of "Fat Controller"
     %li.h4 Origin (and promise) of "Skinny Controller, Fat Model"
     %li.h4 Traps hidden in "Fat Model"
-    %li.h4 A pattern to avoid "Fat Model" and "Fat Controller"
-    %li.h4 Tips to use the pattern successfully
+    %li.h4 One weird trick to avoid "Fat Model" and "Fat Controller"
+    %li.h4 Tips to use the trick successfully
 
 = step :demo_time, x: 4000 do
   %div.text-center
@@ -413,14 +412,14 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
 
 = step :job_vs_mediator, x: 50000 do
   %div.container
-    %div.row
+    %div.row.mb-2
       %h1 Mediators and Jobs
       %h2 Similar...
       = code "ruby" do
         :plain
           # Same result for both
+          FooJob.perform_now(some_arguments)
           FooMediator.run(some_arguments)
-          FooJob.perform_now(sme_arguments)
 
     %div.row
       %h2 But not equal...
