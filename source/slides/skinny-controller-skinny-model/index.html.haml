@@ -351,7 +351,7 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
       end
 
 = step :simplifies_unit_testing, x: 42000 do
-  %h1 Simpler Unit Testing
+  %h1 Simplified Unit Testing
   = code "ruby" do
     :plain
       # With fat model, constants must be stubbed to mock
@@ -378,7 +378,7 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
     %li.h3 👍 Controller is only concerned with serving requests
     %li.h3 👍 Model is only concerned with it's data
     %li.h3 👍 Business logic may be reused
-    %li.h3 👍 Business logic may be unit tested
+    %li.h3 👍 Business logic may be tested independently
     %li.h3 👍 Order of operations is clear
     %li.h3 👍 API is unsurprising
     %li.h3 👎 Net lines of code increased
@@ -400,23 +400,12 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
 
       class TweetMeme < ApplicationJob
         include Rails.application.routes.url_helpers
-
-        def initialize(meme_id:)
-          @meme_id = meme_id
-        end
-
-        def perform
-          Twitter.update(url) if meme
-        end
-
-        private
-
-        def meme
-          @meme ||= Meme.find_by_id(meme_id)
-        end
-
-        def url
-          @url || = url_for(meme)
+        def perform(meme_id:)
+          meme = Meme.find_by_id(meme_id)
+          if meme
+            url = url_for(meme)
+            Twitter.update(url)
+          end
         end
       end
 
@@ -424,7 +413,7 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
   %div.container
     %div.row
       %h1 Mediators and Jobs
-      %h2 Similar but not equal
+      %h2 Similar...
       = code "ruby" do
         :plain
           # Same result for both
@@ -432,6 +421,7 @@ description: 'Skinny Controller, Fat Model' is an old Rails mantra, but a
           FooJob.perform_now(sme_arguments)
 
     %div.row
+      %h2 But not equal...
       %div.col-md-6
         %h3 Jobs (like controllers):
         %ul
